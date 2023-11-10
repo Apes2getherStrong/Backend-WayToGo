@@ -10,4 +10,6 @@ public interface UserService {
     Page<UserDTO> getAllUsers(Integer pageNumber, Integer pageSize);
 
     Optional<UserDTO> getUserById(UUID userId);
+
+    UserDTO saveNewUser(UserDTO userDTO);
 }

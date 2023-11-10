@@ -1,15 +1,14 @@
 package com.example.waytogo.user.controller;
 
 import com.example.waytogo.user.model.dto.UserDTO;
+import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
@@ -32,5 +31,15 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") UUID userId) {
         return ResponseEntity.ok(userService.getUserById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
+    @PostMapping(USER_PATH)
+    public ResponseEntity<UserDTO> postUser(@RequestBody UserDTO userDTO) {
+        UserDTO savedUser =userService.saveNewUser(userDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", USER_PATH + savedUser.getUserId().toString());
+
+        return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
 }
