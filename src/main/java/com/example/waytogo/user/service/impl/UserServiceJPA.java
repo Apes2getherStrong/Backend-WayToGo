@@ -44,6 +44,12 @@ public class UserServiceJPA implements UserService {
         return userMapper.userToUserDto(userRepository.save(userMapper.userDtoToUser(userDTO)));
     }
 
+    @Override
+    public UserDTO updateUserById(UUID userId, UserDTO userDTO) {
+        userDTO.setUserId(userId);
+        return this.saveNewUser(userDTO);
+    }
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;
         int queryPageSize;
