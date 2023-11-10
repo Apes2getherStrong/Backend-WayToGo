@@ -49,4 +49,11 @@ public class UserController {
 
         return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
+
+    @DeleteMapping(USER_PATH_ID)
+    public ResponseEntity<Void> deleteUserById(@PathVariable("userId") UUID userId) {
+        userService.deleteUserById(userId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

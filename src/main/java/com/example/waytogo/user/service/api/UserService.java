@@ -14,4 +14,6 @@ public interface UserService {
     UserDTO saveNewUser(UserDTO userDTO);
 
     UserDTO updateUserById(UUID userId, UserDTO userDTO);
+
+    void deleteUserById(UUID userId);
 }
