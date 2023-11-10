@@ -50,6 +50,11 @@ public class UserServiceJPA implements UserService {
         return this.saveNewUser(userDTO);
     }
 
+    @Override
+    public void deleteUserById(UUID userId) {
+        userRepository.deleteById(userId);
+    }
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;
         int queryPageSize;
