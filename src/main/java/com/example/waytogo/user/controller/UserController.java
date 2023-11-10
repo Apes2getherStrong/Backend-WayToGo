@@ -1,7 +1,6 @@
 package com.example.waytogo.user.controller;
 
 import com.example.waytogo.user.model.dto.UserDTO;
-import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
