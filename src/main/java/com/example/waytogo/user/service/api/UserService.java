@@ -12,4 +12,6 @@ public interface UserService {
     Optional<UserDTO> getUserById(UUID userId);
 
     UserDTO saveNewUser(UserDTO userDTO);
+
+    UserDTO updateUserById(UUID userId, UserDTO userDTO);
 }

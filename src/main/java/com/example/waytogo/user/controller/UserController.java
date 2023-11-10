@@ -1,6 +1,7 @@
 package com.example.waytogo.user.controller;
 
 import com.example.waytogo.user.model.dto.UserDTO;
+import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,11 +35,19 @@ public class UserController {
 
     @PostMapping(USER_PATH)
     public ResponseEntity<UserDTO> postUser(@RequestBody UserDTO userDTO) {
-        UserDTO savedUser =userService.saveNewUser(userDTO);
+        UserDTO savedUser = userService.saveNewUser(userDTO);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", USER_PATH + savedUser.getUserId().toString());
 
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping(USER_PATH_ID)
+    public ResponseEntity<UserDTO> putUserById(@PathVariable("userId") UUID userId,
+                                               @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUserById(userId, userDTO);
+
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 }
