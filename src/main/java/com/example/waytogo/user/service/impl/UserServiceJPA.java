@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -53,6 +54,23 @@ public class UserServiceJPA implements UserService {
     @Override
     public void deleteUserById(UUID userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void patchUserById(UUID userId, UserDTO userDTO) {
+
+        userRepository.findById(userId).ifPresent(foundUser -> {
+            if (StringUtils.hasText(userDTO.getPassword())) {
+                foundUser.setPassword(userDTO.getPassword());
+            }
+            if (StringUtils.hasText(userDTO.getLogin())) {
+                foundUser.setLogin(userDTO.getLogin());
+            }
+            if (StringUtils.hasText(userDTO.getUsername())) {
+                foundUser.setUsername(userDTO.getUsername());
+            }
+            userRepository.save(foundUser);
+        });
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
