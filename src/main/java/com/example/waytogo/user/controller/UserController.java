@@ -1,7 +1,24 @@
 package com.example.waytogo.user.controller;
 
+import com.example.waytogo.user.model.dto.UserDTO;
+import com.example.waytogo.user.service.api.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 public class UserController {
+    private static final String USER_PATH = "/api/users";
+    private static final String USER_PATH_ID = USER_PATH + "/{userId}";
+
+    private final UserService userService;
+
+    @GetMapping(USER_PATH)
+    public Page<UserDTO> getAllUsers(@RequestParam(required = false) Integer pageNumber,
+                                      @RequestParam(required = false) Integer pageSize){
+        return userService.getAllUsers(pageNumber, pageSize);
+    }
 }
