@@ -1,5 +1,4 @@
-package com.example.waytogo.audio.model.entity;
-
+package com.example.waytogo.route.model.entity;
 
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.Entity;
@@ -9,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import java.util.UUID;
 
 @Entity
-public class Audio {
+public class Route {
     @Id
     UUID uuid;
 
