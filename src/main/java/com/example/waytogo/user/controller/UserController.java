@@ -3,7 +3,6 @@ package com.example.waytogo.user.controller;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
