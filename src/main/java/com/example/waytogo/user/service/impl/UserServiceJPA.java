@@ -6,11 +6,13 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +31,12 @@ public class UserServiceJPA implements UserService {
         userPage = userRepository.findAll(pageRequest);
 
         return userPage.map(userMapper::userToUserDto);
+    }
+
+    @Override
+    public Optional<UserDTO> getUserById(UUID userId) {
+        return Optional.ofNullable(userMapper.userToUserDto(userRepository.findById(userId)
+                .orElse(null)));
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
