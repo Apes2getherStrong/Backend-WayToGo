@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> patchUserById(@PathVariable("userId") UUID userId, @RequestParam UserDTO userDTO) {
+    public ResponseEntity<Void> patchUserById(@PathVariable("userId") UUID userId, @RequestBody UserDTO userDTO) {
         userService.patchUserById(userId, userDTO);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -37,7 +37,8 @@ public class Point {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "point", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "coordinates_id")
     private Coordinates coordinates;
 
     @CreationTimestamp

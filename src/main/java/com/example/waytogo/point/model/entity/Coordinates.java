@@ -22,8 +22,7 @@ public class Coordinates {
     @Column(name = "coordinates_id", updatable = false, nullable = false)
     private UUID uuid;
 
-    @OneToOne
-    @JoinColumn(name = "point_id")
+    @OneToOne(mappedBy = "coordinates")
     private Point point;
 
     @Column(name = "latitude")
