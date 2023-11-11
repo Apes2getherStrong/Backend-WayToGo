@@ -6,8 +6,7 @@ import lombok.*;
 
 import java.util.UUID;
 
-@Table(name="route")
-@EqualsAndHashCode
+@Table(name="routes")
 @Builder
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import java.util.UUID;
 public class Route {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="route_id", updatable=false, nullable=false)
     private UUID id;
 
