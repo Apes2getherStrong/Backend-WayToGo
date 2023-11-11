@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
@@ -26,9 +27,9 @@ public class User {
 
     String login;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     List<Audio> audios;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     List<Route> routes;
 }
