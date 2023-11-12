@@ -27,9 +27,9 @@ public class User {
 
     String login;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     List<Audio> audios;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     List<Route> routes;
 }
