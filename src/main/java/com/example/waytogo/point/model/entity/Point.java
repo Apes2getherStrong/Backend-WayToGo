@@ -26,7 +26,7 @@ public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "point_id", updatable = false, nullable = false)
-    private UUID uuid;
+    private UUID id;
 
     @OneToMany(mappedBy="point")
     private List<Audio> audios;

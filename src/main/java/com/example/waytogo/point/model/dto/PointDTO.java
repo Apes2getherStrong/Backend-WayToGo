@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class PointDTO {
-    private UUID uuid;
+    private UUID id;
     private String name;
     private CoordinatesDTO coordinates;
     private LocalDateTime createdDate;

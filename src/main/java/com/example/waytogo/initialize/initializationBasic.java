@@ -21,7 +21,14 @@ public class initializationBasic implements InitializingBean {
                         .longitude(13.0).build())
                 .name("skurwysyn posejdon")
                 .build();
-        log.debug("saving point: {}", point);
         pointRepository.save(point);
+
+        Point point2 = Point.builder()
+                .coordinates(Coordinates.builder()
+                        .latitude(10.0)
+                        .longitude(19.0).build())
+                .name("gmach weti")
+                .build();
+        pointRepository.save(point2);
     }
 }

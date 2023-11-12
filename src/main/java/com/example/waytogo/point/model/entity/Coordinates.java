@@ -20,7 +20,7 @@ public class Coordinates {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "coordinates_id", updatable = false, nullable = false)
-    private UUID uuid;
+    private UUID id;
 
     @OneToOne(mappedBy = "coordinates")
     private Point point;
