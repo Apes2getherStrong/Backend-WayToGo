@@ -39,6 +39,17 @@ public class AudioServiceJPA implements AudioService {
                 .orElse(null)));
     }
 
+    @Override
+    public AudioDTO saveNewAudio(AudioDTO audioDTO) {
+        return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
+    }
+
+    @Override
+    public AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO) {
+        audioDTO.setId(audioId);
+        return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
+    }
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;
         int queryPageSize;

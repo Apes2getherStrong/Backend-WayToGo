@@ -10,4 +10,8 @@ public interface AudioService {
     Page<AudioDTO> getAllAudios(Integer pageNumber, Integer pageSize);
 
     Optional<AudioDTO> getAudioById(UUID audioId);
+
+    AudioDTO saveNewAudio(AudioDTO audioDTO);
+
+    AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO);
 }
