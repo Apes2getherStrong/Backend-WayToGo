@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AudioDTO {
     UUID id;
+    String name;
 /*    MultipartFile file;
     String filePath;*/
     UserDTO user;

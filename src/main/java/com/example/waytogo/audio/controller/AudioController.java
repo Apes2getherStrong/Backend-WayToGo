@@ -58,4 +58,11 @@ public class AudioController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PatchMapping(AUDIO_PATH_ID)
+    public ResponseEntity<Void> patchAudioById(@PathVariable("audioId") UUID audioId, @RequestBody AudioDTO audioDTO) {
+        audioService.patchAudioById(audioId, audioDTO);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

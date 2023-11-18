@@ -5,11 +5,14 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
+import com.example.waytogo.point.mapper.PointMapper;
+import com.example.waytogo.user.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +22,9 @@ import java.util.UUID;
 public class AudioServiceJPA implements AudioService {
     AudioMapper audioMapper;
     AudioRepository audioRepository;
+
+    PointMapper pointMapper;
+    UserMapper userMapper;
 
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
@@ -53,6 +59,23 @@ public class AudioServiceJPA implements AudioService {
     @Override
     public void deleteAudioById(UUID audioId) {
         audioRepository.deleteById(audioId);
+    }
+
+    @Override
+    public void patchAudioById(UUID audioId, AudioDTO audioDTO) {
+
+        audioRepository.findById(audioId).ifPresent(foundAudio -> {
+            if (StringUtils.hasText(audioDTO.getName())) {
+                foundAudio.setName(audioDTO.getName());
+            }
+            if (audioDTO.getPoint() != null) {
+                foundAudio.setPoint(pointMapper.pointDtoToPoint(audioDTO.getPoint()));
+            }
+            if(audioDTO.getUser() != null) {
+                foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
+            }
+
+        });
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
