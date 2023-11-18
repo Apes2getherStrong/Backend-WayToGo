@@ -14,4 +14,6 @@ public interface AudioService {
     AudioDTO saveNewAudio(AudioDTO audioDTO);
 
     AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO);
+
+    void deleteAudioById(UUID audioId);
 }

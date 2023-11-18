@@ -51,4 +51,11 @@ public class AudioController {
         return new ResponseEntity<>(updatedAudio, HttpStatus.CREATED);
     }
 
+    @DeleteMapping(AUDIO_PATH_ID)
+    public ResponseEntity<Void> deleteAudioById(@PathVariable("audioId") UUID audioId) {
+        audioService.deleteAudioById(audioId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
