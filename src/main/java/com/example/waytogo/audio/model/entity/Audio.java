@@ -22,6 +22,9 @@ public class Audio {
     @Column(name = "audio_id", updatable = false, nullable = false)
     UUID uuid;
 
+    @Column(name = "audio_name")
+    String name;
+
 /*
     @Transient
     MultipartFile file;
