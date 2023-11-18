@@ -93,7 +93,7 @@ public class UserServiceJPA implements UserService {
             }
         }
 
-        Sort sort = Sort.by(Sort.Order.asc("userName"));
+        Sort sort = Sort.by(Sort.Order.asc("username"));
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
