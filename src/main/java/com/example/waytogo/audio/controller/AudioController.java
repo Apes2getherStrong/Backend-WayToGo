@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -18,29 +19,37 @@ public class AudioController {
 
     private static final String AUDIO_PATH = "/api/audios";
     private static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
+    private static final String USER_PATH_ID_AUDIOS = "/api/users/{userId}/audios"; //Getting all audios from one user
 
     AudioService audioService;
 
     @GetMapping(AUDIO_PATH)
     public Page<AudioDTO> getAllAudios(@RequestParam(required = false) Integer pageNumber,
                                        @RequestParam(required = false) Integer pageSize) {
-        return audioService.getAllAudios(pageNumber,pageSize);
+        return audioService.getAllAudios(pageNumber, pageSize);
     }
 
     @GetMapping(AUDIO_PATH_ID)
-    public ResponseEntity<AudioDTO> getAudioById(@PathVariable("audioId")UUID audioId) {
+    public ResponseEntity<AudioDTO> getAudioById(@PathVariable("audioId") UUID audioId) {
         return ResponseEntity.ok(audioService.getAudioById(audioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
+    @GetMapping(USER_PATH_ID_AUDIOS)
+    public ResponseEntity<List<AudioDTO>> getAllAudiosByUserId(@PathVariable("userId") UUID userId) {
+        List<AudioDTO> audioDTOList = audioService.getAllAudiosByUserId(userId);
+
+        return new ResponseEntity<>(audioDTOList, HttpStatus.OK);
+    }
+
     @PostMapping(AUDIO_PATH)
     public ResponseEntity<AudioDTO> postAudio(@RequestBody AudioDTO audioDTO) {
-        AudioDTO savedAudio  = audioService.saveNewAudio(audioDTO);
+        AudioDTO savedAudio = audioService.saveNewAudio(audioDTO);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", AUDIO_PATH + savedAudio.getId().toString());
 
-        return new ResponseEntity<>(savedAudio,headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedAudio, headers, HttpStatus.CREATED);
     }
 
     @PutMapping(AUDIO_PATH_ID)

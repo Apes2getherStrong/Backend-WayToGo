@@ -14,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -44,6 +46,14 @@ public class AudioServiceJPA implements AudioService {
         return Optional.ofNullable(audioMapper.audioToAudioDto(audioRepository.findById(audioId)
                 .orElse(null)));
     }
+
+    @Override
+    public List<AudioDTO> getAllAudiosByUserId(UUID userId) {
+        return audioRepository.findByUser_UserId(userId).stream()
+                .map(audioMapper::audioToAudioDto)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public AudioDTO saveNewAudio(AudioDTO audioDTO) {
