@@ -5,7 +5,6 @@ import com.example.waytogo.point.model.entity.Point;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 

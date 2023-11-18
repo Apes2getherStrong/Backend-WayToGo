@@ -3,7 +3,6 @@ package com.example.waytogo.audio.model.dto;
 import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
