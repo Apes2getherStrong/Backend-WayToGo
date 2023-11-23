@@ -8,6 +8,7 @@ import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.point.mapper.PointMapper;
 import com.example.waytogo.user.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Primary
 @AllArgsConstructor
 @Service
 public class AudioServiceJPA implements AudioService {
@@ -48,10 +50,13 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public List<AudioDTO> getAllAudiosByUserId(UUID userId) {
-        return audioRepository.findByUser_UserId(userId).stream()
-                .map(audioMapper::audioToAudioDto)
-                .collect(Collectors.toList());
+    public Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
+
+        Page<Audio> audioPage;
+        audioPage = audioRepository.findByUser_UserId(userId, pageRequest);
+
+        return audioPage.map(audioMapper::audioToAudioDto);
     }
 
 
@@ -84,7 +89,7 @@ public class AudioServiceJPA implements AudioService {
             if(audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
             }
-
+            audioRepository.save(foundAudio);
         });
     }
 
@@ -108,7 +113,7 @@ public class AudioServiceJPA implements AudioService {
             }
         }
 
-        Sort sort = Sort.by(Sort.Order.asc("audio_name"));
+        Sort sort = Sort.by(Sort.Order.asc("name"));
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
