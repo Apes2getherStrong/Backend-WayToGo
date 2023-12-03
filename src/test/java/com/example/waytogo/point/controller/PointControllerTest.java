@@ -7,8 +7,10 @@ import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.point.model.entity.Point;
 import com.example.waytogo.point.repository.PointRepository;
 import com.example.waytogo.point.service.api.PointService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
@@ -58,6 +61,7 @@ class PointControllerTest {
 
 
     @Test
+    @DisplayName("Not implemented Yet testGetAllPoints")
     @Disabled
     public void testGetAllPoints() throws Exception {
         given(pointService.getAllPoints(any(), any()))
@@ -94,8 +98,37 @@ class PointControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+   @Test
+   void testCreateNewPoint() throws Exception {
+        PointDTO pointDTO = getPointDTO();
+        pointDTO.setId(null);
+
+        given(pointService.saveNewPoint(any(PointDTO.class))).willReturn(getPointDTO_2());
+
+        mockMvc.perform(post(PointController.POINT_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pointDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+   }
+
     @Test
-    void postPoint() {
+    void testCreatePointNullNameAndNullCoordinates() throws Exception {
+        PointDTO pointDTO = PointDTO.builder().build();
+
+        given(pointService.saveNewPoint(any(PointDTO.class))).willReturn(getPointDTO_2());
+
+        MvcResult mvcResult = mockMvc.perform(post(PointController.POINT_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pointDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(3)))
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+
     }
 
     @Test
@@ -110,6 +143,13 @@ class PointControllerTest {
     void patchPointById() {
     }
     PointDTO getPointDTO() {
+        return PointDTO.builder()
+                .id(UUID.randomUUID())
+                .name("test Point")
+                .coordinates(CoordinatesDTO.builder().latitude(14.0).longitude(17.2).build())
+                .build();
+    }
+    PointDTO getPointDTO_2() {
         return PointDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test Point")

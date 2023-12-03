@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,7 +36,7 @@ public class PointController {
     }
 
     @PostMapping(POINT_PATH)
-    public ResponseEntity<Void> postPoint(@RequestBody PointDTO pointDTO) {
+    public ResponseEntity<Void> postPoint(@Validated @RequestBody PointDTO pointDTO) {
         PointDTO point = pointService.saveNewPoint(pointDTO);
 
         HttpHeaders headers = new HttpHeaders();
@@ -45,7 +46,7 @@ public class PointController {
     }
 
     @PutMapping(POINT_PATH_ID)
-    public ResponseEntity<Void> putPointById(@PathVariable("pointId") UUID pointId, @RequestBody PointDTO pointDTO) {
+    public ResponseEntity<Void> putPointById(@PathVariable("pointId") UUID pointId,@Validated @RequestBody PointDTO pointDTO) {
         if (pointService.updatePointById(pointId, pointDTO).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
