@@ -36,14 +36,6 @@ public class PointServiceJPA implements PointService {
         return pointRepository.findById(pointId).map(pointMapper::pointToPointDto);
     }
 
-    @Override
-    public Page<PointDTO> getAllPoints(Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
-
-        Page<Point> pointPage = pointRepository.findAll(pageRequest);
-
-        return pointPage.map(pointMapper::pointToPointDto);
-    }
 
     /***
      * Delete point by id if exists and return True, if not exists return False
@@ -101,7 +93,14 @@ public class PointServiceJPA implements PointService {
 
         return atomicReference.get();
     }
+    @Override
+    public Page<PointDTO> getAllPoints(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
+        Page<Point> pointPage = pointRepository.findAll(pageRequest);
+
+        return pointPage.map(pointMapper::pointToPointDto);
+    }
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;

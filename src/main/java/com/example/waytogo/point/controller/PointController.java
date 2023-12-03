@@ -18,8 +18,8 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class PointController {
-    private final static String POINT_PATH = "/api/v1/points";
-    private final static String POINT_PATH_ID = POINT_PATH + "/{pointId}";
+    public final static String POINT_PATH = "/api/v1/points";
+    public final static String POINT_PATH_ID = POINT_PATH + "/{pointId}";
     private final PointService pointService;
 
     @GetMapping(POINT_PATH)
