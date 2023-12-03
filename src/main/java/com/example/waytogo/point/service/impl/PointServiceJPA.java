@@ -5,6 +5,7 @@ import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.point.model.entity.Point;
 import com.example.waytogo.point.repository.PointRepository;
 import com.example.waytogo.point.service.api.PointService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;

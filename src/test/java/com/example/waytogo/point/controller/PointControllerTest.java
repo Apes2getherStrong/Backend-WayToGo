@@ -1,37 +1,24 @@
 package com.example.waytogo.point.controller;
 
-import com.example.waytogo.initialize.InitializationBasic;
-import com.example.waytogo.point.mapper.PointMapper;
 import com.example.waytogo.point.model.dto.CoordinatesDTO;
 import com.example.waytogo.point.model.dto.PointDTO;
-import com.example.waytogo.point.model.entity.Point;
-import com.example.waytogo.point.repository.PointRepository;
 import com.example.waytogo.point.service.api.PointService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Description;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -56,21 +43,20 @@ class PointControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<PointDTO> beerArgumentCaptor;
+    ArgumentCaptor<PointDTO> pointArgumentCaptor;
 
 
 
     @Test
-    @DisplayName("Not implemented Yet testGetAllPoints")
-    @Disabled
     public void testGetAllPoints() throws Exception {
         given(pointService.getAllPoints(any(), any()))
-                .willReturn(new PageImpl<>(Arrays.asList(PointDTO.builder().build(), PointDTO.builder().build()), PageRequest.of(0, 25), 2L));
+                .willReturn(new PageImpl<>(new ArrayList<>(Arrays.asList(getPointDTO(), getPointDTO_2()))));
 
-        mockMvc.perform(get("/api/v1/points"))
+        mockMvc.perform(get(PointController.POINT_PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content").isArray());
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()",is(2)));
     }
 
     @Test
@@ -179,20 +165,37 @@ class PointControllerTest {
     }
 
     @Test
-    void patchPointById() {
+    void testPatchPoint() throws Exception {
+        PointDTO pointDTO = getPointDTO();
+
+        Map<String,Object> pointMap = new HashMap<>();
+        pointMap.put("name", "New Name");
+
+        given(pointService.patchPointById(any(), any())).willReturn(Optional.of(pointDTO));
+
+        mockMvc.perform(patch(PointController.POINT_PATH_ID, pointDTO.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pointMap)))
+                .andExpect(status().isNoContent());
+
+        verify(pointService).patchPointById(uuidArgumentCaptor.capture(), pointArgumentCaptor.capture());
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(pointDTO.getId());
+        assertThat(pointArgumentCaptor.getValue().getName()).isEqualTo(pointMap.get("name"));
+
     }
     PointDTO getPointDTO() {
         return PointDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test Point")
-                .coordinates(CoordinatesDTO.builder().latitude(14.0).longitude(17.2).build())
+                .coordinates(CoordinatesDTO.builder().latitude(11.0).longitude(27.2).build())
                 .build();
     }
     PointDTO getPointDTO_2() {
         return PointDTO.builder()
                 .id(UUID.randomUUID())
-                .name("test Point")
-                .coordinates(CoordinatesDTO.builder().latitude(14.0).longitude(17.2).build())
+                .name("test Point2")
+                .coordinates(CoordinatesDTO.builder().latitude(19.0).longitude(17.5).build())
                 .build();
     }
 }
