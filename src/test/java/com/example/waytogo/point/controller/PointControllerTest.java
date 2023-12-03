@@ -132,11 +132,50 @@ class PointControllerTest {
     }
 
     @Test
-    void putPointById() {
+    void putPointById() throws Exception {
+        PointDTO pointDTO = getPointDTO();
+
+        given(pointService.updatePointById(any(), any())).willReturn(Optional.of(pointDTO));
+
+        mockMvc.perform(put(PointController.POINT_PATH_ID, pointDTO.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pointDTO)))
+                .andExpect(status().isNoContent());
+        verify(pointService).updatePointById(any(UUID.class), any(PointDTO.class));
     }
 
     @Test
-    void deletePointById() {
+    void testUpdatePointBlankName() throws Exception {
+        PointDTO pointDTO = getPointDTO();
+        pointDTO.setName("");
+
+        given(pointService.updatePointById(any(), any())).willReturn(Optional.of(pointDTO));
+
+        MvcResult mvcResult = mockMvc.perform(put(PointController.POINT_PATH_ID, pointDTO.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pointDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testDeletePoint() throws Exception {
+        PointDTO pointDTO = getPointDTO();
+
+        given(pointService.deletePointById(any())).willReturn(true);
+
+        mockMvc.perform(delete(PointController.POINT_PATH_ID, pointDTO.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(pointService).deletePointById(uuidArgumentCaptor.capture());
+
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(pointDTO.getId());
     }
 
     @Test
