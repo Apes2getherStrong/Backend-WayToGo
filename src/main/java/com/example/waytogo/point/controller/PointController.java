@@ -46,20 +46,26 @@ public class PointController {
 
     @PutMapping(POINT_PATH_ID)
     public ResponseEntity<Void> putPointById(@PathVariable("pointId") UUID pointId, @RequestBody PointDTO pointDTO) {
-        pointService.updatePointById(pointId, pointDTO);
+        if (pointService.updatePointById(pointId, pointDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(POINT_PATH_ID)
     public ResponseEntity<Void> deletePointById(@PathVariable("pointId") UUID pointId) {
-        pointService.deletePointById(pointId);
+        if (!pointService.deletePointById(pointId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
     @PatchMapping(POINT_PATH_ID)
     public ResponseEntity<Void> patchPointById(@PathVariable("pointId") UUID pointId, @RequestBody PointDTO pointDTO) {
-        pointService.patchPointById(pointId, pointDTO);
+        if (pointService.patchPointById(pointId, pointDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }

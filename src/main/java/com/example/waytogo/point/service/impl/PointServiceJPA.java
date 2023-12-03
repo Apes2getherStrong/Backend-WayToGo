@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Primary
@@ -22,11 +23,12 @@ import java.util.UUID;
 public class PointServiceJPA implements PointService {
     private final PointMapper pointMapper;
     private final PointRepository pointRepository;
-    private static final Integer DEFAULT_PAGE =   0;
+    private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
+
     @Override
     public PointDTO saveNewPoint(PointDTO point) {
-        return  pointMapper.pointToPointDto(pointRepository.save(pointMapper.pointDtoToPoint(point)));
+        return pointMapper.pointToPointDto(pointRepository.save(pointMapper.pointDtoToPoint(point)));
     }
 
     @Override
@@ -43,50 +45,73 @@ public class PointServiceJPA implements PointService {
         return pointPage.map(pointMapper::pointToPointDto);
     }
 
+    /***
+     * Delete point by id if exists and return True, if not exists return False
+     * @param pointId
+     * @return Boolean
+     */
     @Override
-    public void deletePointById(UUID pointId) {
-        pointRepository.deleteById(pointId);
+    public Boolean deletePointById(UUID pointId) {
+        if (pointRepository.existsById(pointId)) {
+            pointRepository.deleteById(pointId);
+            return true;
+        }
+        return false;
+
     }
 
     @Override
-    public void updatePointById(UUID pointId, PointDTO pointDTO) {
-        Point pointMapped = pointMapper.pointDtoToPoint(pointDTO);
+    public Optional<PointDTO> updatePointById(UUID pointId, PointDTO pointDTO) {
+        AtomicReference<Optional<PointDTO>> atomicReference = new AtomicReference<>();
 
-        pointRepository.findById(pointId).ifPresent(point -> {
-            point.setName(pointMapped.getName());
-            point.setCoordinates(pointMapped.getCoordinates());
-            pointRepository.save(point);
-        });
+        pointRepository.findById(pointId).ifPresentOrElse(found -> {
+            PointDTO foundDTO = pointMapper.pointToPointDto(found);
+            foundDTO.setName(pointDTO.getName());
+            foundDTO.setCoordinates(pointDTO.getCoordinates());
+
+            atomicReference.set(Optional.of(pointMapper
+                    .pointToPointDto(pointRepository
+                            .save(pointMapper.pointDtoToPoint(foundDTO)))));
+        }, () -> atomicReference.set(Optional.empty()));
+        return atomicReference.get();
     }
 
     @Override
-    public void patchPointById(UUID pointId, PointDTO pointDTO) {
-        pointRepository.findById(pointId).ifPresent(point -> {
-            if (StringUtils.hasText(pointDTO.getName())){
+    public Optional<PointDTO> patchPointById(UUID pointId, PointDTO pointDTO) {
+        AtomicReference<Optional<PointDTO>> atomicReference = new AtomicReference<>();
+
+        pointRepository.findById(pointId).ifPresentOrElse(point -> {
+            if (StringUtils.hasText(pointDTO.getName())) {
                 point.setName(pointDTO.getName());
 
-            } if (pointDTO.getCoordinates() != null){
-                if (pointDTO.getCoordinates().getLatitude() != null){
+            }
+            if (pointDTO.getCoordinates() != null) {
+                if (pointDTO.getCoordinates().getLatitude() != null) {
                     point.getCoordinates().setLatitude(pointDTO.getCoordinates().getLatitude());
                 }
-                if (pointDTO.getCoordinates().getLongitude() != null){
+                if (pointDTO.getCoordinates().getLongitude() != null) {
                     point.getCoordinates().setLongitude(pointDTO.getCoordinates().getLongitude());
                 }
             }
-            pointRepository.save(point);
+            atomicReference.set(Optional.of(pointMapper.pointToPointDto(pointRepository.save(point))));
+
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
+
+        return atomicReference.get();
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;
         if (pageNumber != null && pageNumber > 0) {
-            queryPageNumber = pageNumber -1;
+            queryPageNumber = pageNumber - 1;
         }
         if (pageSize != null && pageSize > 0) {
-            if ( pageSize > 1000){
+            if (pageSize > 1000) {
                 queryPageSize = 1000;
-            }else {
+            } else {
                 queryPageSize = pageSize;
             }
         }

@@ -13,9 +13,9 @@ public interface PointService {
 
     Page<PointDTO> getAllPoints(Integer pageNumber, Integer pageSize);
 
-    void deletePointById(UUID pointId);
+    Boolean deletePointById(UUID pointId);
 
-    void updatePointById(UUID pointId, PointDTO pointDTO);
+    Optional<PointDTO> updatePointById(UUID pointId, PointDTO pointDTO);
 
-    void patchPointById(UUID pointId, PointDTO pointDTO);
+    Optional<PointDTO> patchPointById(UUID pointId, PointDTO pointDTO);
 }

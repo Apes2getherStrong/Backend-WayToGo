@@ -3,6 +3,9 @@ package com.example.waytogo.point.model.entity;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.routes_points.entity.RoutePoint;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,10 +35,14 @@ public class Point {
     private List<RoutePoint> routes;
 
     @Column(name = "name")
+    @NotBlank
+    @NotNull
+    @Size(max = 100)
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id")
+    @NotNull
     private Coordinates coordinates;
 
     @CreationTimestamp
