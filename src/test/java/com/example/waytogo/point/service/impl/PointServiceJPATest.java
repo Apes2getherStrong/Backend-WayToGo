@@ -205,7 +205,26 @@ class PointServiceJPATest {
 
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    void patchTest() {
+        testPoint = pointRepository.findAll().get(0);
 
+        PointDTO pointDTO = pointMapper.pointToPointDto(testPoint);
+        pointDTO.setCoordinates(CoordinatesDTO.builder()
+                .latitude(50.0)
+                .longitude(10.0).build());
+
+        pointService.patchPointById(testPoint.getId(), pointDTO);
+
+        Point point = pointRepository.findById(testPoint.getId()).get();
+        System.out.println(pointDTO.getName());
+        assertEquals(pointDTO.getId(), point.getId());
+        assertEquals(pointDTO.getName(), point.getName());
+        assertEquals(pointDTO.getCoordinates().getLatitude(), point.getCoordinates().getLatitude());
+        assertEquals(pointDTO.getCoordinates().getLongitude(), point.getCoordinates().getLongitude());
+    }
 
     PointDTO getPointDTO() {
         return PointDTO.builder()
