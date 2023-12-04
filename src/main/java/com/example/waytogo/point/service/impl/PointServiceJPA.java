@@ -55,7 +55,7 @@ public class PointServiceJPA implements PointService {
     }
 
     @Override
-    public Optional<PointDTO> updatePointById(UUID pointId, PointDTO pointDTO) {
+    public Optional<PointDTO> updatePointById(UUID pointId,PointDTO pointDTO) {
         AtomicReference<Optional<PointDTO>> atomicReference = new AtomicReference<>();
 
         pointRepository.findById(pointId).ifPresentOrElse(found -> {

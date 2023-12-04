@@ -1,13 +1,16 @@
 package com.example.waytogo.point.service.api;
 
 import com.example.waytogo.point.model.dto.PointDTO;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Validated
 public interface PointService {
-    PointDTO saveNewPoint(PointDTO point);
+    PointDTO saveNewPoint(@Valid PointDTO point);
 
     Optional<PointDTO> getPointById(UUID pointId);
 
