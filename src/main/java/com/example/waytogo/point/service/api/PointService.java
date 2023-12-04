@@ -18,7 +18,7 @@ public interface PointService {
 
     Boolean deletePointById(UUID pointId);
 
-    Optional<PointDTO> updatePointById(UUID pointId, PointDTO pointDTO);
+    Optional<PointDTO> updatePointById(UUID pointId,@Valid PointDTO pointDTO);
 
     Optional<PointDTO> patchPointById(UUID pointId, PointDTO pointDTO);
 }

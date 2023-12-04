@@ -1,5 +1,6 @@
 package com.example.waytogo.point.service.impl;
 
+import com.example.waytogo.point.mapper.PointMapper;
 import com.example.waytogo.point.model.dto.CoordinatesDTO;
 import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.point.model.entity.Coordinates;
@@ -22,6 +23,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class PointServiceJPATest {
     @Autowired
     PointService pointService;
+    @Autowired
+    PointMapper pointMapper;
 
     @Autowired
     PointRepository pointRepository;
@@ -37,6 +42,116 @@ class PointServiceJPATest {
 
     Point testPoint;
     PointDTO testPointDTO;
+
+    @Transactional
+    @Rollback
+    @Test
+    void testUpdatePointByIdNotExists() {
+
+        testPointDTO = getPointDTO();
+        testPointDTO.setId(UUID.randomUUID());
+        testPointDTO.setName("Test Name 2");
+        testPointDTO.setCoordinates(CoordinatesDTO.builder()
+                .latitude(50.0)
+                .longitude(10.0).build());
+
+        pointService.updatePointById(testPointDTO.getId(),testPointDTO);
+
+        Optional<Point> point =  pointRepository.findById(testPointDTO.getId());
+        assertFalse(point.isPresent());
+
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void testUpdatePointById() {
+        testPoint = pointRepository.findAll().get(0);
+
+        testPointDTO = pointMapper.pointToPointDto(testPoint);
+        testPointDTO.setName("Test Name 2");
+        testPointDTO.setCoordinates(CoordinatesDTO.builder()
+                .latitude(50.0)
+                .longitude(10.0).build());
+
+        pointService.updatePointById(testPoint.getId(),testPointDTO).get();
+
+        Point point = pointRepository.findById(testPoint.getId()).get();
+
+        assertEquals(testPointDTO.getId(), point.getId());
+        assertEquals(testPointDTO.getName(), point.getName());
+        assertEquals(testPointDTO.getCoordinates().getLatitude(), point.getCoordinates().getLatitude());
+        assertEquals(testPointDTO.getCoordinates().getLongitude(), point.getCoordinates().getLongitude());
+
+    }
+    @Transactional
+    @Rollback
+    @Test
+    void testUpdatePointByIdBadEntity() {
+        testPoint = pointRepository.findAll().get(0);
+        assertThrows(ConstraintViolationException.class, () -> {
+            pointService.updatePointById(testPoint.getId(),PointDTO.builder().id(testPoint.getId()).build());
+        });
+        // bad values for coordinates
+        assertThrows(ConstraintViolationException.class, () -> {
+            pointService.updatePointById(testPoint.getId(),PointDTO.builder()
+                    .id(testPoint.getId())
+                    .name("Test Name")
+                    .coordinates(CoordinatesDTO.builder()
+                            .latitude(-994.0)
+                            .longitude(1860.0).build())
+                    .build());
+        });
+        // without coordinates
+        assertThrows(ConstraintViolationException.class, () -> {
+            pointService.updatePointById(testPoint.getId(),PointDTO.builder()
+                    .id(testPoint.getId())
+                    .name("Test Name")
+                    .build());
+        });
+        // without name
+        assertThrows(ConstraintViolationException.class, () -> {
+            pointService.updatePointById(testPoint.getId(),PointDTO.builder()
+                    .id(testPoint.getId())
+                    .name("Test Name")
+                    .coordinates(CoordinatesDTO.builder()
+                            .latitude(-994.0)
+                            .longitude(1860.0).build())
+                    .build());
+        });
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void testDeleteByIdDeleted() {
+        testPoint = pointRepository.findAll().get(0);
+
+        pointService.deletePointById(testPoint.getId());
+
+        assertFalse(pointRepository.existsById(testPoint.getId()));
+    }
+    @Transactional
+    @Rollback
+    @Test
+    void testDeleteByIdRandomReturnsFalse() {
+        assertFalse(pointService.deletePointById(UUID.randomUUID()));
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void testGetById() {
+        testPoint = getPoint();
+        Point savedPoint = pointRepository.save(testPoint);
+
+        PointDTO pointDTO = pointService.getPointById(savedPoint.getId()).get();
+
+        assertEquals(savedPoint.getId(), pointDTO.getId());
+        assertEquals(savedPoint.getName(), pointDTO.getName());
+        assertEquals(savedPoint.getCoordinates().getLatitude(), pointDTO.getCoordinates().getLatitude());
+        assertEquals(savedPoint.getCoordinates().getLongitude(), pointDTO.getCoordinates().getLongitude());
+    }
 
     @Transactional
     @Rollback
