@@ -219,7 +219,7 @@ class PointServiceJPATest {
         pointService.patchPointById(testPoint.getId(), pointDTO);
 
         Point point = pointRepository.findById(testPoint.getId()).get();
-        System.out.println(pointDTO.getName());
+
         assertEquals(pointDTO.getId(), point.getId());
         assertEquals(pointDTO.getName(), point.getName());
         assertEquals(pointDTO.getCoordinates().getLatitude(), point.getCoordinates().getLatitude());
