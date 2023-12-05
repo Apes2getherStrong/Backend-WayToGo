@@ -31,6 +31,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Audio> audios;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<Route> routes;
 }
