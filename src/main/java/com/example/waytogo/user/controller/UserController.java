@@ -15,8 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-    private static final String USER_PATH = "/api/users";
-    private static final String USER_PATH_ID = USER_PATH + "/{userId}";
+    public static final String USER_PATH = "/api/users";
+    public static final String USER_PATH_ID = USER_PATH + "/{userId}";
 
     private final UserService userService;
 
@@ -37,7 +37,7 @@ public class UserController {
         UserDTO savedUser = userService.saveNewUser(userDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", USER_PATH + savedUser.getUserId().toString());
+        headers.add("Location", USER_PATH + "/" + savedUser.getUserId().toString());
 
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
@@ -52,7 +52,9 @@ public class UserController {
 
     @DeleteMapping(USER_PATH_ID)
     public ResponseEntity<Void> deleteUserById(@PathVariable("userId") UUID userId) {
-        userService.deleteUserById(userId);
+            if (!userService.deleteUserById(userId)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

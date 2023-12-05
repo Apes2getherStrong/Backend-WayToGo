@@ -25,7 +25,7 @@ public class Route {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
     private List<RoutePoint> routePoints;
 
     private String name;
