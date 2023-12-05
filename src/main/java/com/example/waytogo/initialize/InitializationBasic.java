@@ -9,7 +9,6 @@ import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.routes_points.entity.RoutePoint;
 import com.example.waytogo.routes_points.repository.RoutePointRepository;
-import com.example.waytogo.routes_points.service.api.RoutePointService;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class initializationBasic implements InitializingBean {
+public class InitializationBasic implements InitializingBean {
     private final PointRepository pointRepository;
     private final RoutePointRepository routePointRepository;
     private final RouteRepository routeRepository;
