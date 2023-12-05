@@ -52,8 +52,12 @@ public class UserServiceJPA implements UserService {
     }
 
     @Override
-    public void deleteUserById(UUID userId) {
-        userRepository.deleteById(userId);
+    public boolean deleteUserById(UUID userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+            return true;
+        }
+        return false;
     }
 
     @Override
