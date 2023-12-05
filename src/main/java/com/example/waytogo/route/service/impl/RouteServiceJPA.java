@@ -5,19 +5,23 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.user.model.entity.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Primary
 @RequiredArgsConstructor
+@Validated
 public class RouteServiceJPA implements RouteService {
     private final RouteRepository routeRepository;
     private final RouteMapper routeMapper;
@@ -42,7 +46,7 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public RouteDTO saveNewRoute(RouteDTO routeDTO) {
+    public RouteDTO saveNewRoute(@Valid RouteDTO routeDTO) {
         return routeMapper.routeToRouteDto(routeRepository.save(routeMapper.routeDtoToRoute(routeDTO)));
     }
 
@@ -53,8 +57,12 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public void deleteRouteById(UUID routeId) {
-        routeRepository.deleteById(routeId);
+    public Boolean deleteRouteById(UUID routeId) {
+        if(routeRepository.existsById(routeId)) {
+            routeRepository.deleteById(routeId);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -65,7 +73,19 @@ public class RouteServiceJPA implements RouteService {
             }
             routeRepository.save(foundRoute);
         });
+
     }
+
+    @Override
+    public Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+        Page<Route> routePage;
+        routePage = routeRepository.findByUser_UserId(userId, pageRequest);
+
+        return routePage.map(routeMapper::routeToRouteDto);
+    }
+
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;
