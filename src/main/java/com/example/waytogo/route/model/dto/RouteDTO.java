@@ -21,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RouteDTO {
 
-    @NotNull
     private UUID id;
 
     private UserDTO user;
