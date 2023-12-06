@@ -36,4 +36,16 @@ public class Route {
     @NotNull
     @Size(max=32)
     private String name;
+
+    /*
+    @Transient
+    MultipartFile file;
+
+    @Column(name = "file_path")
+    String filePath;
+
+    @Column(name = "description"
+    @Size(max=150)
+    String description;
+    */
 }
