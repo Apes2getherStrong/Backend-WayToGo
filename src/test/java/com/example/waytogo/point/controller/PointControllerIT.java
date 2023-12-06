@@ -61,6 +61,34 @@ public class PointControllerIT {
     @Rollback
     @Transactional
     @Test
+    void updateExistingPoint(){
+        Point point = pointRepository.findAll().get(0);
+        PointDTO pointDTO = pointMapper.pointToPointDto(point);
+
+        final String newName = "changed name";
+        final Double newLongitude = 0.9213123;
+        final Double newLatitude = 63.324213;
+
+
+        pointDTO.setName("changed name");
+        pointDTO.setCoordinates(CoordinatesDTO.builder()
+                .longitude(newLongitude)
+                .latitude(newLatitude)
+                .build());
+
+        ResponseEntity<Void> responseEntity = pointController.putPointById(point.getId(),pointDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Point updatedPoint = pointRepository.findById(point.getId()).get();
+        assertThat(updatedPoint.getCoordinates().getLatitude()).isEqualTo(newLatitude);
+        assertThat(updatedPoint.getCoordinates().getLongitude()).isEqualTo(newLongitude);
+
+
+    }
+
+    @Rollback
+    @Transactional
+    @Test
     void saveNewPointTest(){
         PointDTO pointDTO = PointDTO.builder()
                 .name("test point")
