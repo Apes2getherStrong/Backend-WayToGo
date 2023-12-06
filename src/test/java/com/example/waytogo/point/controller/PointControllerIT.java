@@ -58,6 +58,32 @@ public class PointControllerIT {
     void tenPierwszy() {
     }
 
+    @Test
+    void testDeleteByIdNotFound() {
+        assertThrows(ResponseStatusException.class, () ->{
+            pointController.deletePointById(UUID.randomUUID());
+        });
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testGetByIdNotFound(){
+        Point point = pointRepository.findAll().get(0);
+
+        ResponseEntity<Void> responseEntity = pointController.deletePointById(point.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        assertThat(pointRepository.findById(point.getId())).isEmpty();
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        assertThrows(ResponseStatusException.class, () ->{
+            pointController.putPointById(UUID.randomUUID(), PointDTO.builder().name("test").coordinates(CoordinatesDTO.builder().longitude(12.2).latitude(13.2).build()).build());
+        });
+    }
+
     @Rollback
     @Transactional
     @Test

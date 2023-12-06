@@ -15,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class PointDTO {
     private UUID id;
+
     @NotBlank
     @NotNull
     @Size(max = 100)
@@ -22,6 +23,7 @@ public class PointDTO {
     @NotNull
     @Valid
     private CoordinatesDTO coordinates;
+
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 }
