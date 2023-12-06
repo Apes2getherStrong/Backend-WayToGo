@@ -5,6 +5,10 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
+import com.example.waytogo.user.model.dto.UserDTO;
+import com.example.waytogo.user.model.entity.User;
+import com.example.waytogo.user.repository.UserRepository;
+import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,6 +81,9 @@ class RouteControllerIT {
     WebApplicationContext wac;
     MockMvc mockMvc;
 
+    @Autowired
+    UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -123,8 +130,9 @@ class RouteControllerIT {
                 .andExpect(jsonPath("$.name", is(testRouteDTO.getName())));
     }
 
+
     @Test
-    void getRoutesByUserId() throws Exception{
+    void getRoutesByUserIdEmpty() throws Exception{
 
         mockMvc.perform(get(RouteController.ROUTE_PATH_ID_USER, UUID.randomUUID())
                         .param("pageNumber", "0")
@@ -133,6 +141,24 @@ class RouteControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(0)));
+
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void getRoutesByUserId() throws Exception{
+
+        User user = userRepository.findAll().get(0);
+        user.setRoutes(Collections.emptyList());
+        Route route = routeRepository.findAll().get(0);
+        route.setUser(user);
+
+        Page<RouteDTO> routePage = routeController.getRoutesByUserId(user.getUserId(), 0, 10);
+        List<RouteDTO> routes = routePage.stream().toList();
+
+        assertThat(routes.size()).isEqualTo(1);
+        assertThat(routes.get(0).getName()).isEqualTo(route.getName());
 
     }
 
@@ -151,6 +177,21 @@ class RouteControllerIT {
                         .content(objectMapper.writeValueAsString(testRouteDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void postRouteCheckRepository() throws Exception {
+        RouteDTO testRouteDTO = RouteDTO.builder()
+                .name("postRouteITTestName")
+                .id(UUID.randomUUID())
+                .build();
+
+        ResponseEntity<RouteDTO> responseEntity = routeController.postRoute(testRouteDTO);
+        UUID id = responseEntity.getBody().getId();
+        Route repositoryRoute = routeRepository.findById(id).get();
+        assertThat(testRouteDTO.getName()).isEqualTo(repositoryRoute.getName());
     }
 
 
