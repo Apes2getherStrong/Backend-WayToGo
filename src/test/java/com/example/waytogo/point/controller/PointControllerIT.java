@@ -5,6 +5,7 @@ import com.example.waytogo.point.model.dto.CoordinatesDTO;
 import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.point.model.entity.Point;
 import com.example.waytogo.point.repository.PointRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,18 +17,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 public class PointControllerIT {
@@ -47,6 +56,7 @@ public class PointControllerIT {
     WebApplicationContext wac;
 
     MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -57,18 +67,46 @@ public class PointControllerIT {
     @Disabled
     void tenPierwszy() {
     }
+    @Test
+    @Disabled
+    @DisplayName("z usuwaniem problem przez polaczenia z reszta")
+    void testyNaListBrakuje(){
+
+    }
 
     @Test
     void testDeleteByIdNotFound() {
-        assertThrows(ResponseStatusException.class, () ->{
+        assertThrows(ResponseStatusException.class, () -> {
             pointController.deletePointById(UUID.randomUUID());
         });
+    }
+
+    // no ogolnie to cos mi tu nie dzialalo jak chcialem parametry coordinates zmienic w sensie to do zapisywania jakos nie sprawdzalo poprawnosci zbytnio
+    @Test
+    void testPatchPointBadName() throws Exception {
+        Point point = pointRepository.findAll().get(0);
+
+        Map<String, Object> pointMap = new HashMap<>();
+
+        pointMap.put("name", "abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890");
+
+        MvcResult result = mockMvc.perform(patch(PointController.POINT_PATH_ID, point.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(pointMap)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andReturn();
+
+        System.out.println(result.getResponse().getContentAsString());
+
+
     }
 
     @Rollback
     @Transactional
     @Test
-    void testGetByIdNotFound(){
+    void testGetByIdNotFound() {
         Point point = pointRepository.findAll().get(0);
 
         ResponseEntity<Void> responseEntity = pointController.deletePointById(point.getId());
@@ -79,7 +117,7 @@ public class PointControllerIT {
 
     @Test
     void testUpdateNotFound() {
-        assertThrows(ResponseStatusException.class, () ->{
+        assertThrows(ResponseStatusException.class, () -> {
             pointController.putPointById(UUID.randomUUID(), PointDTO.builder().name("test").coordinates(CoordinatesDTO.builder().longitude(12.2).latitude(13.2).build()).build());
         });
     }
@@ -87,7 +125,7 @@ public class PointControllerIT {
     @Rollback
     @Transactional
     @Test
-    void updateExistingPoint(){
+    void updateExistingPoint() throws JsonProcessingException {
         Point point = pointRepository.findAll().get(0);
         PointDTO pointDTO = pointMapper.pointToPointDto(point);
 
@@ -102,7 +140,8 @@ public class PointControllerIT {
                 .latitude(newLatitude)
                 .build());
 
-        ResponseEntity<Void> responseEntity = pointController.putPointById(point.getId(),pointDTO);
+
+        ResponseEntity<Void> responseEntity = pointController.putPointById(point.getId(), pointDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Point updatedPoint = pointRepository.findById(point.getId()).get();
@@ -115,7 +154,7 @@ public class PointControllerIT {
     @Rollback
     @Transactional
     @Test
-    void saveNewPointTest(){
+    void saveNewPointTest() {
         PointDTO pointDTO = PointDTO.builder()
                 .name("test point")
                 .coordinates(
@@ -142,24 +181,26 @@ public class PointControllerIT {
     }
 
     @Test
-    void testPointIdNotFound(){
-        assertThrows(ResponseStatusException.class, ()->{
+    void testPointIdNotFound() {
+        assertThrows(ResponseStatusException.class, () -> {
             pointController.getPointById(UUID.randomUUID());
         });
     }
+
     @Test
-    void getPointById(){
+    void getPointById() {
         Point point = pointRepository.findAll().get(0);
         PointDTO pointDTO = pointController.getPointById(point.getId()).getBody();
 
         assertThat(pointDTO).isNotNull();
         assertThat(pointDTO.getId()).isEqualTo(point.getId());
     }
+
     @Test
     @DisplayName("jak bedzie wiecej danych to odpalic")
     @Disabled
-    void listPoints(){
-        Page<PointDTO> dtos = pointController.getAllPoints(1,2141).getBody();
+    void listPoints() {
+        Page<PointDTO> dtos = pointController.getAllPoints(1, 2141).getBody();
         assertThat(dtos.getContent().size()).isEqualTo(1000);
     }
 
@@ -168,9 +209,9 @@ public class PointControllerIT {
     @Test
     @Disabled
     @DisplayName("z usuwaniem problem przez polaczenia z reszta")
-    void testEmptyList(){
+    void testEmptyList() {
         pointRepository.deleteAll();
-        Page<PointDTO> dtos = pointController.getAllPoints(1,25).getBody();
+        Page<PointDTO> dtos = pointController.getAllPoints(1, 25).getBody();
         assertThat(dtos.getContent().size()).isEqualTo(0);
 
     }
