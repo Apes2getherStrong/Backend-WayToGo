@@ -57,17 +57,9 @@ class UserControllerTest {
 
     User user1;
     User user2;
-    User user3;
-    User userNoLogin;
-    User userNoPassword;
-    User userNoUsername;
 
     UserDTO userDTO1;
     UserDTO userDTO2;
-    UserDTO userDTO3;
-    UserDTO userNoLoginDTO;
-    UserDTO userNoPasswordDTO;
-    UserDTO userNoUsernameDTO;
 
     @BeforeEach
     void setUp() {
@@ -84,34 +76,9 @@ class UserControllerTest {
                 .username("username2")
                 .password("password2")
                 .build();
-        user3 = User.builder()
-                .id(UUID.randomUUID())
-                .login("login3")
-                .username("username3")
-                .password("password3")
-                .build();
-        userNoLogin = User.builder()
-                .id(UUID.randomUUID())
-                .username("username")
-                .password("password")
-                .build();
-        userNoPassword = User.builder()
-                .id(UUID.randomUUID())
-                .login("login")
-                .username("username")
-                .build();
-        userNoUsername = User.builder()
-                .id(UUID.randomUUID())
-                .login("login")
-                .password("password")
-                .build();
 
         userDTO1 = userMapper.userToUserDto(user1);
         userDTO2 = userMapper.userToUserDto(user2);
-        userDTO3 = userMapper.userToUserDto(user3);
-        userNoLoginDTO = userMapper.userToUserDto(userNoLogin);
-        userNoPasswordDTO = userMapper.userToUserDto(userNoLogin);
-        userNoUsernameDTO = userMapper.userToUserDto(userNoUsername);
     }
 
     @Test
