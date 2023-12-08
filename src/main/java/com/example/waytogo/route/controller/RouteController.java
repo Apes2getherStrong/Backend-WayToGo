@@ -14,8 +14,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
-    public final String ROUTE_PATH = "api/routes";
-    public final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeID}";
+    public final String ROUTE_PATH = "api/v1/routes";
+    public final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
     private final RouteServiceJPA routeService;
 
     @GetMapping(ROUTE_PATH)
