@@ -54,7 +54,7 @@ public class AudioServiceJPA implements AudioService {
         PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
 
         Page<Audio> audioPage;
-        audioPage = audioRepository.findByUser_UserId(userId, pageRequest);
+        audioPage = audioRepository.findByUser_Id(userId, pageRequest);
 
         return audioPage.map(audioMapper::audioToAudioDto);
     }
