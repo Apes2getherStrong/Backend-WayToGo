@@ -19,7 +19,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id", updatable = false, nullable = false)
     UUID userId;
 
     String username;
@@ -31,6 +30,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Audio> audios;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user")
     List<Route> routes;
 }

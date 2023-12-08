@@ -53,7 +53,7 @@ public class initializationBasic implements InitializingBean {
 
         Route r1 = Route.builder()
                 .user(u1)
-                .name("route1")
+                .name("r1")
                 .build();
         routeRepository.save(r1);
 

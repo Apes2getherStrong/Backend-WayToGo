@@ -2,7 +2,6 @@ package com.example.waytogo.routes_points.service.api;
 
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.routes_points.entity.RoutePoint;
-import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +13,11 @@ public interface RoutePointService {
 
     Optional<RoutePoint> getRoutePointById(UUID routePointId);
 
-    RoutePoint saveNewRoutePoint(@Valid RoutePoint routePoint);
+    RoutePoint saveNewRoutePoint(RoutePoint routePoint);
 
     RoutePoint updateRoutePointById(UUID routePointId, RoutePoint routePoint);
 
-    Boolean deleteRoutePointById(UUID routePointId);
+    void deleteRoutePointById(UUID routePointId);
 
 
 
