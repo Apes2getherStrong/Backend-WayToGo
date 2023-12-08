@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,8 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-    public static final String USER_PATH = "/api/v1/users";
-    public static final String USER_PATH_ID = USER_PATH + "/{userId}";
+    private static final String USER_PATH = "/api/users";
+    private static final String USER_PATH_ID = USER_PATH + "/{userId}";
 
     private final UserService userService;
 
@@ -34,11 +33,11 @@ public class UserController {
     }
 
     @PostMapping(USER_PATH)
-    public ResponseEntity<UserDTO> postUser(@Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> postUser(@RequestBody UserDTO userDTO) {
         UserDTO savedUser = userService.saveNewUser(userDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", USER_PATH + "/" + savedUser.getId().toString());
+        headers.add("Location", USER_PATH + savedUser.getUserId().toString());
 
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
@@ -48,14 +47,12 @@ public class UserController {
                                                @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUserById(userId, userDTO);
 
-        return new ResponseEntity<>(updatedUser, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     @DeleteMapping(USER_PATH_ID)
     public ResponseEntity<Void> deleteUserById(@PathVariable("userId") UUID userId) {
-            if (!userService.deleteUserById(userId)) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
+        userService.deleteUserById(userId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -63,9 +60,7 @@ public class UserController {
 
     @PatchMapping(USER_PATH_ID)
     public ResponseEntity<Void> patchUserById(@PathVariable("userId") UUID userId, @RequestBody UserDTO userDTO) {
-        if(userService.patchUserById(userId, userDTO).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        userService.patchUserById(userId, userDTO);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

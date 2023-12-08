@@ -10,17 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
 public class AudioController {
 
-    private static final String AUDIO_PATH = "/api/v1/audios";
+    private static final String AUDIO_PATH = "/api/audios";
     private static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
-    private static final String USER_PATH_ID_AUDIOS = "/api/v1/users/{userId}/audios"; //Getting all audios from one user
+    private static final String USER_PATH_ID_AUDIOS = "/api/users/{userId}/audios"; //Getting all audios from one user
 
-    private final AudioService audioService;
+    AudioService audioService;
 
     @GetMapping(AUDIO_PATH)
     public Page<AudioDTO> getAllAudios(@RequestParam(required = false) Integer pageNumber,
@@ -35,10 +36,8 @@ public class AudioController {
     }
 
     @GetMapping(USER_PATH_ID_AUDIOS)
-    public ResponseEntity<Page<AudioDTO>> getAllAudiosByUserId(@PathVariable("userId") UUID userId,
-                                                               @RequestParam(required = false) Integer pageNumber,
-                                                               @RequestParam(required = false) Integer pageSize) {
-        Page<AudioDTO> audioDTOList = audioService.getAllAudiosByUserId(userId, pageNumber, pageSize);
+    public ResponseEntity<List<AudioDTO>> getAllAudiosByUserId(@PathVariable("userId") UUID userId) {
+        List<AudioDTO> audioDTOList = audioService.getAllAudiosByUserId(userId);
 
         return new ResponseEntity<>(audioDTOList, HttpStatus.OK);
     }

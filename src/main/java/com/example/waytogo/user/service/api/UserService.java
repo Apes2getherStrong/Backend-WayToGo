@@ -1,24 +1,21 @@
 package com.example.waytogo.user.service.api;
 
 import com.example.waytogo.user.model.dto.UserDTO;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Validated
 public interface UserService {
     Page<UserDTO> getAllUsers(Integer pageNumber, Integer pageSize);
 
     Optional<UserDTO> getUserById(UUID userId);
 
-    UserDTO saveNewUser(@Valid UserDTO userDTO);
+    UserDTO saveNewUser(UserDTO userDTO);
 
-    UserDTO updateUserById(UUID userId,@Valid UserDTO userDTO);
+    UserDTO updateUserById(UUID userId, UserDTO userDTO);
 
-    boolean deleteUserById(UUID userId);
+    void deleteUserById(UUID userId);
 
-    Optional<UserDTO> patchUserById(UUID userId, UserDTO userDTO);
+    void patchUserById(UUID userId, UserDTO userDTO);
 }

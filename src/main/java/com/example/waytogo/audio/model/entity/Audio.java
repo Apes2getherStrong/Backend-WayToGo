@@ -20,7 +20,7 @@ public class Audio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "audio_id", updatable = false, nullable = false)
-    UUID id;
+    UUID uuid;
 
     @Column(name = "audio_name")
     String name;

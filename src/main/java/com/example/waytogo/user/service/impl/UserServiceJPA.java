@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 @RequiredArgsConstructor
 @Service
@@ -48,24 +47,19 @@ public class UserServiceJPA implements UserService {
 
     @Override
     public UserDTO updateUserById(UUID userId, UserDTO userDTO) {
-        userDTO.setId(userId);
+        userDTO.setUserId(userId);
         return userMapper.userToUserDto(userRepository.save(userMapper.userDtoToUser(userDTO)));
     }
 
     @Override
-    public boolean deleteUserById(UUID userId) {
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
-            return true;
-        }
-        return false;
+    public void deleteUserById(UUID userId) {
+        userRepository.deleteById(userId);
     }
 
     @Override
-    public Optional<UserDTO> patchUserById(UUID userId, UserDTO userDTO) {
-        AtomicReference<Optional<UserDTO>> atomicReference = new AtomicReference<>();
+    public void patchUserById(UUID userId, UserDTO userDTO) {
 
-        userRepository.findById(userId).ifPresentOrElse(foundUser -> {
+        userRepository.findById(userId).ifPresent(foundUser -> {
             if (StringUtils.hasText(userDTO.getPassword())) {
                 foundUser.setPassword(userDTO.getPassword());
             }
@@ -75,12 +69,8 @@ public class UserServiceJPA implements UserService {
             if (StringUtils.hasText(userDTO.getUsername())) {
                 foundUser.setUsername(userDTO.getUsername());
             }
-            atomicReference.set(Optional.of(userMapper.userToUserDto(userRepository.save(foundUser))));
-        }, () -> {
-            atomicReference.set(Optional.empty());
+            userRepository.save(foundUser);
         });
-
-        return atomicReference.get();
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {

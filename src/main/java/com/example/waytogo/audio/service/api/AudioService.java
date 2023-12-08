@@ -3,6 +3,7 @@ package com.example.waytogo.audio.service.api;
 import com.example.waytogo.audio.model.dto.AudioDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public interface AudioService {
 
     Optional<AudioDTO> getAudioById(UUID audioId);
 
-    Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize);
+    List<AudioDTO> getAllAudiosByUserId(UUID userId);
 
     AudioDTO saveNewAudio(AudioDTO audioDTO);
 
