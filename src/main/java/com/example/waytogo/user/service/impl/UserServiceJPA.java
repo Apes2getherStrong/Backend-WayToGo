@@ -48,7 +48,7 @@ public class UserServiceJPA implements UserService {
     @Override
     public UserDTO updateUserById(UUID userId, UserDTO userDTO) {
         userDTO.setUserId(userId);
-        return this.saveNewUser(userDTO);
+        return userMapper.userToUserDto(userRepository.save(userMapper.userDtoToUser(userDTO)));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class UserServiceJPA implements UserService {
             }
         }
 
-        Sort sort = Sort.by(Sort.Order.asc("userName"));
+        Sort sort = Sort.by(Sort.Order.asc("username"));
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
