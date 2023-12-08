@@ -18,9 +18,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
-    public static final String ROUTE_PATH = "/api/routes";
+    public static final String ROUTE_PATH = "/api/v1/routes";
     public static final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
-    public static final String ROUTE_PATH_ID_USER = "/api/routes/{userId}/routes";
+    public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
     private final RouteService routeService;
 
 
