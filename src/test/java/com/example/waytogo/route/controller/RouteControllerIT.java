@@ -10,8 +10,7 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -33,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -270,4 +268,21 @@ class RouteControllerIT {
         Route patchedRoute = routeRepository.findById(route.getId()).get();
         assertThat(patchedRoute.getName()).isEqualTo(newRouteName);
     }
+
+    @Rollback
+    @Transactional
+    @Test
+    @Disabled
+    @DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
+    void testRouteExistanceAfterUserDeletion() {
+        User user = userRepository.findAll().get(0);
+        user.setRoutes(Collections.emptyList());
+        Route route = routeRepository.findAll().get(0);
+        route.setUser(user);
+
+        //userRepository.deleteById(user.getUserId());
+        //assertThat(routeRepository.existsById(route.getId())).isTrue();
+
+    }
+
 }
