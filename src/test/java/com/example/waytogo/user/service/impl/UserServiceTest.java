@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -21,36 +24,36 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class UserServiceTest {
 
-    @Mock
+    @Autowired
     UserRepository userRepository;
 
-    @InjectMocks
+    @Autowired
     UserServiceJPA userService;
 
+    @Autowired
     UserMapper userMapper;
 
-    @BeforeEach
-    void setUp() {
-        userMapper = new UserMapperImpl();
-    }
-
+    @Transactional
+    @Rollback
     @Test
     void testSaveUser() {
-        UserDTO user = UserDTO.builder()
+        User user = User.builder()
                 .password("haslo")
                 .login("login")
                 .username("username")
                 .build();
 
-        //UserDTO userDTO = userMapper.userToUserDto(user);
+        UserDTO userDTO = userMapper.userToUserDto(user);
 
-        when(userService.saveNewUser(any(UserDTO.class))).thenReturn(user);
-
-        UserDTO savedUser = userService.saveNewUser(user);
+        UserDTO savedUser = userService.saveNewUser(userDTO);
 
         assertThat(savedUser).isNotNull();
+    }
+
+    @Test
+    void testSave() {
     }
 }

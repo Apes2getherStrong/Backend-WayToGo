@@ -6,8 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface AudioMapper {
-
     Audio audioDtoToAudio(AudioDTO dto);
     AudioDTO audioToAudioDto(Audio audio);
-
 }

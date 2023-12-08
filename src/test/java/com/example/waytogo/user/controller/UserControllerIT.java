@@ -5,7 +5,6 @@ import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
-import com.example.waytogo.user.service.impl.UserServiceJPA;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,20 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +28,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 class UserControllerIT {
@@ -85,7 +78,7 @@ class UserControllerIT {
     void testGetUserById() {
         User user = userRepository.findAll().get(0);
 
-        ResponseEntity<UserDTO> dto = userController.getUserById(user.getUserId());
+        ResponseEntity<UserDTO> dto = userController.getUserById(user.getId());
 
         assertThat(dto.getBody()).isNotNull();
     }
@@ -113,8 +106,9 @@ class UserControllerIT {
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
         String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
-        //System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[3] );
-        UUID savedUUID = UUID.fromString(locationUUID[3]);
+        System.out.println(responseEntity.getHeaders().getLocation().getPath());
+        System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[4] );
+        UUID savedUUID = UUID.fromString(locationUUID[4]);
 
         User user = userRepository.findById(savedUUID).get();
         assertThat(user).isNotNull();
@@ -126,15 +120,15 @@ class UserControllerIT {
     void testUpdateExistingUser() {
         User user = userRepository.findAll().get(0);
         UserDTO userDTO = userMapper.userToUserDto(user);
-        userDTO.setUserId(null);
+        userDTO.setId(null);
 
         final String username = "UPDATED";
         userDTO.setUsername(username);
 
-        ResponseEntity responseEntity = userController.putUserById(user.getUserId(), userDTO);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        ResponseEntity responseEntity = userController.putUserById(user.getId(), userDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        User updatedUser = userRepository.findById(user.getUserId()).get();
+        User updatedUser = userRepository.findById(user.getId()).get();
         assertThat(updatedUser.getUsername()).isEqualTo(username);
     }
 
@@ -144,10 +138,10 @@ class UserControllerIT {
     void testDeleteById() {
         User user = userRepository.findAll().get(0);
 
-        ResponseEntity responseEntity = userController.deleteUserById(user.getUserId());
+        ResponseEntity responseEntity = userController.deleteUserById(user.getId());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        assertThat(userRepository.findById(user.getUserId())).isEmpty();
+        assertThat(userRepository.findById(user.getId())).isEmpty();
     }
 
     @Test
@@ -165,15 +159,15 @@ class UserControllerIT {
         UserDTO userDTO = userMapper.userToUserDto(user);
 
         final String username = "UPDATED";
-        userDTO.setUserId(null);
+        userDTO.setId(null);
         userDTO.setUsername(username);
         userDTO.setLogin(null);
         userDTO.setPassword(null);
 
-        ResponseEntity responseEntity = userController.patchUserById(user.getUserId(), userDTO);
+        ResponseEntity responseEntity = userController.patchUserById(user.getId(), userDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        User updatedUser = userRepository.findById(user.getUserId()).get();
+        User updatedUser = userRepository.findById(user.getId()).get();
         assertThat(updatedUser.getUsername()).isEqualTo(username);
         assertThat(updatedUser.getLogin()).isEqualTo(user.getLogin());
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
@@ -184,14 +178,14 @@ class UserControllerIT {
         User user = userRepository.findAll().get(0);
         UserDTO userDTO = userMapper.userToUserDto(user);
 
-        userDTO.setUserId(null);
+        userDTO.setId(null);
         userDTO.setUsername("123456789012345678901234567890");
 
         /*Map<String, Object> userMap = new HashMap<>();
         userMap.put("username", "New Name 123456789012345678901234567890");*/
 
         assertThrows(TransactionSystemException.class, () -> {
-            userController.patchUserById(user.getUserId(), userDTO);
+            userController.patchUserById(user.getId(), userDTO);
         });
 
         /*MvcResult result = mockMvc.perform(patch(UserController.USER_PATH_ID, user.getUserId())

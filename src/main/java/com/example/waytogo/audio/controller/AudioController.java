@@ -16,9 +16,9 @@ import java.util.UUID;
 @RestController
 public class AudioController {
 
-    private static final String AUDIO_PATH = "/api/audios";
+    private static final String AUDIO_PATH = "/api/v1/audios";
     private static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
-    private static final String USER_PATH_ID_AUDIOS = "/api/users/{userId}/audios"; //Getting all audios from one user
+    private static final String USER_PATH_ID_AUDIOS = "/api/v1/users/{userId}/audios"; //Getting all audios from one user
 
     private final AudioService audioService;
 
