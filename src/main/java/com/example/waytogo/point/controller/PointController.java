@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,8 +19,8 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class PointController {
-    private final static String POINT_PATH = "/api/v1/points";
-    private final static String POINT_PATH_ID = POINT_PATH + "/{pointId}";
+    public final static String POINT_PATH = "/api/v1/points";
+    public final static String POINT_PATH_ID = POINT_PATH + "/{pointId}";
     private final PointService pointService;
 
     @GetMapping(POINT_PATH)
@@ -35,7 +36,7 @@ public class PointController {
     }
 
     @PostMapping(POINT_PATH)
-    public ResponseEntity<Void> postPoint(@RequestBody PointDTO pointDTO) {
+    public ResponseEntity<Void> postPoint(@Validated @RequestBody PointDTO pointDTO) {
         PointDTO point = pointService.saveNewPoint(pointDTO);
 
         HttpHeaders headers = new HttpHeaders();
@@ -45,21 +46,27 @@ public class PointController {
     }
 
     @PutMapping(POINT_PATH_ID)
-    public ResponseEntity<Void> putPointById(@PathVariable("pointId") UUID pointId, @RequestBody PointDTO pointDTO) {
-        pointService.updatePointById(pointId, pointDTO);
+    public ResponseEntity<Void> putPointById(@PathVariable("pointId") UUID pointId,@Validated @RequestBody PointDTO pointDTO) {
+        if (pointService.updatePointById(pointId, pointDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(POINT_PATH_ID)
     public ResponseEntity<Void> deletePointById(@PathVariable("pointId") UUID pointId) {
-        pointService.deletePointById(pointId);
+        if (!pointService.deletePointById(pointId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
     @PatchMapping(POINT_PATH_ID)
     public ResponseEntity<Void> patchPointById(@PathVariable("pointId") UUID pointId, @RequestBody PointDTO pointDTO) {
-        pointService.patchPointById(pointId, pointDTO);
+        if (pointService.patchPointById(pointId, pointDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
