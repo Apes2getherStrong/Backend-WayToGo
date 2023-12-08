@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,10 +43,10 @@ class UserRepositoryTest {
         User savedUser = userRepository.save(user);
         userRepository.flush();
 
-        User foundUser = userRepository.findById(savedUser.getUserId()).get();
+        User foundUser = userRepository.findById(savedUser.getId()).get();
 
         assertThat(foundUser).isNotNull();
-        assertThat(foundUser.getUserId()).isEqualTo(savedUser.getUserId());
+        assertThat(foundUser.getId()).isEqualTo(savedUser.getId());
     }
 
     @Test
@@ -136,12 +135,12 @@ class UserRepositoryTest {
         userRepository.flush();
 
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getUserId()).isNotNull();
-        assertThat(savedUser.getUserId().toString()).isGreaterThan("0");
+        assertThat(savedUser.getId()).isNotNull();
+        assertThat(savedUser.getId().toString()).isGreaterThan("0");
     }
 
     @Test
-    void testUpdateuser() {
+    void testUpdateUser() {
         User savedUser = userRepository.save(User.builder()
                 .password("haslo")
                 .login("login")
@@ -169,8 +168,8 @@ class UserRepositoryTest {
                 .username("username")
                 .build());
 
-        userRepository.deleteById(savedUser.getUserId());
-        Optional<User> returnedUser = userRepository.findById(savedUser.getUserId());
+        userRepository.deleteById(savedUser.getId());
+        Optional<User> returnedUser = userRepository.findById(savedUser.getId());
 
         assertThat(returnedUser).isEmpty();
     }

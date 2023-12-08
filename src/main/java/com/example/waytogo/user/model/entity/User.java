@@ -2,6 +2,7 @@ package com.example.waytogo.user.model.entity;
 
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.route.model.entity.Route;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", updatable = false, nullable = false)
-    UUID userId;
+    UUID id;
 
     @NotNull
     @NotBlank
