@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface RouteRepository  extends JpaRepository<Route, UUID> {
 
-    Page<Route> findByUser_UserId(UUID userId, PageRequest pageRequest);
+    Page<Route> findByUser_Id(UUID userId, PageRequest pageRequest);
 }

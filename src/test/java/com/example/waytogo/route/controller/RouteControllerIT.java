@@ -152,7 +152,7 @@ class RouteControllerIT {
         Route route = routeRepository.findAll().get(0);
         route.setUser(user);
 
-        Page<RouteDTO> routePage = routeController.getRoutesByUserId(user.getUserId(), 0, 10);
+        Page<RouteDTO> routePage = routeController.getRoutesByUserId(user.getId(), 0, 10);
         List<RouteDTO> routes = routePage.stream().toList();
 
         assertThat(routes.size()).isEqualTo(1);

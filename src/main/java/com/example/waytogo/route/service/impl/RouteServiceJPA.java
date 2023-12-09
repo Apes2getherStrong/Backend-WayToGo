@@ -81,7 +81,7 @@ public class RouteServiceJPA implements RouteService {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
-        routePage = routeRepository.findByUser_UserId(userId, pageRequest);
+        routePage = routeRepository.findByUser_Id(userId, pageRequest);
 
         return routePage.map(routeMapper::routeToRouteDto);
     }

@@ -38,7 +38,7 @@ class RouteMapperTest {
                 .build();
 
         User user = User.builder()
-                .userId(UUID.fromString("64236c2a-9124-11ee-b9d1-0242ac120002"))
+                .id(UUID.fromString("64236c2a-9124-11ee-b9d1-0242ac120002"))
                 .routes(List.of(testRoute))
                 .login("login")
                 .password("password")
