@@ -1,22 +1,28 @@
 package com.example.waytogo.route.controller;
 
 import com.example.waytogo.route.model.dto.RouteDTO;
+import com.example.waytogo.route.service.api.RouteService;
 import com.example.waytogo.route.service.impl.RouteServiceJPA;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
-    public final String ROUTE_PATH = "api/v1/routes";
-    public final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
-    private final RouteServiceJPA routeService;
+    public static final String ROUTE_PATH = "/api/v1/routes";
+    public static final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
+    public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
+    private final RouteService routeService;
+
 
     @GetMapping(ROUTE_PATH)
     public Page<RouteDTO> getRoutes(@RequestParam(required = false) Integer pageNumber,
@@ -30,8 +36,17 @@ public class RouteController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
+    @GetMapping(ROUTE_PATH_ID_USER)
+    public Page<RouteDTO> getRoutesByUserId(@PathVariable("userId") UUID userId,
+                                            @RequestParam(required = false) Integer pageNumber,
+                                            @RequestParam(required = false) Integer pageSize) {
+
+        return routeService.getRoutesByUserId(userId, pageNumber, pageSize);
+
+    }
+
     @PostMapping(ROUTE_PATH)
-    public ResponseEntity<RouteDTO> postRoute(@RequestBody RouteDTO routeDTO){
+    public ResponseEntity<RouteDTO> postRoute(@Validated @RequestBody RouteDTO routeDTO){
 
         RouteDTO savedRoute = routeService.saveNewRoute(routeDTO);
 
@@ -42,7 +57,7 @@ public class RouteController {
     }
 
     @PutMapping(ROUTE_PATH_ID)
-    public ResponseEntity<RouteDTO> putRoute(@PathVariable("routeId") UUID routeId, @RequestBody RouteDTO routeDTO){
+    public ResponseEntity<RouteDTO> putRoute(@PathVariable("routeId") UUID routeId, @Validated @RequestBody RouteDTO routeDTO){
 
         RouteDTO updatedRoute = routeService.updateRouteById(routeId, routeDTO);
         return new ResponseEntity<>(updatedRoute, HttpStatus.CREATED);
@@ -52,13 +67,16 @@ public class RouteController {
     @DeleteMapping(ROUTE_PATH_ID)
     public ResponseEntity<Void> deleteRoute (@PathVariable("routeId") UUID routeId) {
 
-        routeService.deleteRouteById(routeId);
+        if( !routeService.deleteRouteById(routeId))
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
     @PatchMapping(ROUTE_PATH_ID)
-    public ResponseEntity<Void> patchRouteById(@PathVariable("routeId") UUID routeId, @RequestParam RouteDTO routeDTO) {
+    public ResponseEntity<Void> patchRouteById(@PathVariable("routeId") UUID routeId, @RequestBody RouteDTO routeDTO) {
         routeService.patchRouteById(routeId, routeDTO);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
