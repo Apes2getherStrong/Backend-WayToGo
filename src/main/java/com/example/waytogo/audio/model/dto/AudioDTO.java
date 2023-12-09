@@ -2,6 +2,11 @@ package com.example.waytogo.audio.model.dto;
 
 import com.example.waytogo.point.model.dto.PointDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
+import jakarta.persistence.Column;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.UUID;
@@ -14,6 +19,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AudioDTO {
     UUID id;
+
+    @NotNull
+    @NotBlank
+    @Valid
+    @Size(max = 20)
+    @Column(length = 20)
     String name;
 /*    MultipartFile file;
     String filePath;*/

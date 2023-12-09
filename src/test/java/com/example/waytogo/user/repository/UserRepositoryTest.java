@@ -156,6 +156,7 @@ class UserRepositoryTest {
         User updatedUser = userRepository.save(savedUser);
 
         assertThat(updatedUser.getUsername()).isNotNull();
+        assertThat(updatedUser.getUsername()).isEqualTo(savedUser.getUsername());
         assertThat(updatedUser.getPassword()).isNotNull();
         assertThat(updatedUser.getLogin()).isNotNull();
     }
