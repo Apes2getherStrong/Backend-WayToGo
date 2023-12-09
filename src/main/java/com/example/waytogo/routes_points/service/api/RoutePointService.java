@@ -1,6 +1,6 @@
 package com.example.waytogo.routes_points.service.api;
 
-import com.example.waytogo.route.model.dto.RouteDTO;
+
 import com.example.waytogo.routes_points.entity.RoutePoint;
 import jakarta.validation.Valid;
 
