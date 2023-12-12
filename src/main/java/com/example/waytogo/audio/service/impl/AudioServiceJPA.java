@@ -15,10 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Primary
 @AllArgsConstructor
@@ -72,8 +70,12 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public void deleteAudioById(UUID audioId) {
-        audioRepository.deleteById(audioId);
+    public boolean deleteAudioById(UUID audioId) {
+        if (audioRepository.existsById(audioId)){
+            audioRepository.deleteById(audioId);
+            return true;
+        }
+        return false;
     }
 
     @Override

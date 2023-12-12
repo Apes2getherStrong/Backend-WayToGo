@@ -48,7 +48,7 @@ public class AudioController {
         AudioDTO savedAudio = audioService.saveNewAudio(audioDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", AUDIO_PATH + savedAudio.getId().toString());
+        headers.add("Location", AUDIO_PATH + "/" + savedAudio.getId().toString());
 
         return new ResponseEntity<>(savedAudio, headers, HttpStatus.CREATED);
     }
@@ -63,7 +63,9 @@ public class AudioController {
 
     @DeleteMapping(AUDIO_PATH_ID)
     public ResponseEntity<Void> deleteAudioById(@PathVariable("audioId") UUID audioId) {
-        audioService.deleteAudioById(audioId);
+        if(!audioService.deleteAudioById(audioId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

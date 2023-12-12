@@ -100,7 +100,7 @@ class UserControllerIT {
                 .password("password")
                 .build();
 
-        ResponseEntity responseEntity = userController.postUser(userDTO);
+        ResponseEntity<UserDTO> responseEntity = userController.postUser(userDTO);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
@@ -125,7 +125,7 @@ class UserControllerIT {
         final String username = "UPDATED";
         userDTO.setUsername(username);
 
-        ResponseEntity responseEntity = userController.putUserById(user.getId(), userDTO);
+        ResponseEntity<UserDTO> responseEntity = userController.putUserById(user.getId(), userDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         User updatedUser = userRepository.findById(user.getId()).get();
@@ -138,7 +138,7 @@ class UserControllerIT {
     void testDeleteById() {
         User user = userRepository.findAll().get(0);
 
-        ResponseEntity responseEntity = userController.deleteUserById(user.getId());
+        ResponseEntity<Void> responseEntity = userController.deleteUserById(user.getId());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
@@ -164,7 +164,7 @@ class UserControllerIT {
         userDTO.setLogin(null);
         userDTO.setPassword(null);
 
-        ResponseEntity responseEntity = userController.patchUserById(user.getId(), userDTO);
+        ResponseEntity<Void> responseEntity = userController.patchUserById(user.getId(), userDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         User updatedUser = userRepository.findById(user.getId()).get();
@@ -174,29 +174,16 @@ class UserControllerIT {
     }
 
     @Test
-    void testPatchUserByIdBadUsername() throws Exception {
+    void testPatchUserByIdBadUsername() {
         User user = userRepository.findAll().get(0);
         UserDTO userDTO = userMapper.userToUserDto(user);
 
         userDTO.setId(null);
         userDTO.setUsername("123456789012345678901234567890");
 
-        /*Map<String, Object> userMap = new HashMap<>();
-        userMap.put("username", "New Name 123456789012345678901234567890");*/
-
         assertThrows(TransactionSystemException.class, () -> {
             userController.patchUserById(user.getId(), userDTO);
         });
-
-        /*MvcResult result = mockMvc.perform(patch(UserController.USER_PATH_ID, user.getUserId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userMap)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.length()", is(1)))
-                .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());*/
     }
 
 
