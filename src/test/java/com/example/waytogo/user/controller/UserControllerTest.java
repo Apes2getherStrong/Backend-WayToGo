@@ -52,7 +52,6 @@ class UserControllerTest {
     @Captor
     ArgumentCaptor<UserDTO> userDTOArgumentCaptor;
 
-    //@Autowired
     UserMapper userMapper;
 
     User user1;
@@ -147,7 +146,7 @@ class UserControllerTest {
 
     @Test
     void testPutUserById() throws Exception {
-        given(userService.updateUserById(any(), any())).willReturn(userDTO1);
+        given(userService.updateUserById(any(), any())).willReturn(Optional.of(userDTO1));
 
         mockMvc.perform(put(UserController.USER_PATH_ID, userDTO1.getId())
                         .accept(MediaType.APPLICATION_JSON)

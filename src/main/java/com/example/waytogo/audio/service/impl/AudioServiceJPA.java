@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Primary
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class AudioServiceJPA implements AudioService {
 
     @Override
     public Page<AudioDTO> getAllAudios(Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Audio> audioPage;
         audioPage = audioRepository.findAll(pageRequest);
@@ -49,7 +50,7 @@ public class AudioServiceJPA implements AudioService {
 
     @Override
     public Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Audio> audioPage;
         audioPage = audioRepository.findByUser_Id(userId, pageRequest);
@@ -64,14 +65,22 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO) {
-        audioDTO.setId(audioId);
-        return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
+    public Optional<AudioDTO> updateUserById(UUID audioId, AudioDTO audioDTO) {
+        AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
+
+        audioRepository.findById(audioId).ifPresentOrElse(found -> {
+            audioDTO.setId(audioId);
+            atomicReference.set(Optional.of(audioMapper
+                    .audioToAudioDto(audioRepository
+                            .save(audioMapper.audioDtoToAudio(audioDTO)))));
+        }, () -> atomicReference.set(Optional.empty()));
+
+        return atomicReference.get();
     }
 
     @Override
     public boolean deleteAudioById(UUID audioId) {
-        if (audioRepository.existsById(audioId)){
+        if (audioRepository.existsById(audioId)) {
             audioRepository.deleteById(audioId);
             return true;
         }
@@ -79,20 +88,46 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public void patchAudioById(UUID audioId, AudioDTO audioDTO) {
+    public Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO) {
+        AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
 
-        audioRepository.findById(audioId).ifPresent(foundAudio -> {
+        audioRepository.findById(audioId).ifPresentOrElse(foundAudio -> {
             if (StringUtils.hasText(audioDTO.getName())) {
                 foundAudio.setName(audioDTO.getName());
             }
             if (audioDTO.getPoint() != null) {
-                foundAudio.setPoint(pointMapper.pointDtoToPoint(audioDTO.getPoint()));
+                if (StringUtils.hasText(audioDTO.getPoint().getName())) {
+                    foundAudio.getPoint().setName(audioDTO.getPoint().getName());
+                }
+                if (audioDTO.getPoint().getCoordinates() != null) {
+                    if (audioDTO.getPoint().getCoordinates().getLatitude() != null) {
+                        foundAudio.getPoint().getCoordinates().setLatitude(audioDTO.getPoint().getCoordinates().getLatitude());
+                    }
+                    if (audioDTO.getPoint().getCoordinates().getLongitude() != null) {
+                        foundAudio.getPoint().getCoordinates().setLongitude(audioDTO.getPoint().getCoordinates().getLongitude());
+                    }
+                }
             }
-            if(audioDTO.getUser() != null) {
+            if (audioDTO.getUser() != null) {
+                if (StringUtils.hasText(audioDTO.getUser().getUsername())) {
+                    foundAudio.getUser().setUsername(audioDTO.getUser().getUsername());
+                }
+                if (StringUtils.hasText(audioDTO.getUser().getLogin())) {
+                    foundAudio.getUser().setLogin(audioDTO.getUser().getLogin());
+                }
+                if (StringUtils.hasText(audioDTO.getUser().getPassword())) {
+                    foundAudio.getUser().setPassword(audioDTO.getUser().getPassword());
+                }
+            }
+            if (audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
             }
-            audioRepository.save(foundAudio);
+            atomicReference.set(Optional.of(audioMapper.audioToAudioDto(audioRepository.save(foundAudio))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
+
+        return atomicReference.get();
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {

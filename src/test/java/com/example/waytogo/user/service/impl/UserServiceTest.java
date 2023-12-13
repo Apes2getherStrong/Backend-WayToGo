@@ -142,7 +142,7 @@ class UserServiceTest {
         UserDTO dto = userMapper.userToUserDto(userRepository.findAll().get(0));
         dto.setUsername("UPDATED");
 
-        UserDTO saved = userService.updateUserById(dto.getId(), dto);
+        UserDTO saved = userService.updateUserById(dto.getId(), dto).get();
 
         //Wszytkie 3 asserty to to samo, ale nie wiem ktory najlepiej uzywac
         //assertEquals(userService.getUserById(dto.getId()).get().getUsername(), "UPDATED");

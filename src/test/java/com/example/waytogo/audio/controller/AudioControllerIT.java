@@ -123,10 +123,17 @@ class AudioControllerIT {
         audioDTO.setName(name);
 
         ResponseEntity<AudioDTO> responseEntity = audioController.putAudioById(audio.getId(), audioDTO);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Audio updatedAudio = audioRepository.findById(audio.getId()).get();
         assertThat(updatedAudio.getName()).isEqualTo(name);
+    }
+
+    @Test
+    void testUpdateAudioNotFound() {
+        assertThrows(ResponseStatusException.class, () -> {
+            audioController.patchAudioById(UUID.randomUUID(), getAudioDto());
+        });
     }
 
     @Rollback

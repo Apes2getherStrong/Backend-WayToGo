@@ -132,6 +132,13 @@ class UserControllerIT {
         assertThat(updatedUser.getUsername()).isEqualTo(username);
     }
 
+    @Test
+    void testUpdateUserNotFound() {
+        assertThrows(ResponseStatusException.class, () -> {
+            userController.patchUserById(UUID.randomUUID(), UserDTO.builder().build());
+        });
+    }
+
     @Rollback
     @Transactional
     @Test

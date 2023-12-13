@@ -1,6 +1,7 @@
 package com.example.waytogo.audio.service.api;
 
 import com.example.waytogo.audio.model.dto.AudioDTO;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
@@ -13,11 +14,11 @@ public interface AudioService {
 
     Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 
-    AudioDTO saveNewAudio(AudioDTO audioDTO);
+    AudioDTO saveNewAudio(@Valid AudioDTO audioDTO);
 
-    AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO);
+    Optional<AudioDTO> updateUserById(UUID audioId, @Valid AudioDTO audioDTO);
 
     boolean deleteAudioById(UUID audioId);
 
-    void patchAudioById(UUID audioId, AudioDTO audioDTO);
+    Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO);
 }
