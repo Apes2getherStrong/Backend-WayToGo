@@ -96,28 +96,10 @@ public class AudioServiceJPA implements AudioService {
                 foundAudio.setName(audioDTO.getName());
             }
             if (audioDTO.getPoint() != null) {
-                if (StringUtils.hasText(audioDTO.getPoint().getName())) {
-                    foundAudio.getPoint().setName(audioDTO.getPoint().getName());
-                }
-                if (audioDTO.getPoint().getCoordinates() != null) {
-                    if (audioDTO.getPoint().getCoordinates().getLatitude() != null) {
-                        foundAudio.getPoint().getCoordinates().setLatitude(audioDTO.getPoint().getCoordinates().getLatitude());
-                    }
-                    if (audioDTO.getPoint().getCoordinates().getLongitude() != null) {
-                        foundAudio.getPoint().getCoordinates().setLongitude(audioDTO.getPoint().getCoordinates().getLongitude());
-                    }
-                }
+                foundAudio.setPoint(pointMapper.pointDtoToPoint(audioDTO.getPoint()));
             }
             if (audioDTO.getUser() != null) {
-                if (StringUtils.hasText(audioDTO.getUser().getUsername())) {
-                    foundAudio.getUser().setUsername(audioDTO.getUser().getUsername());
-                }
-                if (StringUtils.hasText(audioDTO.getUser().getLogin())) {
-                    foundAudio.getUser().setLogin(audioDTO.getUser().getLogin());
-                }
-                if (StringUtils.hasText(audioDTO.getUser().getPassword())) {
-                    foundAudio.getUser().setPassword(audioDTO.getUser().getPassword());
-                }
+                foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
             }
             if (audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));

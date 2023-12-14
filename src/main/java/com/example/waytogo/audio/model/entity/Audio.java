@@ -40,9 +40,10 @@ public class Audio {
 */
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne( fetch = FetchType.LAZY)
-    @JoinColumn(name="point_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "point_id")
     Point point;
 }
