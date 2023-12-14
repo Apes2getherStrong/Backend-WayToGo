@@ -46,9 +46,11 @@ public class UserController {
     @PutMapping(USER_PATH_ID)
     public ResponseEntity<UserDTO> putUserById(@PathVariable("userId") UUID userId,
                                                @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUserById(userId, userDTO);
+        if (userService.updateUserById(userId, userDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
-        return new ResponseEntity<>(updatedUser, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(USER_PATH_ID)

@@ -16,7 +16,7 @@ public interface UserService {
 
     UserDTO saveNewUser(@Valid UserDTO userDTO);
 
-    UserDTO updateUserById(UUID userId,@Valid UserDTO userDTO);
+    Optional<UserDTO> updateUserById(UUID userId, @Valid UserDTO userDTO);
 
     boolean deleteUserById(UUID userId);
 

@@ -4,6 +4,9 @@ package com.example.waytogo.audio.model.entity;
 import com.example.waytogo.point.model.entity.Point;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.UUID;
@@ -22,7 +25,10 @@ public class Audio {
     @Column(name = "audio_id", updatable = false, nullable = false)
     UUID id;
 
-    @Column(name = "audio_name")
+    @NotNull
+    @NotBlank
+    @Size(max = 20)
+    @Column(name = "audio_name", length = 20)
     String name;
 
 /*
@@ -34,9 +40,10 @@ public class Audio {
 */
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne( fetch = FetchType.LAZY)
-    @JoinColumn(name="point_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "point_id")
     Point point;
 }

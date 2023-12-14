@@ -47,9 +47,18 @@ public class UserServiceJPA implements UserService {
     }
 
     @Override
-    public UserDTO updateUserById(UUID userId, UserDTO userDTO) {
+    public Optional<UserDTO> updateUserById(UUID userId, UserDTO userDTO) {
+        AtomicReference<Optional<UserDTO>> atomicReference = new AtomicReference<>();
+
+        userRepository.findById(userId).ifPresentOrElse(found -> {
+            userDTO.setId(userId);
+            atomicReference.set(Optional.of(userMapper
+                    .userToUserDto(userRepository
+                            .save(userMapper.userDtoToUser(userDTO)))));
+        }, () -> atomicReference.set(Optional.empty()));
         userDTO.setId(userId);
-        return userMapper.userToUserDto(userRepository.save(userMapper.userDtoToUser(userDTO)));
+
+        return atomicReference.get();
     }
 
     @Override

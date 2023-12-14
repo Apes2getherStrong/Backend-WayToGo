@@ -15,10 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Primary
 @AllArgsConstructor
@@ -35,7 +34,7 @@ public class AudioServiceJPA implements AudioService {
 
     @Override
     public Page<AudioDTO> getAllAudios(Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Audio> audioPage;
         audioPage = audioRepository.findAll(pageRequest);
@@ -51,7 +50,7 @@ public class AudioServiceJPA implements AudioService {
 
     @Override
     public Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber,pageSize);
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Audio> audioPage;
         audioPage = audioRepository.findByUser_Id(userId, pageRequest);
@@ -66,31 +65,51 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public AudioDTO updateUserById(UUID audioId, AudioDTO audioDTO) {
-        audioDTO.setId(audioId);
-        return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
+    public Optional<AudioDTO> updateUserById(UUID audioId, AudioDTO audioDTO) {
+        AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
+
+        audioRepository.findById(audioId).ifPresentOrElse(found -> {
+            audioDTO.setId(audioId);
+            atomicReference.set(Optional.of(audioMapper
+                    .audioToAudioDto(audioRepository
+                            .save(audioMapper.audioDtoToAudio(audioDTO)))));
+        }, () -> atomicReference.set(Optional.empty()));
+
+        return atomicReference.get();
     }
 
     @Override
-    public void deleteAudioById(UUID audioId) {
-        audioRepository.deleteById(audioId);
+    public boolean deleteAudioById(UUID audioId) {
+        if (audioRepository.existsById(audioId)) {
+            audioRepository.deleteById(audioId);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void patchAudioById(UUID audioId, AudioDTO audioDTO) {
+    public Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO) {
+        AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
 
-        audioRepository.findById(audioId).ifPresent(foundAudio -> {
+        audioRepository.findById(audioId).ifPresentOrElse(foundAudio -> {
             if (StringUtils.hasText(audioDTO.getName())) {
                 foundAudio.setName(audioDTO.getName());
             }
             if (audioDTO.getPoint() != null) {
                 foundAudio.setPoint(pointMapper.pointDtoToPoint(audioDTO.getPoint()));
             }
-            if(audioDTO.getUser() != null) {
+            if (audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
             }
-            audioRepository.save(foundAudio);
+            if (audioDTO.getUser() != null) {
+                foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
+            }
+            atomicReference.set(Optional.of(audioMapper.audioToAudioDto(audioRepository.save(foundAudio))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
+
+        return atomicReference.get();
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,9 +17,9 @@ import java.util.UUID;
 @RestController
 public class AudioController {
 
-    private static final String AUDIO_PATH = "/api/v1/audios";
-    private static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
-    private static final String USER_PATH_ID_AUDIOS = "/api/v1/users/{userId}/audios"; //Getting all audios from one user
+    public static final String AUDIO_PATH = "/api/v1/audios";
+    public static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
+    public static final String USER_PATH_ID_AUDIOS = "/api/v1/users/{userId}/audios"; //Getting all audios from one user
 
     private final AudioService audioService;
 
@@ -44,11 +45,11 @@ public class AudioController {
     }
 
     @PostMapping(AUDIO_PATH)
-    public ResponseEntity<AudioDTO> postAudio(@RequestBody AudioDTO audioDTO) {
+    public ResponseEntity<AudioDTO> postAudio(@Validated @RequestBody AudioDTO audioDTO) {
         AudioDTO savedAudio = audioService.saveNewAudio(audioDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", AUDIO_PATH + savedAudio.getId().toString());
+        headers.add("Location", AUDIO_PATH + "/" + savedAudio.getId().toString());
 
         return new ResponseEntity<>(savedAudio, headers, HttpStatus.CREATED);
     }
@@ -56,21 +57,27 @@ public class AudioController {
     @PutMapping(AUDIO_PATH_ID)
     public ResponseEntity<AudioDTO> putAudioById(@PathVariable("audioId") UUID audioId,
                                                  @RequestBody AudioDTO audioDTO) {
-        AudioDTO updatedAudio = audioService.updateUserById(audioId, audioDTO);
+        if (audioService.updateUserById(audioId, audioDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
-        return new ResponseEntity<>(updatedAudio, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(AUDIO_PATH_ID)
     public ResponseEntity<Void> deleteAudioById(@PathVariable("audioId") UUID audioId) {
-        audioService.deleteAudioById(audioId);
+        if(!audioService.deleteAudioById(audioId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping(AUDIO_PATH_ID)
     public ResponseEntity<Void> patchAudioById(@PathVariable("audioId") UUID audioId, @RequestBody AudioDTO audioDTO) {
-        audioService.patchAudioById(audioId, audioDTO);
+        if (audioService.patchAudioById(audioId, audioDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
