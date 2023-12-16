@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  waytogo-db:
+    image: postgres:16.1
+    restart: always
+    environment:
+      POSTGRES_DB: "waytogo_db"
+      POSTGRES_USER: "waytogo_user"
+      POSTGRES_PASSWORD: "waytogo_password"
+    volumes:
+      - waytogo-data:/var/lib/postgresql/data
+
+  waytogo:
+    build:
+      #context: ./order-service
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
+      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      SPRING_DATASOURCE_USERNAME: "waytogo_user"
+      SPRING_DATASOURCE_PASSWORD: "waytogo_password"
+      SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.PostgreSQLDialect"
+      SPRING_JPA_GENERATE_DDL: true
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+      # jak bedzie schemat we flyway to te dwa zmienic
+
+volumes:
+  waytogo-data:
