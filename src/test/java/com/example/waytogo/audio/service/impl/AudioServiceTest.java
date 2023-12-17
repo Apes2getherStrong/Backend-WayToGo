@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -41,6 +43,9 @@ class AudioServiceTest {
     AudioDTO audioDTO;
     AudioDTO audioDTO2;
 
+    @Autowired
+    GeometryFactory geometryFactory;
+
     @BeforeEach
     void setUp() {
         audio = Audio.builder()
@@ -51,6 +56,7 @@ class AudioServiceTest {
                         .password("p")
                         .build())
                 .mapLocation(MapLocation.builder()
+                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
                         .name("n")
                         .build())
                 .build();

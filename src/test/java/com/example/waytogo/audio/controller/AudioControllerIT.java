@@ -10,6 +10,8 @@ import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -47,6 +49,11 @@ class AudioControllerIT {
 
     @Autowired
     WebApplicationContext wac;
+
+    @Autowired
+    GeometryFactory geometryFactory;
+
+
 
     MockMvc mockMvc;
 
@@ -195,6 +202,7 @@ class AudioControllerIT {
                         .username("u")
                         .build())
                 .mapLocationDTO(MapLocationDTO.builder()
+                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
                         .name("n")
                         .build())
                 .build();

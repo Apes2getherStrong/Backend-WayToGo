@@ -11,6 +11,7 @@ import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationServic
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -37,6 +38,9 @@ class RouteMapLocationServiceIT {
 
     @Autowired
     RouteRepository routeRepository;
+
+    @Autowired
+    GeometryFactory geometryFactory;
 
     Route testRoute;
     RouteDTO testRouteDTO;

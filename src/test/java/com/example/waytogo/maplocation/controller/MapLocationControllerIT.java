@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -52,6 +55,9 @@ public class MapLocationControllerIT {
     @Autowired
     WebApplicationContext wac;
 
+    @Autowired
+    GeometryFactory geometryFactory;
+
     MockMvc mockMvc;
 
     @BeforeEach
@@ -80,14 +86,15 @@ public class MapLocationControllerIT {
 
     // no ogolnie to cos mi tu nie dzialalo jak chcialem parametry coordinates zmienic w sensie to do zapisywania jakos nie sprawdzalo poprawnosci zbytnio
     @Test
-    @DisplayName("dodac pointa robienie")
+    @DisplayName("dodac pointa sprawdzanie, jakas dzicz sie dziala z zapetlaniem jak probowalem")
+
     void testPatchMapLocationBadName() throws Exception {
         MapLocation mapLocation = mapLocationRepository.findAll().get(0);
 
         Map<String, Object> mapLocationMap = new HashMap<>();
 
         mapLocationMap.put("name", "abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890abcdefghijklmnoprstw1234567890");
-
+        //mapLocationMap.put("coordinates", geometryFactory.createPoint(new Coordinate(400,400)));
         MvcResult result = mockMvc.perform(patch(MapLocationController.MAP_LOCATION_PATH_ID, mapLocation.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -116,7 +123,7 @@ public class MapLocationControllerIT {
     @Test
     void testUpdateNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
-            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").build());
+            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").coordinates(geometryFactory.createPoint(new Coordinate(21.1,11.5))).build());
         });
     }
 
@@ -128,15 +135,18 @@ public class MapLocationControllerIT {
         MapLocationDTO mapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(mapLocation);
 
         final String newName = "changed name";
-
+        final Point point =  geometryFactory.createPoint(new Coordinate(21.1,11.5));
 
         mapLocationDTO.setName("changed name");
+        mapLocationDTO.setCoordinates(point);
 
 
         ResponseEntity<Void> responseEntity = mapLocationController.putMapLocationById(mapLocation.getId(), mapLocationDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         MapLocation updatedMapLocation = mapLocationRepository.findById(mapLocation.getId()).get();
+        assertThat(updatedMapLocation.getName()).isEqualTo(newName);
+        assertThat(updatedMapLocation.getCoordinates()).isEqualTo(point);
 
 
     }
@@ -146,6 +156,7 @@ public class MapLocationControllerIT {
     @Test
     void saveNewMapLocationTest() {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder()
+                .coordinates(geometryFactory.createPoint(new Coordinate(11.6,21.52)))
                 .name("test mapLocation")
                 .build();
 
@@ -178,6 +189,7 @@ public class MapLocationControllerIT {
 
         assertThat(mapLocationDTO).isNotNull();
         assertThat(mapLocationDTO.getId()).isEqualTo(mapLocation.getId());
+        assertThat(mapLocationDTO.getCoordinates()).isEqualTo(mapLocation.getCoordinates());
     }
 
     @Test
