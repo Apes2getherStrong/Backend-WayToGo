@@ -1,6 +1,5 @@
 package com.example.waytogo.maplocation.controller;
 
-import com.example.waytogo.maplocation.model.dto.CoordinatesDTO;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,8 +66,6 @@ class MapLocationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testMapLocation.getId().toString())))
-                .andExpect(jsonPath("$.coordinates.latitude", is(testMapLocation.getCoordinates().getLatitude())))
-                .andExpect(jsonPath("$.coordinates.longitude", is(testMapLocation.getCoordinates().getLongitude())))
                 .andExpect(jsonPath("$.name", is(testMapLocation.getName())));
     }
 
@@ -107,7 +104,7 @@ class MapLocationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mapLocationDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.length()", is(3)))
+                .andExpect(jsonPath("$.length()", is(2)))
                 .andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
@@ -185,14 +182,12 @@ class MapLocationControllerTest {
         return MapLocationDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test MapLocation")
-                .coordinates(CoordinatesDTO.builder().latitude(11.0).longitude(27.2).build())
                 .build();
     }
     MapLocationDTO getMapLocationDTO_2() {
         return MapLocationDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test MapLocation2")
-                .coordinates(CoordinatesDTO.builder().latitude(19.0).longitude(17.5).build())
                 .build();
     }
 }

@@ -5,7 +5,6 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
-import com.example.waytogo.maplocation.model.dto.CoordinatesDTO;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -197,10 +196,6 @@ class AudioControllerIT {
                         .build())
                 .mapLocationDTO(MapLocationDTO.builder()
                         .name("n")
-                        .coordinates(CoordinatesDTO.builder()
-                                .latitude(1.0)
-                                .longitude(1.0)
-                                .build())
                         .build())
                 .build();
     }

@@ -1,7 +1,6 @@
 package com.example.waytogo.maplocation.controller;
 
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
-import com.example.waytogo.maplocation.model.dto.CoordinatesDTO;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
@@ -116,7 +115,7 @@ public class MapLocationControllerIT {
     @Test
     void testUpdateNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
-            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").coordinates(CoordinatesDTO.builder().longitude(12.2).latitude(13.2).build()).build());
+            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").build());
         });
     }
 
@@ -133,18 +132,12 @@ public class MapLocationControllerIT {
 
 
         mapLocationDTO.setName("changed name");
-        mapLocationDTO.setCoordinates(CoordinatesDTO.builder()
-                .longitude(newLongitude)
-                .latitude(newLatitude)
-                .build());
 
 
         ResponseEntity<Void> responseEntity = mapLocationController.putMapLocationById(mapLocation.getId(), mapLocationDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         MapLocation updatedMapLocation = mapLocationRepository.findById(mapLocation.getId()).get();
-        assertThat(updatedMapLocation.getCoordinates().getLatitude()).isEqualTo(newLatitude);
-        assertThat(updatedMapLocation.getCoordinates().getLongitude()).isEqualTo(newLongitude);
 
 
     }
@@ -155,12 +148,6 @@ public class MapLocationControllerIT {
     void saveNewMapLocationTest() {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder()
                 .name("test mapLocation")
-                .coordinates(
-                        CoordinatesDTO.builder()
-                                .longitude(12.0)
-                                .latitude(16.2)
-                                .build()
-                )
                 .build();
 
         ResponseEntity<Void> response = mapLocationController.postMapLocation(mapLocationDTO);

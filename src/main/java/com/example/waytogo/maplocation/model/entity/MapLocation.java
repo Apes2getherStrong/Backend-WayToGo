@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.locationtech.jts.geom.Coordinates;
+import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,13 +42,9 @@ public class MapLocation {
     @Size(max = 100)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "coordinates_id")
-    @NotNull
-    private Coordinates coordinates;
 
 //    @Column(columnDefinition = "POINT")
-//    private org.springframework.data.geo.Point coordinates;
+//    private Point coordinates;
 
 
     @CreationTimestamp

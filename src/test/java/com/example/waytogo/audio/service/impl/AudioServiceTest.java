@@ -4,7 +4,6 @@ import com.example.waytogo.audio.mapper.AudioMapper;
 import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
-import com.example.waytogo.maplocation.model.entity.Coordinates;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,10 +52,6 @@ class AudioServiceTest {
                         .build())
                 .mapLocation(MapLocation.builder()
                         .name("n")
-                        .coordinates(Coordinates.builder()
-                                .latitude(1.0)
-                                .longitude(1.0)
-                                .build())
                         .build())
                 .build();
         audio2 = Audio.builder()

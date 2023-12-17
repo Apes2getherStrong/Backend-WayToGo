@@ -2,7 +2,6 @@ package com.example.waytogo.initialize;
 
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
-import com.example.waytogo.maplocation.model.entity.Coordinates;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.entity.Route;
@@ -31,17 +30,11 @@ public class InitializationBasic implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         MapLocation mapLocation = MapLocation.builder()
-                .coordinates(Coordinates.builder()
-                        .latitude(12.0)
-                        .longitude(13.0).build())
                 .name("skurwysyn posejdon")
                 .build();
         mapLocationRepository.save(mapLocation);
 
         MapLocation mapLocation2 = MapLocation.builder()
-                .coordinates(Coordinates.builder()
-                        .latitude(10.0)
-                        .longitude(19.0).build())
                 .name("gmach weti")
                 .build();
         mapLocationRepository.save(mapLocation2);
@@ -90,9 +83,6 @@ public class InitializationBasic implements InitializingBean {
         routeRepository.save(r1);
 
         MapLocation p1 = MapLocation.builder()
-                .coordinates(Coordinates.builder()
-                        .latitude(10.0)
-                        .longitude(19.0).build())
                 .name("p1")
                 .build();
         mapLocationRepository.save(p1);

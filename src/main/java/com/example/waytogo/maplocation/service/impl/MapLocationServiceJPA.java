@@ -59,7 +59,6 @@ public class MapLocationServiceJPA implements MapLocationService {
         mapLocationRepository.findById(mapLocationId).ifPresentOrElse(found -> {
             MapLocationDTO foundDTO = mapLocationMapper.mapLocationToMapLocationDto(found);
             foundDTO.setName(mapLocationDTO.getName());
-            foundDTO.setCoordinates(mapLocationDTO.getCoordinates());
 
             atomicReference.set(Optional.of(mapLocationMapper
                     .mapLocationToMapLocationDto(mapLocationRepository
@@ -76,14 +75,6 @@ public class MapLocationServiceJPA implements MapLocationService {
             if (StringUtils.hasText(mapLocationDTO.getName())) {
                 mapLocation.setName(mapLocationDTO.getName());
 
-            }
-            if (mapLocationDTO.getCoordinates() != null) {
-                if (mapLocationDTO.getCoordinates().getLatitude() != null) {
-                    mapLocation.getCoordinates().setLatitude(mapLocationDTO.getCoordinates().getLatitude());
-                }
-                if (mapLocationDTO.getCoordinates().getLongitude() != null) {
-                    mapLocation.getCoordinates().setLongitude(mapLocationDTO.getCoordinates().getLongitude());
-                }
             }
             atomicReference.set(Optional.of(mapLocationMapper.mapLocationToMapLocationDto(mapLocationRepository.save(mapLocation))));
 

@@ -1,9 +1,7 @@
 package com.example.waytogo.maplocation.service.impl;
 
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
-import com.example.waytogo.maplocation.model.dto.CoordinatesDTO;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
-import com.example.waytogo.maplocation.model.entity.Coordinates;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
@@ -41,9 +39,6 @@ class MapLocationServiceJPATest {
         testMapLocationDTO = getMapLocationDTO();
         testMapLocationDTO.setId(UUID.randomUUID());
         testMapLocationDTO.setName("Test Name 2");
-        testMapLocationDTO.setCoordinates(CoordinatesDTO.builder()
-                .latitude(50.0)
-                .longitude(10.0).build());
 
         mapLocationService.updateMapLocationById(testMapLocationDTO.getId(), testMapLocationDTO);
 
@@ -60,9 +55,6 @@ class MapLocationServiceJPATest {
 
         testMapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(testMapLocation);
         testMapLocationDTO.setName("Test Name 2");
-        testMapLocationDTO.setCoordinates(CoordinatesDTO.builder()
-                .latitude(50.0)
-                .longitude(10.0).build());
 
         mapLocationService.updateMapLocationById(testMapLocation.getId(), testMapLocationDTO).get();
 
@@ -70,8 +62,7 @@ class MapLocationServiceJPATest {
 
         assertEquals(testMapLocationDTO.getId(), mapLocation.getId());
         assertEquals(testMapLocationDTO.getName(), mapLocation.getName());
-        assertEquals(testMapLocationDTO.getCoordinates().getLatitude(), mapLocation.getCoordinates().getLatitude());
-        assertEquals(testMapLocationDTO.getCoordinates().getLongitude(), mapLocation.getCoordinates().getLongitude());
+
 
     }
     @Transactional
@@ -81,33 +72,6 @@ class MapLocationServiceJPATest {
         testMapLocation = mapLocationRepository.findAll().get(0);
         assertThrows(ConstraintViolationException.class, () -> {
             mapLocationService.updateMapLocationById(testMapLocation.getId(), MapLocationDTO.builder().id(testMapLocation.getId()).build());
-        });
-        // bad values for coordinates
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.updateMapLocationById(testMapLocation.getId(), MapLocationDTO.builder()
-                    .id(testMapLocation.getId())
-                    .name("Test Name")
-                    .coordinates(CoordinatesDTO.builder()
-                            .latitude(-994.0)
-                            .longitude(1860.0).build())
-                    .build());
-        });
-        // without coordinates
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.updateMapLocationById(testMapLocation.getId(), MapLocationDTO.builder()
-                    .id(testMapLocation.getId())
-                    .name("Test Name")
-                    .build());
-        });
-        // without name
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.updateMapLocationById(testMapLocation.getId(), MapLocationDTO.builder()
-                    .id(testMapLocation.getId())
-                    .name("Test Name")
-                    .coordinates(CoordinatesDTO.builder()
-                            .latitude(-994.0)
-                            .longitude(1860.0).build())
-                    .build());
         });
     }
 
@@ -139,8 +103,7 @@ class MapLocationServiceJPATest {
 
         assertEquals(savedMapLocation.getId(), mapLocationDTO.getId());
         assertEquals(savedMapLocation.getName(), mapLocationDTO.getName());
-        assertEquals(savedMapLocation.getCoordinates().getLatitude(), mapLocationDTO.getCoordinates().getLatitude());
-        assertEquals(savedMapLocation.getCoordinates().getLongitude(), mapLocationDTO.getCoordinates().getLongitude());
+
     }
 
     @Transactional
@@ -153,8 +116,7 @@ class MapLocationServiceJPATest {
         assertNotNull(savedMapLocation.getId());
 
         assertEquals(testMapLocationDTO.getName(), savedMapLocation.getName());
-        assertEquals(testMapLocationDTO.getCoordinates().getLatitude(), savedMapLocation.getCoordinates().getLatitude());
-        assertEquals(testMapLocationDTO.getCoordinates().getLongitude(), savedMapLocation.getCoordinates().getLongitude());
+
 
         assertTrue(mapLocationRepository.existsById(savedMapLocation.getId()));
 
@@ -168,30 +130,6 @@ class MapLocationServiceJPATest {
         assertThrows(ConstraintViolationException.class, () -> {
             mapLocationService.saveNewMapLocation(MapLocationDTO.builder().build());
         });
-        // bad values for coordinates
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.saveNewMapLocation(MapLocationDTO.builder()
-                    .name("Test Name")
-                    .coordinates(CoordinatesDTO.builder()
-                            .latitude(-994.0)
-                            .longitude(1860.0).build())
-                    .build());
-        });
-        // without coordinates
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.saveNewMapLocation(MapLocationDTO.builder()
-                    .name("Test Name")
-                    .build());
-        });
-        // without name
-        assertThrows(ConstraintViolationException.class, () -> {
-            mapLocationService.saveNewMapLocation(MapLocationDTO.builder()
-                    .name("Test Name")
-                    .coordinates(CoordinatesDTO.builder()
-                            .latitude(-994.0)
-                            .longitude(1860.0).build())
-                    .build());
-        });
 
     }
 
@@ -202,9 +140,7 @@ class MapLocationServiceJPATest {
         testMapLocation = mapLocationRepository.findAll().get(0);
 
         MapLocationDTO mapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(testMapLocation);
-        mapLocationDTO.setCoordinates(CoordinatesDTO.builder()
-                .latitude(50.0)
-                .longitude(10.0).build());
+
 
         mapLocationService.patchMapLocationById(testMapLocation.getId(), mapLocationDTO);
 
@@ -212,22 +148,17 @@ class MapLocationServiceJPATest {
 
         assertEquals(mapLocationDTO.getId(), mapLocation.getId());
         assertEquals(mapLocationDTO.getName(), mapLocation.getName());
-        assertEquals(mapLocationDTO.getCoordinates().getLatitude(), mapLocation.getCoordinates().getLatitude());
-        assertEquals(mapLocationDTO.getCoordinates().getLongitude(), mapLocation.getCoordinates().getLongitude());
+
     }
 
     MapLocationDTO getMapLocationDTO() {
         return MapLocationDTO.builder()
                 .name("testMapLocationttttt")
-                .coordinates(CoordinatesDTO.builder().latitude(11.0).longitude(27.2).build())
                 .build();
     }
     MapLocation getMapLocation() {
         return MapLocation.builder()
                 .name("Test Name 2")
-                .coordinates(Coordinates.builder()
-                        .latitude(50.0)
-                        .longitude(10.0).build())
                 .build();
     }
 }

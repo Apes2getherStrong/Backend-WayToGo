@@ -19,10 +19,6 @@ public class MapLocationDTO {
     @NotNull
     @Size(max = 100)
     private String name;
-    @NotNull
-    @Valid
-    private CoordinatesDTO coordinates;
-
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 }
