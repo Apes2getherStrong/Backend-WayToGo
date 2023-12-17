@@ -15,4 +15,5 @@ public class WayToGoApplication {
     public GeometryFactory geometryFactory() {
         return new GeometryFactory();
     }
+
 }

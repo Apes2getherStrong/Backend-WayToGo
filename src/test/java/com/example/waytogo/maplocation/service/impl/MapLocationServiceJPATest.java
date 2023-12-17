@@ -7,6 +7,8 @@ import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -26,6 +28,9 @@ class MapLocationServiceJPATest {
 
     @Autowired
     MapLocationRepository mapLocationRepository;
+
+    @Autowired
+    GeometryFactory geometryFactory;
 
 
     MapLocation testMapLocation;
@@ -154,11 +159,13 @@ class MapLocationServiceJPATest {
     MapLocationDTO getMapLocationDTO() {
         return MapLocationDTO.builder()
                 .name("testMapLocationttttt")
+                .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
                 .build();
     }
     MapLocation getMapLocation() {
         return MapLocation.builder()
                 .name("Test Name 2")
+                .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
                 .build();
     }
 }

@@ -44,7 +44,7 @@ public class MapLocation {
 
     @Column(columnDefinition = "Geometry(point)")
     @NotNull
-    @ValidCoordinates
+    //@ValidCoordinates
     private Point coordinates;
 
 

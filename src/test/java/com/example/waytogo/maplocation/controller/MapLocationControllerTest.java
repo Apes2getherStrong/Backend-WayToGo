@@ -3,7 +3,11 @@ package com.example.waytogo.maplocation.controller;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +45,8 @@ class MapLocationControllerTest {
     @Captor
     ArgumentCaptor<MapLocationDTO> mapLocationArgumentCaptor;
 
-
+    @Autowired
+    GeometryFactory geometryFactory;
 
     @Test
     public void testGetAllMapLocations() throws Exception {
@@ -56,6 +61,7 @@ class MapLocationControllerTest {
     }
 
     @Test
+    @DisplayName("nie ma tutaj coordow sprawdzania")
     void getMapLocationById() throws Exception {
         MapLocationDTO testMapLocation = getMapLocationDTO();
 
@@ -94,6 +100,7 @@ class MapLocationControllerTest {
    }
 
     @Test
+    @DisplayName("cos nie sprawdza nulla coord")
     void testCreateMapLocationNullNameAndNullCoordinates() throws Exception {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder().build();
 
@@ -159,6 +166,7 @@ class MapLocationControllerTest {
     }
 
     @Test
+    @DisplayName("dodac zeby sprawdzalo coordy tez")
     void testPatchMapLocation() throws Exception {
         MapLocationDTO mapLocationDTO = getMapLocationDTO();
 
@@ -182,12 +190,14 @@ class MapLocationControllerTest {
         return MapLocationDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test MapLocation")
+                .coordinates(geometryFactory.createPoint(new Coordinate(54.2,85.2)))
                 .build();
     }
     MapLocationDTO getMapLocationDTO_2() {
         return MapLocationDTO.builder()
                 .id(UUID.randomUUID())
                 .name("test MapLocation2")
+                .coordinates(geometryFactory.createPoint(new Coordinate(54.2,85.2)))
                 .build();
     }
 }
