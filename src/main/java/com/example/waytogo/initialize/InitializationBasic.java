@@ -12,6 +12,9 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +29,16 @@ public class InitializationBasic implements InitializingBean {
     private final RouteRepository routeRepository;
     private final UserRepository userRepository;
     private final AudioRepository audioRepository;
+    private final GeometryFactory geometryFactory;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         MapLocation mapLocation = MapLocation.builder()
                 .name("skurwysyn posejdon")
+                .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
                 .build();
         mapLocationRepository.save(mapLocation);
+        System.out.println(mapLocationRepository.findAll().get(0).getCoordinates());
 
         MapLocation mapLocation2 = MapLocation.builder()
                 .name("gmach weti")

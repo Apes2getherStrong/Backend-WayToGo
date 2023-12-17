@@ -13,12 +13,9 @@
 
 -- dodatkowo trzeba pobrac postgis stad: https://postgis.net/documentation/getting_started/
 --SELECT * FROM pg_available_extensions WHERE name = 'postgis';   -- sprawdza czy masz jakas wersje
---CREATE EXTENSION IF NOT EXISTS postgis;
-
 
 --REASSIGN OWNED BY waytogo TO postgres;  -- or some other trusted role
 --DROP OWNED BY waytogo;
-
 
 
 CREATE EXTENSION IF NOT EXISTS postgis;

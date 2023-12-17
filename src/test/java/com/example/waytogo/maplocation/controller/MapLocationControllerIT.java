@@ -80,6 +80,7 @@ public class MapLocationControllerIT {
 
     // no ogolnie to cos mi tu nie dzialalo jak chcialem parametry coordinates zmienic w sensie to do zapisywania jakos nie sprawdzalo poprawnosci zbytnio
     @Test
+    @DisplayName("dodac pointa robienie")
     void testPatchMapLocationBadName() throws Exception {
         MapLocation mapLocation = mapLocationRepository.findAll().get(0);
 
@@ -127,8 +128,6 @@ public class MapLocationControllerIT {
         MapLocationDTO mapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(mapLocation);
 
         final String newName = "changed name";
-        final Double newLongitude = 0.9213123;
-        final Double newLatitude = 63.324213;
 
 
         mapLocationDTO.setName("changed name");
