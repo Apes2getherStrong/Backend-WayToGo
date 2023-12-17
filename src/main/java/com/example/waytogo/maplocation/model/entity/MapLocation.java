@@ -1,6 +1,7 @@
 package com.example.waytogo.maplocation.model.entity;
 
 import com.example.waytogo.audio.model.entity.Audio;
+import com.example.waytogo.maplocation.model.entity.coordinateTools.ValidCoordinates;
 import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "map_location")
+@Table(name = "map_locations")
 public class MapLocation {
 
     @Id

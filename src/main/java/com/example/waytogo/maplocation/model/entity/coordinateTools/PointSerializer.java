@@ -1,4 +1,4 @@
-package com.example.waytogo.maplocation.model.entity;
+package com.example.waytogo.maplocation.model.entity.coordinateTools;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

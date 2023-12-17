@@ -1,4 +1,4 @@
-package com.example.waytogo.maplocation.model.entity;
+package com.example.waytogo.maplocation.model.entity.coordinateTools;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

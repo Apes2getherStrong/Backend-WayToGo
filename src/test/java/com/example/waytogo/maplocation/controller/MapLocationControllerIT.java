@@ -70,6 +70,13 @@ public class MapLocationControllerIT {
     @Disabled
     void tenPierwszy() {
     }
+
+    @Test
+    @Disabled
+    @DisplayName("dorobic test do tego szukania po route punktow")
+    void aaa() {
+    }
+
     @Test
     @Disabled
     @DisplayName("z usuwaniem problem przez polaczenia z reszta")

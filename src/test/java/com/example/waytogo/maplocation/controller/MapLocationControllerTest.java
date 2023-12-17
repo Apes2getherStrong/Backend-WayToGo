@@ -2,6 +2,7 @@ package com.example.waytogo.maplocation.controller;
 
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
+import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +39,8 @@ class MapLocationControllerTest {
 
     @MockBean
     MapLocationService mapLocationService;
+    @MockBean
+    RouteMapLocationService routeMapLocationService;
 
     @Captor
     ArgumentCaptor<UUID> uuidArgumentCaptor;
@@ -48,6 +51,11 @@ class MapLocationControllerTest {
     @Autowired
     GeometryFactory geometryFactory;
 
+    @Test
+    @Disabled
+    @DisplayName("dorobic test do tego szukania po route punktow")
+    void aaa() {
+    }
     @Test
     public void testGetAllMapLocations() throws Exception {
         given(mapLocationService.getAllMapLocations(any(), any()))
