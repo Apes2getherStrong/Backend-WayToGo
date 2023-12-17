@@ -42,6 +42,7 @@ public class InitializationBasic implements InitializingBean {
 
         MapLocation mapLocation2 = MapLocation.builder()
                 .name("gmach weti")
+                .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
                 .build();
         mapLocationRepository.save(mapLocation2);
 
@@ -89,6 +90,7 @@ public class InitializationBasic implements InitializingBean {
         routeRepository.save(r1);
 
         MapLocation p1 = MapLocation.builder()
+                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
                 .name("p1")
                 .build();
         mapLocationRepository.save(p1);
