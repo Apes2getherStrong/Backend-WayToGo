@@ -2,6 +2,7 @@ package com.example.waytogo.maplocation.controller;
 
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
+import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,18 @@ import java.util.UUID;
 public class MapLocationController {
     public final static String MAP_LOCATION_PATH = "/api/v1/mapLocations";
     public final static String MAP_LOCATION_PATH_ID = MAP_LOCATION_PATH + "/{mapLocationId}";
+    public final static String MAP_LOCATIONS_BY_ROUTE = "/api/v1/routes/{routeId}/mapLocations";
+
     private final MapLocationService mapLocationService;
+    private final RouteMapLocationService routeMapLocationService;
+
+    @GetMapping(MAP_LOCATIONS_BY_ROUTE)
+    public ResponseEntity<Page<MapLocationDTO>> getAllMapLocationsByRoute(@PathVariable("routeId") UUID routeId, @RequestParam(required = false) Integer pageNumber,
+                                                                          @RequestParam(required = false) Integer pageSize) {
+
+        Page<MapLocationDTO> mapLocationsPage = routeMapLocationService.getAllMapLocationsByRouteId(routeId ,pageNumber, pageSize);
+        return new ResponseEntity<>(mapLocationsPage, HttpStatus.OK);
+    }
 
     @GetMapping(MAP_LOCATION_PATH)
     public ResponseEntity<Page<MapLocationDTO>> getAllMapLocations(@RequestParam(required = false) Integer pageNumber,
@@ -28,6 +40,7 @@ public class MapLocationController {
         Page<MapLocationDTO> mapLocationsPage = mapLocationService.getAllMapLocations(pageNumber, pageSize);
         return new ResponseEntity<>(mapLocationsPage, HttpStatus.OK);
     }
+
     @GetMapping(MAP_LOCATION_PATH_ID)
     public ResponseEntity<MapLocationDTO> getMapLocationById(@PathVariable("mapLocationId") UUID mapLocationId) {
         return ResponseEntity.ok(mapLocationService.getMapLocationById(mapLocationId)
@@ -61,6 +74,7 @@ public class MapLocationController {
 
         return ResponseEntity.noContent().build();
     }
+
     @PatchMapping(MAP_LOCATION_PATH_ID)
     public ResponseEntity<Void> patchMapLocationById(@PathVariable("mapLocationId") UUID mapLocationId, @RequestBody MapLocationDTO mapLocationDTO) {
         if (mapLocationService.patchMapLocationById(mapLocationId, mapLocationDTO).isEmpty()) {
