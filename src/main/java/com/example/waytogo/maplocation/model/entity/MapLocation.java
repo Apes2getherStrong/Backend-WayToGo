@@ -9,8 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.locationtech.jts.geom.Coordinates;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,8 +42,8 @@ public class MapLocation {
     private String name;
 
 
-//    @Column(columnDefinition = "POINT")
-//    private Point coordinates;
+    @Column(columnDefinition = "Geometry(point)")
+    private Point coordinates;
 
 
     @CreationTimestamp
