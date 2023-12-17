@@ -5,9 +5,8 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
-import com.example.waytogo.audio.service.impl.AudioServiceJPA;
-import com.example.waytogo.point.model.dto.CoordinatesDTO;
-import com.example.waytogo.point.model.dto.PointDTO;
+import com.example.waytogo.maplocation.model.dto.CoordinatesDTO;
+import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,14 +18,12 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.ReadOnlyFileSystemException;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -166,14 +163,14 @@ class AudioControllerIT {
         final String name = "UPDATED";
         audioDTO.setName(name);
         audioDTO.setUser(null);
-        audioDTO.setPoint(null);
+        audioDTO.setMapLocationDTO(null);
 
         ResponseEntity<Void> responseEntity = audioController.patchAudioById(audio.getId(), audioDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Audio updatedAudio = audioRepository.findById(audio.getId()).get();
         assertThat(updatedAudio.getName()).isEqualTo(name);
-        assertThat(updatedAudio.getPoint()).isEqualTo(audio.getPoint());
+        assertThat(updatedAudio.getMapLocation()).isEqualTo(audio.getMapLocation());
         assertThat(updatedAudio.getUser()).isEqualTo(audio.getUser());
     }
 
@@ -198,7 +195,7 @@ class AudioControllerIT {
                         .login("l")
                         .username("u")
                         .build())
-                .point(PointDTO.builder()
+                .mapLocationDTO(MapLocationDTO.builder()
                         .name("n")
                         .coordinates(CoordinatesDTO.builder()
                                 .latitude(1.0)

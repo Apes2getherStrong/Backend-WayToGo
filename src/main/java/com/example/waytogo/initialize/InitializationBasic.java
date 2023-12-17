@@ -2,13 +2,13 @@ package com.example.waytogo.initialize;
 
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
-import com.example.waytogo.point.model.entity.Coordinates;
-import com.example.waytogo.point.model.entity.Point;
-import com.example.waytogo.point.repository.PointRepository;
+import com.example.waytogo.maplocation.model.entity.Coordinates;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.routes_points.entity.RoutePoint;
-import com.example.waytogo.routes_points.repository.RoutePointRepository;
+import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,29 +22,29 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class InitializationBasic implements InitializingBean {
-    private final PointRepository pointRepository;
-    private final RoutePointRepository routePointRepository;
+    private final MapLocationRepository mapLocationRepository;
+    private final RouteMapLocationRepository routeMapLocationRepository;
     private final RouteRepository routeRepository;
     private final UserRepository userRepository;
     private final AudioRepository audioRepository;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Point point = Point.builder()
+        MapLocation mapLocation = MapLocation.builder()
                 .coordinates(Coordinates.builder()
                         .latitude(12.0)
                         .longitude(13.0).build())
                 .name("skurwysyn posejdon")
                 .build();
-        pointRepository.save(point);
+        mapLocationRepository.save(mapLocation);
 
-        Point point2 = Point.builder()
+        MapLocation mapLocation2 = MapLocation.builder()
                 .coordinates(Coordinates.builder()
                         .latitude(10.0)
                         .longitude(19.0).build())
                 .name("gmach weti")
                 .build();
-        pointRepository.save(point2);
+        mapLocationRepository.save(mapLocation2);
 
         tuSieBawiOskar();
         hejkaTuLenka();
@@ -89,20 +89,20 @@ public class InitializationBasic implements InitializingBean {
                 .build();
         routeRepository.save(r1);
 
-        Point p1 = Point.builder()
+        MapLocation p1 = MapLocation.builder()
                 .coordinates(Coordinates.builder()
                         .latitude(10.0)
                         .longitude(19.0).build())
                 .name("p1")
                 .build();
-        pointRepository.save(p1);
+        mapLocationRepository.save(p1);
 
-        RoutePoint rp1 = RoutePoint.builder()
+        RouteMapLocation rp1 = RouteMapLocation.builder()
                 .sequenceNr(1)
-                .point(p1)
+                .mapLocation(p1)
                 .route(r1)
                 .build();
-        routePointRepository.save(rp1);
+        routeMapLocationRepository.save(rp1);
 
 
 

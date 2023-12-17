@@ -1,6 +1,6 @@
 package com.example.waytogo.route.model.entity;
 
-import com.example.waytogo.routes_points.entity.RoutePoint;
+import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -30,7 +30,7 @@ public class Route {
     private User user;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
-    private List<RoutePoint> routePoints;
+    private List<RouteMapLocation> routeMapLocations;
 
     @NotBlank
     @NotNull
