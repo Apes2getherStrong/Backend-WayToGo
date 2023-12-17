@@ -36,7 +36,7 @@ public class RouteMapLocation {
 
     @NotNull
     @Min(0)
-    @Max(100)
+    @Max(1000)
     @Column(name = "sequence_nr")
     private Integer sequenceNr;
 }
