@@ -1,6 +1,6 @@
 package com.example.waytogo.audio.model.dto;
 
-import com.example.waytogo.point.model.dto.PointDTO;
+import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;
@@ -29,5 +29,5 @@ public class AudioDTO {
 /*    MultipartFile file;
     String filePath;*/
     UserDTO user;
-    PointDTO point;
+    MapLocationDTO mapLocationDTO;
 }

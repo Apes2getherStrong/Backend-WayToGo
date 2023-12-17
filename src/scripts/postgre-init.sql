@@ -6,14 +6,19 @@
 --  Kliknij ja dwukrotnie, aby sie polaczyc. Czerwony X zniknie i zobaczysz opcje.
 -- 6. daj prawy na baze i create query czy jakos tak
 -- 7. Wyswietli sie edytor zapytan.
--- 8. wrzuc to co jest w sql-init.sql i odpal
--- 9. pamietajcie aby przy odpalaniu apki wejsc w edit configuration i tam dodac do ActiveProfiels tak: 'postgres'
+-- 8. wrzuc to co jest w sql-init.sql i odpal, pamietaj zeby zainstalowac rowniez postgisa, ktory jes ponizej
+-- 9. pamietajcie aby przy odpalaniu apki wejsc w edit configuration i tam dodac do ActiveProfiels tak: 'postgres', ale tylko jak odpalacie 'runtime' testy odpalacie jak wczesniej bo one na h2 dzialaja
 -- 10. odpal waytogo zobaczymy czy dziala i potem testy
 
 
+-- dodatkowo trzeba pobrac postgis stad: https://postgis.net/documentation/getting_started/
+--SELECT * FROM pg_available_extensions WHERE name = 'postgis';   -- sprawdza czy masz jakas wersje
 
---REASSIGN OWNED BY waytogo TO postgres;  -- or some other trusted role
+--REASSIGN OWNED BY waytogo TO postgres;  -- jak sie odpierdoli i nie da sie usunac uzytkownika, jak usuwacie database to mozecie tez delete FORCE jak nie dziala xD
 --DROP OWNED BY waytogo;
+
+
+CREATE EXTENSION IF NOT EXISTS postgis;
 DROP USER IF EXISTS waytogo;
 
 CREATE USER  waytogo WITH PASSWORD 'waytogo';

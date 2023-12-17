@@ -5,7 +5,7 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
-import com.example.waytogo.point.mapper.PointMapper;
+import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.user.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -26,7 +26,7 @@ public class AudioServiceJPA implements AudioService {
     AudioMapper audioMapper;
     AudioRepository audioRepository;
 
-    PointMapper pointMapper;
+    MapLocationMapper mapLocationMapper;
     UserMapper userMapper;
 
     private final static int DEFAULT_PAGE = 0;
@@ -95,8 +95,8 @@ public class AudioServiceJPA implements AudioService {
             if (StringUtils.hasText(audioDTO.getName())) {
                 foundAudio.setName(audioDTO.getName());
             }
-            if (audioDTO.getPoint() != null) {
-                foundAudio.setPoint(pointMapper.pointDtoToPoint(audioDTO.getPoint()));
+            if (audioDTO.getMapLocationDTO() != null) {
+                foundAudio.setMapLocation(mapLocationMapper.mapLocationDtoToMapLocation(audioDTO.getMapLocationDTO()));
             }
             if (audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));

@@ -1,7 +1,7 @@
 package com.example.waytogo.audio.model.entity;
 
 
-import com.example.waytogo.point.model.entity.Point;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -44,6 +44,6 @@ public class Audio {
     User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    Point point;
+    @JoinColumn(name = "map_location_id")
+    MapLocation mapLocation;
 }

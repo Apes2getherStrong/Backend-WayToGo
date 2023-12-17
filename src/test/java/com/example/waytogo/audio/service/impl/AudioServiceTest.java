@@ -4,13 +4,14 @@ import com.example.waytogo.audio.mapper.AudioMapper;
 import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
-import com.example.waytogo.point.model.entity.Coordinates;
-import com.example.waytogo.point.model.entity.Point;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,9 @@ class AudioServiceTest {
     AudioDTO audioDTO;
     AudioDTO audioDTO2;
 
+    @Autowired
+    GeometryFactory geometryFactory;
+
     @BeforeEach
     void setUp() {
         audio = Audio.builder()
@@ -51,12 +55,9 @@ class AudioServiceTest {
                         .login("l")
                         .password("p")
                         .build())
-                .point(Point.builder()
+                .mapLocation(MapLocation.builder()
+                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
                         .name("n")
-                        .coordinates(Coordinates.builder()
-                                .latitude(1.0)
-                                .longitude(1.0)
-                                .build())
                         .build())
                 .build();
         audio2 = Audio.builder()

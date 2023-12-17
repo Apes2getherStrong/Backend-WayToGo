@@ -5,11 +5,13 @@ import com.example.waytogo.audio.mapper.AudioMapperImpl;
 import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.service.api.AudioService;
-import com.example.waytogo.point.model.entity.Point;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,19 +61,22 @@ class AudioControllerTest {
 
     AudioDTO audioDTO2;
 
+    @Autowired
+    GeometryFactory geometryFactory;
+
     @BeforeEach
     void setUp() {
         audioMapper = new AudioMapperImpl();
         audio1 = Audio.builder()
                 .id(UUID.randomUUID())
                 .name("name1")
-                .point(Point.builder().name("point1").build())
+                .mapLocation(MapLocation.builder().name("mapLocation1").coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2))).build())
                 .user(User.builder().id(UUID.randomUUID()).username("user1").build())
                 .build();
         audio2 = Audio.builder()
                 .id(UUID.randomUUID())
                 .name("name2")
-                .point(Point.builder().name("point2").build())
+                .mapLocation(MapLocation.builder().name("mapLocation2").coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2))).build())
                 .user(User.builder().username("user2").build())
                 .build();
 
