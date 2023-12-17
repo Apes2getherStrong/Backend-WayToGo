@@ -100,7 +100,6 @@ class MapLocationControllerTest {
    }
 
     @Test
-    @DisplayName("cos nie sprawdza nulla coord")
     void testCreateMapLocationNullNameAndNullCoordinates() throws Exception {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder().build();
 
@@ -111,7 +110,7 @@ class MapLocationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mapLocationDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.length()", is(2)))
+                .andExpect(jsonPath("$.length()", is(3)))
                 .andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
