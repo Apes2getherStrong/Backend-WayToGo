@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -45,6 +45,10 @@ public class Point {
     @NotNull
     private Coordinates coordinates;
 
+//    @Column(columnDefinition = "POINT")
+//    private org.springframework.data.geo.Point location1;
+
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 

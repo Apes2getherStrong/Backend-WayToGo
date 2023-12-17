@@ -24,9 +24,10 @@ services:
       SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.PostgreSQLDialect"
       SPRING_JPA_GENERATE_DDL: true
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # jak bedzie schemat we flyway to te dwa zmienic wyzej
     ports:
       - "8080:8080"
-      # jak bedzie schemat we flyway to te dwa zmienic
+
 
 #volumes:
 #  waytogo-data:
