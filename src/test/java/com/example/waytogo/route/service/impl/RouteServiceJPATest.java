@@ -61,6 +61,7 @@ class RouteServiceJPATest {
         testRoute = Route.builder()
                 .id(UUID.fromString("2aa5e9a8-0e93-4181-87cc-9c40fe1825e6"))
                 .name("r1")
+                .description("d1")
                 .user(null)
                 .build();
 
