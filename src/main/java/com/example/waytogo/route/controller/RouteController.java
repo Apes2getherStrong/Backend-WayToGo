@@ -85,7 +85,9 @@ public class RouteController {
 
     @PatchMapping(ROUTE_PATH_ID)
     public ResponseEntity<Void> patchRouteById(@PathVariable("routeId") UUID routeId, @RequestBody RouteDTO routeDTO) {
-        routeService.patchRouteById(routeId, routeDTO);
+        if (routeService.patchRouteById(routeId, routeDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

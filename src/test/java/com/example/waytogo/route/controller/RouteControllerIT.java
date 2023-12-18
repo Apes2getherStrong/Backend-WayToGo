@@ -246,12 +246,15 @@ class RouteControllerIT {
         routeDTO.setId(null);
         String newRouteName = "NEW NAME";
         routeDTO.setName(newRouteName);
+        routeDTO.setUser(null);
+        routeDTO.setDescription(null);
 
         ResponseEntity responseEntity = routeController.patchRouteById(route.getId(), routeDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Route patchedRoute = routeRepository.findById(route.getId()).get();
         assertThat(patchedRoute.getName()).isEqualTo(newRouteName);
+        assertThat(patchedRoute.getDescription()).isEqualTo(route.getDescription());
     }
 
     @Rollback

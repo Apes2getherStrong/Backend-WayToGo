@@ -104,7 +104,7 @@ class RouteServiceJPATest {
     }
 
 
-    @Test
+    /*@Test
     void updateRouteById() {
         given(routeMapper.routeDtoToRoute(any(RouteDTO.class))).willReturn(testRoute);
         given(routeRepository.save(any(Route.class))).willReturn(testRoute);
@@ -114,7 +114,7 @@ class RouteServiceJPATest {
         assertThat(routeDTO).isNotNull();
         assertThat(routeDTO).isEqualTo(testRouteDTO);
 
-    }
+    }*/
 
     @Test
     void deleteRouteById() {

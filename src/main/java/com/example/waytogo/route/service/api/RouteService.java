@@ -19,7 +19,7 @@ public interface RouteService {
 
     Boolean deleteRouteById(UUID routeId);
 
-    void patchRouteById(UUID routeId, RouteDTO routeDTO);
+    Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
 
     Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 }

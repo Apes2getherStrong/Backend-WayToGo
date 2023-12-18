@@ -152,6 +152,17 @@ class UserControllerTest {
     }
 
     @Test
+    void testPutUserByIdNotFound() throws Exception {
+        given(userService.updateUserById(any(), any())).willReturn(Optional.empty());
+
+        mockMvc.perform(put(UserController.USER_PATH_ID, UUID.randomUUID())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO1)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void testDeleteUserById() throws Exception {
         given(userService.deleteUserById(any())).willReturn(true);
 
