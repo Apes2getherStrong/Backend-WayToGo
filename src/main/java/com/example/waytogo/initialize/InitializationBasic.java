@@ -6,15 +6,14 @@ import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -67,12 +66,11 @@ public class InitializationBasic implements InitializingBean {
         Route route1 = Route.builder()
                 .name("Dijkstra")
                 .user(user1)
+                .description("description")
                 .build();
         routeRepository.save(route1);
 
         List<User> users = userRepository.findAll();
-        /*System.out.println(users.get(0).getAudios().get(0).getUuid());
-        System.out.println(users.get(0).getRoutes().get(0).getId());*/
     }
 
     private void tuSieBawiOskar() {
@@ -86,6 +84,7 @@ public class InitializationBasic implements InitializingBean {
         Route r1 = Route.builder()
                 .user(u1)
                 .name("route1")
+                .description("description")
                 .build();
         routeRepository.save(r1);
 

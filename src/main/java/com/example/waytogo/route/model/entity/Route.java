@@ -1,6 +1,6 @@
 package com.example.waytogo.route.model.entity;
 
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +36,10 @@ public class Route {
     @NotNull
     @Size(max=32)
     private String name;
+
+    @Size(max = 255)
+    @Column(length = 255)
+    private String description;
 
     /*
     @Transient

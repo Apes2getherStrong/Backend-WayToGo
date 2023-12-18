@@ -1,11 +1,11 @@
-package com.example.waytogo.routes_mapLocation.service.impl;
+package com.example.waytogo.routes_maplocation.service.impl;
 
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
-import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationService;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;

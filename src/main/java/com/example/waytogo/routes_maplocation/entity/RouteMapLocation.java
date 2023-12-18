@@ -1,4 +1,4 @@
-package com.example.waytogo.routes_mapLocation.entity;
+package com.example.waytogo.routes_maplocation.entity;
 
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.route.model.entity.Route;

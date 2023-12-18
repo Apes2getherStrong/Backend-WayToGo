@@ -166,6 +166,7 @@ class RouteControllerIT {
     void postRoute() throws Exception {
         RouteDTO testRouteDTO = RouteDTO.builder()
                 .name("postRouteITTestName")
+                .description("description")
                 .id(UUID.randomUUID())
                 .build();
 
@@ -174,7 +175,8 @@ class RouteControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRouteDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(header().exists("Location"))
+                .andExpect(jsonPath("$.description", is(testRouteDTO.getDescription())));
     }
 
     @Rollback
@@ -183,6 +185,7 @@ class RouteControllerIT {
     void postRouteCheckRepository() throws Exception {
         RouteDTO testRouteDTO = RouteDTO.builder()
                 .name("postRouteITTestName")
+                .description("desc")
                 .id(UUID.randomUUID())
                 .build();
 
@@ -190,6 +193,7 @@ class RouteControllerIT {
         UUID id = responseEntity.getBody().getId();
         Route repositoryRoute = routeRepository.findById(id).get();
         assertThat(testRouteDTO.getName()).isEqualTo(repositoryRoute.getName());
+        assertThat(testRouteDTO.getDescription()).isEqualTo(repositoryRoute.getDescription());
     }
 
 
@@ -200,6 +204,7 @@ class RouteControllerIT {
         RouteDTO routeDTO = RouteDTO.builder()
                 .id(UUID.randomUUID())
                 .name("testputname")
+                .description("desc")
                 .user(null)
                 .build();
         MvcResult result = mockMvc.perform(put(RouteController.ROUTE_PATH_ID, routeDTO.getId())
@@ -212,6 +217,8 @@ class RouteControllerIT {
         String responseContent = result.getResponse().getContentAsString();
         RouteDTO responseRouteDTO = objectMapper.readValue(responseContent, RouteDTO.class);
         assertThat(responseRouteDTO.getName()).isEqualTo(routeDTO.getName());
+        assertThat(responseRouteDTO.getDescription()).isEqualTo(routeDTO.getDescription());
+        assertThat(responseRouteDTO.getUser()).isNull();
 
     }
 
@@ -222,6 +229,8 @@ class RouteControllerIT {
 
         RouteDTO routeDTO = routeMapper.routeToRouteDto(routeRepository.findAll().get(0));
 
+        routeDTO.setDescription("UPDATED");
+
         ResponseEntity<RouteDTO> responseEntity = routeController.putRoute(routeDTO.getId(), routeDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
 
@@ -230,6 +239,7 @@ class RouteControllerIT {
 
         Route putRoute = routeRepository.findById(routeDTO.getId()).get();
         assertThat(putRoute.getName()).isEqualTo(routeMapper.routeDtoToRoute(routeDTO).getName());
+        assertThat(putRoute.getDescription()).isEqualTo(routeDTO.getDescription());
 
     }
 

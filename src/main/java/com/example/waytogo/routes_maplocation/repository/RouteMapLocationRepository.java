@@ -1,7 +1,7 @@
-package com.example.waytogo.routes_mapLocation.repository;
+package com.example.waytogo.routes_maplocation.repository;
 
 import com.example.waytogo.maplocation.model.entity.MapLocation;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
