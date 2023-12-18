@@ -169,7 +169,7 @@ class RouteControllerTest {
     //update test
     @Test
     void testPutRoute() throws Exception{
-        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(testRouteDTO);
+        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
@@ -183,7 +183,7 @@ class RouteControllerTest {
     @Test
     void testPutRouteBlankName() throws Exception{
         testRouteDTO.setName("");
-        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(testRouteDTO);
+        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)

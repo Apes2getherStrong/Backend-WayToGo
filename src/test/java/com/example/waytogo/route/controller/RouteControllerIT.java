@@ -5,17 +5,13 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
-import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
@@ -30,21 +26,10 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
@@ -53,7 +38,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -200,26 +184,15 @@ class RouteControllerIT {
     @Rollback
     @Transactional
     @Test
-    void putNewRoute() throws Exception {
-        RouteDTO routeDTO = RouteDTO.builder()
-                .id(UUID.randomUUID())
-                .name("testputname")
-                .description("desc")
-                .user(null)
-                .build();
-        MvcResult result = mockMvc.perform(put(RouteController.ROUTE_PATH_ID, routeDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(routeDTO)))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String responseContent = result.getResponse().getContentAsString();
-        RouteDTO responseRouteDTO = objectMapper.readValue(responseContent, RouteDTO.class);
-        assertThat(responseRouteDTO.getName()).isEqualTo(routeDTO.getName());
-        assertThat(responseRouteDTO.getDescription()).isEqualTo(routeDTO.getDescription());
-        assertThat(responseRouteDTO.getUser()).isNull();
-
+    void putRouteByIdNotFound() throws Exception {
+        assertThrows(ResponseStatusException.class, () -> {
+            routeController.putRoute(UUID.randomUUID(), RouteDTO.builder()
+                    .id(UUID.randomUUID())
+                    .name("testputname")
+                    .description("desc")
+                    .user(null)
+                    .build());
+        });
     }
 
     @Rollback
@@ -249,8 +222,10 @@ class RouteControllerIT {
     @Test
     void testDeleteRoute() {
         Route route = routeRepository.findAll().get(0);
+
         ResponseEntity responseEntity = routeController.deleteRoute(route.getId());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
         assertThat(routeRepository.findById(route.getId())).isEmpty();
 
     }

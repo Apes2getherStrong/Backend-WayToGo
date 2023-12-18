@@ -5,7 +5,6 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -53,7 +52,7 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public RouteDTO updateRouteById(UUID routeId, RouteDTO routeDTO) {
+    public Optional<RouteDTO> updateRouteById(UUID routeId, RouteDTO routeDTO) {
         AtomicReference<Optional<RouteDTO>> atomicReference = new AtomicReference<>();
 
         routeRepository.findById(routeId).ifPresentOrElse(found -> {
@@ -65,8 +64,7 @@ public class RouteServiceJPA implements RouteService {
             atomicReference.set(Optional.empty());
         });
 
-        routeDTO.setId(routeId);
-        return this.saveNewRoute(routeDTO);
+        return atomicReference.get();
     }
 
     @Override
