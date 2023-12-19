@@ -34,6 +34,7 @@ public class InitializationBasic implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         MapLocation mapLocation = MapLocation.builder()
                 .name("skurwysyn posejdon")
+                .description("krul moża")
                 .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
                 .build();
         mapLocationRepository.save(mapLocation);
@@ -41,6 +42,7 @@ public class InitializationBasic implements InitializingBean {
 
         MapLocation mapLocation2 = MapLocation.builder()
                 .name("gmach weti")
+                .description("gniazdo potworów")
                 .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
                 .build();
         mapLocationRepository.save(mapLocation2);
@@ -59,6 +61,7 @@ public class InitializationBasic implements InitializingBean {
 
         Audio audio1 = Audio.builder()
                 .name("Wyklad 1")
+                .description("problem listonosza")
                 .user(user1)
                 .build();
         audioRepository.save(audio1);
@@ -91,6 +94,7 @@ public class InitializationBasic implements InitializingBean {
         MapLocation p1 = MapLocation.builder()
                 .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
                 .name("p1")
+                .description("d1")
                 .build();
         mapLocationRepository.save(p1);
 

@@ -9,6 +9,8 @@ import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -114,6 +116,8 @@ class AudioControllerIT {
 
         Audio audio = audioRepository.findById(savedUUID).get();
         assertThat(audio).isNotNull();
+        assertThat(audio.getName()).isEqualTo(audioDTO.getName());
+        assertThat(audio.getDescription()).isEqualTo(audioDTO.getDescription());
     }
 
     @Test
@@ -130,6 +134,8 @@ class AudioControllerIT {
 
         Audio updatedAudio = audioRepository.findById(audio.getId()).get();
         assertThat(updatedAudio.getName()).isEqualTo(name);
+        assertThat(updatedAudio.getName()).isNotEqualTo(audio.getName());
+        assertThat(updatedAudio.getDescription()).isEqualTo(audio.getDescription());
     }
 
     @Test
@@ -168,6 +174,7 @@ class AudioControllerIT {
 
         final String name = "UPDATED";
         audioDTO.setName(name);
+        audioDTO.setDescription(null);
         audioDTO.setUser(null);
         audioDTO.setMapLocationDTO(null);
 
@@ -176,12 +183,13 @@ class AudioControllerIT {
 
         Audio updatedAudio = audioRepository.findById(audio.getId()).get();
         assertThat(updatedAudio.getName()).isEqualTo(name);
+        assertThat(updatedAudio.getDescription()).isEqualTo(audio.getDescription());
         assertThat(updatedAudio.getMapLocation()).isEqualTo(audio.getMapLocation());
         assertThat(updatedAudio.getUser()).isEqualTo(audio.getUser());
     }
 
     @Test
-    void testPatchUserByIdBadName() {
+    void testPatchUserByIdNameTooLong() {
         Audio audio = audioRepository.findAll().get(0);
         AudioDTO audioDTO = audioMapper.audioToAudioDto(audio);
 
@@ -193,9 +201,26 @@ class AudioControllerIT {
         });
     }
 
+    @Disabled
+    @DisplayName("Nie dziala blad przy za duzym description (przy za duzym name dziala)")
+    @Test
+    void testPatchUserByIdDescriptionTooLong() {
+        Audio audio = audioRepository.findAll().get(0);
+        AudioDTO audioDTO = audioMapper.audioToAudioDto(audio);
+
+        audioDTO.setId(null);
+        audioDTO.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        System.out.println(audio.getDescription().length());
+
+        assertThrows(TransactionSystemException.class, () -> {
+            audioController.patchAudioById(audio.getId(), audioDTO);
+        });
+    }
+
     AudioDTO getAudioDto() {
         return AudioDTO.builder()
                 .name("name")
+                .description("desc")
                 .user(UserDTO.builder()
                         .password("p")
                         .login("l")

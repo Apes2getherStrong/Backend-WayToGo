@@ -42,6 +42,8 @@ public class MapLocation {
     @Size(max = 100)
     private String name;
 
+    @Size(max = 255)
+    private String description;
 
     @Column(columnDefinition = "Geometry(point)")
     @NotNull

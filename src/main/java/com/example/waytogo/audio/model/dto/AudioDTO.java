@@ -26,6 +26,10 @@ public class AudioDTO {
     @Size(max = 20)
     @Column(length = 20)
     String name;
+
+    @Size(max = 255)
+    @Column(length = 255)
+    String description;
 /*    MultipartFile file;
     String filePath;*/
     UserDTO user;
