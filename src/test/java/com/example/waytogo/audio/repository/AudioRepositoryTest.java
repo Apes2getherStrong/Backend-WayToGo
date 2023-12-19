@@ -40,6 +40,7 @@ class AudioRepositoryTest {
     void testGetAudioById() {
         Audio audio = Audio.builder()
                 .name("n")
+                .description("d")
                 .build();
 
         Audio savedAudio = audioRepository.save(audio);
@@ -49,12 +50,15 @@ class AudioRepositoryTest {
 
         assertThat(foundAudio).isNotNull();
         assertThat(foundAudio.getId()).isEqualTo(savedAudio.getId());
+        assertThat(foundAudio.getName()).isEqualTo(savedAudio.getName());
+        assertThat(foundAudio.getDescription()).isEqualTo(savedAudio.getDescription());
     }
 
     @Test
     void testSaveAudio() {
         Audio savedAudio = audioRepository.save(Audio.builder()
                 .name("n")
+                .description("d")
                 .build());
 
         audioRepository.flush();
@@ -62,6 +66,8 @@ class AudioRepositoryTest {
         assertThat(savedAudio).isNotNull();
         assertThat(savedAudio.getId()).isNotNull();
         assertThat(savedAudio.getId().toString()).isGreaterThan("0");
+        assertThat(savedAudio.getName()).isEqualTo("n");
+        assertThat(savedAudio.getDescription()).isEqualTo("d");
     }
 
     @Test
@@ -85,9 +91,22 @@ class AudioRepositoryTest {
     }
 
     @Test
+    void testSaveAudioDescriptionTooLong() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            audioRepository.save(Audio.builder()
+                    .description("name")
+                    .description("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    .build());
+
+            audioRepository.flush();
+        });
+    }
+
+    @Test
     void testUpdateAudio() {
         Audio savedAudio = audioRepository.save(Audio.builder()
                 .name("name")
+                .description("desc")
                 .build());
         audioRepository.flush();
 
@@ -97,6 +116,7 @@ class AudioRepositoryTest {
 
         assertThat(savedAudio.getId()).isEqualTo(updatedAudio.getId());
         assertEquals(savedAudio.getName(), updatedAudio.getName());
+        assertEquals(savedAudio.getDescription(), updatedAudio.getDescription());
     }
 
     @Test
