@@ -176,7 +176,7 @@ class AudioControllerIT {
         audioDTO.setName(name);
         audioDTO.setDescription(null);
         audioDTO.setUser(null);
-        audioDTO.setMapLocationDTO(null);
+        audioDTO.setMapLocation(null);
 
         ResponseEntity<Void> responseEntity = audioController.patchAudioById(audio.getId(), audioDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
@@ -233,7 +233,7 @@ class AudioControllerIT {
                         .login("l")
                         .username("u")
                         .build())
-                .mapLocationDTO(MapLocationDTO.builder()
+                .mapLocation(MapLocationDTO.builder()
                         .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
                         .name("n")
                         .build())

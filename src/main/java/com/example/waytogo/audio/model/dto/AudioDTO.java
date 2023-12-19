@@ -33,5 +33,5 @@ public class AudioDTO {
 /*    MultipartFile file;
     String filePath;*/
     UserDTO user;
-    MapLocationDTO mapLocationDTO;
+    MapLocationDTO mapLocation;
 }

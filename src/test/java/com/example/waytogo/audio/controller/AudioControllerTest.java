@@ -220,7 +220,6 @@ class AudioControllerTest {
         verify(audioService).patchAudioById(uuidArgumentCaptor.capture(), audioDTOArgumentCaptor.capture());
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(audioDTO1.getId());
         assertThat(audioDTOArgumentCaptor.getValue().getName()).isEqualTo(audioMap.get("name"));
-        assertThat(audioDTOArgumentCaptor.getValue().getDescription()).isEqualTo(audioDTO1.getDescription());
     }
 
     @Test

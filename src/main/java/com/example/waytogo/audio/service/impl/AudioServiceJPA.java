@@ -95,8 +95,8 @@ public class AudioServiceJPA implements AudioService {
             if (StringUtils.hasText(audioDTO.getName())) {
                 foundAudio.setName(audioDTO.getName());
             }
-            if (audioDTO.getMapLocationDTO() != null) {
-                foundAudio.setMapLocation(mapLocationMapper.mapLocationDtoToMapLocation(audioDTO.getMapLocationDTO()));
+            if (audioDTO.getMapLocation() != null) {
+                foundAudio.setMapLocation(mapLocationMapper.mapLocationDtoToMapLocation(audioDTO.getMapLocation()));
             }
             if (audioDTO.getUser() != null) {
                 foundAudio.setUser(userMapper.userDtoToUser(audioDTO.getUser()));
