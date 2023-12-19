@@ -217,6 +217,13 @@ class AudioControllerIT {
         });
     }
 
+    @Test
+    void testPatchUserByIdNotFound() {
+        assertThrows(ResponseStatusException.class, () -> {
+            audioController.patchAudioById(UUID.randomUUID(), getAudioDto());
+        });
+    }
+
     AudioDTO getAudioDto() {
         return AudioDTO.builder()
                 .name("name")
