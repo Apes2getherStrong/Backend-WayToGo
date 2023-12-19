@@ -50,6 +50,7 @@ class AudioServiceTest {
     void setUp() {
         audio = Audio.builder()
                 .name("name")
+                .description("desc")
                 .user(User.builder()
                         .username("u")
                         .login("l")
@@ -86,6 +87,7 @@ class AudioServiceTest {
 
         assertEquals(savedAudio.getId(), foundDTO.getId());
         assertEquals(savedAudio.getName(), foundDTO.getName());
+        assertEquals(savedAudio.getDescription(), foundDTO.getDescription());
     }
 
     @Test
@@ -107,6 +109,7 @@ class AudioServiceTest {
 
         assertEquals(savedAudio.getId(), foundDTO.getId());
         assertEquals(savedAudio.getName(), foundDTO.getName());
+        assertEquals(savedAudio.getDescription(), foundDTO.getDescription());
     }
 
     @Rollback
@@ -117,6 +120,7 @@ class AudioServiceTest {
 
         assertThat(savedAudio).isNotNull();
         assertEquals(audio.getName(), savedAudio.getName());
+        assertEquals(audio.getDescription(), savedAudio.getDescription());
     }
 
     @Disabled
@@ -138,6 +142,7 @@ class AudioServiceTest {
         AudioDTO saved = audioService.updateUserById(dto.getId(), dto).get();
 
         assertEquals(saved.getName(), dto.getName());
+        assertEquals(saved.getDescription(), dto.getDescription());
     }
 
     @Disabled
@@ -170,6 +175,7 @@ class AudioServiceTest {
 
         assertThat(updated).isNotNull();
         assertThat(updated.getName()).isEqualTo(audioDTO2.getName());
+        assertThat(updated.getDescription()).isEqualTo(audio.getDescription());
     }
 
     @Test
