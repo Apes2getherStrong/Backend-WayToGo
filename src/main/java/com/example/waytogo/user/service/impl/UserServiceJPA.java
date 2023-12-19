@@ -55,7 +55,9 @@ public class UserServiceJPA implements UserService {
             atomicReference.set(Optional.of(userMapper
                     .userToUserDto(userRepository
                             .save(userMapper.userDtoToUser(userDTO)))));
-        }, () -> atomicReference.set(Optional.empty()));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
         userDTO.setId(userId);
 
         return atomicReference.get();

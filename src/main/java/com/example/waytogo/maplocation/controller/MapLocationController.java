@@ -2,7 +2,7 @@ package com.example.waytogo.maplocation.controller;
 
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
-import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationService;
+import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

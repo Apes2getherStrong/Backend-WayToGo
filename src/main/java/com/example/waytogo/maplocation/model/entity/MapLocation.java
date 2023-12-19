@@ -2,7 +2,7 @@ package com.example.waytogo.maplocation.model.entity;
 
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.maplocation.model.entity.coordinateTools.ValidCoordinates;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,6 +42,8 @@ public class MapLocation {
     @Size(max = 100)
     private String name;
 
+    @Size(max = 255)
+    private String description;
 
     @Column(columnDefinition = "Geometry(point)")
     @NotNull

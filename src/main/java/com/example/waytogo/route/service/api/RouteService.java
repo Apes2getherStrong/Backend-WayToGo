@@ -1,8 +1,6 @@
 package com.example.waytogo.route.service.api;
 
 import com.example.waytogo.route.model.dto.RouteDTO;
-import com.example.waytogo.route.model.entity.Route;
-import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 
@@ -17,11 +15,11 @@ public interface RouteService {
 
     RouteDTO saveNewRoute(@Valid RouteDTO routeDTO);
 
-    RouteDTO updateRouteById(UUID routeId, RouteDTO routeDTO);
+    Optional<RouteDTO> updateRouteById(UUID routeId, RouteDTO routeDTO);
 
     Boolean deleteRouteById(UUID routeId);
 
-    void patchRouteById(UUID routeId, RouteDTO routeDTO);
+    Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
 
     Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 }

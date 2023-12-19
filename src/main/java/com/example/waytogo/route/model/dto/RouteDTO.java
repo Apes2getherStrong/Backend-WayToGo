@@ -1,6 +1,7 @@
 package com.example.waytogo.route.model.dto;
 
 import com.example.waytogo.user.model.dto.UserDTO;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,5 +25,9 @@ public class RouteDTO {
     @NotNull
     @Size(max=32)
     private String name;
+
+    @Size(max = 255)
+    @Column(length = 255)
+    private String description;
 
 }

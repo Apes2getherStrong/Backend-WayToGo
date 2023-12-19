@@ -70,13 +70,15 @@ class AudioControllerTest {
         audio1 = Audio.builder()
                 .id(UUID.randomUUID())
                 .name("name1")
-                .mapLocation(MapLocation.builder().name("mapLocation1").coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2))).build())
+                .description("desc1")
+                .mapLocation(MapLocation.builder().name("mapLocation1").coordinates(geometryFactory.createPoint(new Coordinate(30.1, 30.2))).build())
                 .user(User.builder().id(UUID.randomUUID()).username("user1").build())
                 .build();
         audio2 = Audio.builder()
                 .id(UUID.randomUUID())
                 .name("name2")
-                .mapLocation(MapLocation.builder().name("mapLocation2").coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2))).build())
+                .description("desc2")
+                .mapLocation(MapLocation.builder().name("mapLocation2").coordinates(geometryFactory.createPoint(new Coordinate(30.1, 30.2))).build())
                 .user(User.builder().username("user2").build())
                 .build();
 
@@ -133,7 +135,7 @@ class AudioControllerTest {
     void testCreateAudio() throws Exception {
         given(audioService.saveNewAudio(any())).willReturn(audioDTO1);
 
-        mockMvc.perform(post(AudioController.AUDIO_PATH)
+         mockMvc.perform(post(AudioController.AUDIO_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(audioDTO1)))
                 .andExpect(status().isCreated())
@@ -167,6 +169,17 @@ class AudioControllerTest {
                         .content(objectMapper.writeValueAsString(audioDTO1)))
                 .andExpect(status().isNoContent());
         verify(audioService).updateUserById(any(UUID.class), any(AudioDTO.class));
+    }
+
+    @Test
+    void testPutAudioByIdNotFound() throws Exception {
+        given(audioService.updateUserById(any(), any())).willReturn(Optional.empty());
+
+        mockMvc.perform(put(AudioController.AUDIO_PATH_ID, UUID.randomUUID())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(audioDTO1)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -217,9 +230,9 @@ class AudioControllerTest {
         given(audioService.patchAudioById(any(), any())).willReturn(Optional.empty());
 
         mockMvc.perform(patch(AudioController.AUDIO_PATH_ID, UUID.randomUUID())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(audioMap)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(audioMap)))
                 .andExpect(status().isNotFound());
     }
 }

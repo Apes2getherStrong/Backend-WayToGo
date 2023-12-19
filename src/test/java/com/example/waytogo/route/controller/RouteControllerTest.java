@@ -2,19 +2,12 @@ package com.example.waytogo.route.controller;
 
 import com.example.waytogo.route.mapper.RouteMapper;
 import com.example.waytogo.route.model.dto.RouteDTO;
-import com.example.waytogo.route.model.entity.Route;
-import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.route.service.impl.RouteServiceJPA;
-import com.example.waytogo.user.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,7 +26,6 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -67,6 +59,7 @@ class RouteControllerTest {
     void setUp() {
         testRouteDTO = RouteDTO.builder()
                 .name("route1")
+                .description("desc")
                 .id(UUID.randomUUID())
                 .build();
 
@@ -106,7 +99,8 @@ class RouteControllerTest {
     void testGetRouteNotFound() throws Exception {
         given(routeService.getRouteById(any(UUID.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(get(RouteController.ROUTE_PATH_ID, UUID.randomUUID()))
+        mockMvc.perform(get(RouteController.ROUTE_PATH_ID, UUID.randomUUID())
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
     }
@@ -162,14 +156,24 @@ class RouteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRouteDTO)))
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    void testPostRouteTooLongDescription() throws Exception{
+        testRouteDTO.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        given(routeService.saveNewRoute(any(RouteDTO.class))).willReturn(testRouteDTO);
 
+        mockMvc.perform(post(RouteController.ROUTE_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testRouteDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     //update test
     @Test
     void testPutRoute() throws Exception{
-        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(testRouteDTO);
+        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
@@ -183,13 +187,24 @@ class RouteControllerTest {
     @Test
     void testPutRouteBlankName() throws Exception{
         testRouteDTO.setName("");
-        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(testRouteDTO);
+        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRouteDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testPutRouteNotFound() throws Exception {
+        given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testRouteDTO)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -219,10 +234,11 @@ class RouteControllerTest {
     }
 
     @Test
-    void patchRouteById() throws Exception {
-
+    void testPatchRouteById() throws Exception {
         Map<String, Object> routeMap = new HashMap<>();
         routeMap.put("namee", "AAAAAA");
+
+        given(routeService.patchRouteById(any(), any())).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(patch(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -234,5 +250,19 @@ class RouteControllerTest {
 
         assertThat(testRouteDTO.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(routeMap.get("name")).isEqualTo(routeDTOArgumentCaptor.getValue().getName());
+    }
+
+    @Test
+    void testPatchRouteByIdNotFound() throws Exception{
+        Map<String, Object> routeMap = new HashMap<>();
+        routeMap.put("namee", "AAAAAA");
+
+        given(routeService.patchRouteById(any(), any())).willReturn(Optional.empty());
+
+        mockMvc.perform(patch(RouteController.ROUTE_PATH_ID, UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(routeMap)))
+                .andExpect(status().isNotFound());
     }
 }

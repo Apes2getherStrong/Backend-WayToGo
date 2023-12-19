@@ -1,18 +1,16 @@
-package com.example.waytogo.routes_mapLocation.service.impl;
+package com.example.waytogo.routes_maplocation.service.impl;
 
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 import java.util.UUID;

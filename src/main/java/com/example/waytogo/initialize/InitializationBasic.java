@@ -6,15 +6,14 @@ import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +34,7 @@ public class InitializationBasic implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         MapLocation mapLocation = MapLocation.builder()
                 .name("skurwysyn posejdon")
+                .description("krul moża")
                 .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
                 .build();
         mapLocationRepository.save(mapLocation);
@@ -42,6 +42,7 @@ public class InitializationBasic implements InitializingBean {
 
         MapLocation mapLocation2 = MapLocation.builder()
                 .name("gmach weti")
+                .description("gniazdo potworów")
                 .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
                 .build();
         mapLocationRepository.save(mapLocation2);
@@ -60,6 +61,7 @@ public class InitializationBasic implements InitializingBean {
 
         Audio audio1 = Audio.builder()
                 .name("Wyklad 1")
+                .description("problem listonosza")
                 .user(user1)
                 .build();
         audioRepository.save(audio1);
@@ -67,12 +69,11 @@ public class InitializationBasic implements InitializingBean {
         Route route1 = Route.builder()
                 .name("Dijkstra")
                 .user(user1)
+                .description("description")
                 .build();
         routeRepository.save(route1);
 
         List<User> users = userRepository.findAll();
-        /*System.out.println(users.get(0).getAudios().get(0).getUuid());
-        System.out.println(users.get(0).getRoutes().get(0).getId());*/
     }
 
     private void tuSieBawiOskar() {
@@ -86,12 +87,14 @@ public class InitializationBasic implements InitializingBean {
         Route r1 = Route.builder()
                 .user(u1)
                 .name("route1")
+                .description("description")
                 .build();
         routeRepository.save(r1);
 
         MapLocation p1 = MapLocation.builder()
                 .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
                 .name("p1")
+                .description("d1")
                 .build();
         mapLocationRepository.save(p1);
 

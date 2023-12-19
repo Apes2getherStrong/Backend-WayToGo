@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -59,8 +60,15 @@ public class RouteController {
     @PutMapping(ROUTE_PATH_ID)
     public ResponseEntity<RouteDTO> putRoute(@PathVariable("routeId") UUID routeId, @Validated @RequestBody RouteDTO routeDTO){
 
-        RouteDTO updatedRoute = routeService.updateRouteById(routeId, routeDTO);
-        return new ResponseEntity<>(updatedRoute, HttpStatus.CREATED);
+        Optional<RouteDTO> updatedRoute = routeService.updateRouteById(routeId, routeDTO);
+
+        if (updatedRoute.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        RouteDTO existingRoute = updatedRoute.get();
+
+        return new ResponseEntity<>(existingRoute, HttpStatus.CREATED);
 
     }
 
@@ -77,7 +85,9 @@ public class RouteController {
 
     @PatchMapping(ROUTE_PATH_ID)
     public ResponseEntity<Void> patchRouteById(@PathVariable("routeId") UUID routeId, @RequestBody RouteDTO routeDTO) {
-        routeService.patchRouteById(routeId, routeDTO);
+        if (routeService.patchRouteById(routeId, routeDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

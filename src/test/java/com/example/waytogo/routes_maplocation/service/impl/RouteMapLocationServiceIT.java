@@ -1,13 +1,13 @@
-package com.example.waytogo.routes_mapLocation.service.impl;
+package com.example.waytogo.routes_maplocation.service.impl;
 
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.routes_mapLocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_mapLocation.repository.RouteMapLocationRepository;
-import com.example.waytogo.routes_mapLocation.service.api.RouteMapLocationService;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

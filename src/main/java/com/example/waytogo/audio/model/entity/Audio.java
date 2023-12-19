@@ -31,6 +31,10 @@ public class Audio {
     @Column(name = "audio_name", length = 20)
     String name;
 
+    @Size(max = 255)
+    @Column(length = 255)
+    String description;
+
 /*
     @Transient
     MultipartFile file;

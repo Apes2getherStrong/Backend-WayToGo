@@ -135,7 +135,11 @@ class UserControllerIT {
     @Test
     void testUpdateUserNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
-            userController.patchUserById(UUID.randomUUID(), UserDTO.builder().build());
+            userController.putUserById(UUID.randomUUID(), UserDTO.builder()
+                            .login("l")
+                            .username("u")
+                            .password("p")
+                    .build());
         });
     }
 

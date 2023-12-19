@@ -5,6 +5,7 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
+import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Primary
@@ -51,14 +53,24 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public RouteDTO updateRouteById(UUID routeId, RouteDTO routeDTO) {
-        routeDTO.setId(routeId);
-        return this.saveNewRoute(routeDTO);
+    public Optional<RouteDTO> updateRouteById(UUID routeId, RouteDTO routeDTO) {
+        AtomicReference<Optional<RouteDTO>> atomicReference = new AtomicReference<>();
+
+        routeRepository.findById(routeId).ifPresentOrElse(found -> {
+            routeDTO.setId(routeId);
+            atomicReference.set(Optional.of(routeMapper
+                    .routeToRouteDto(routeRepository
+                            .save(routeMapper.routeDtoToRoute(routeDTO)))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
+
+        return atomicReference.get();
     }
 
     @Override
     public Boolean deleteRouteById(UUID routeId) {
-        if(routeRepository.existsById(routeId)) {
+        if (routeRepository.existsById(routeId)) {
             routeRepository.deleteById(routeId);
             return true;
         }
@@ -66,14 +78,21 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public void patchRouteById(UUID routeId, RouteDTO routeDTO) {
-        routeRepository.findById(routeId).ifPresent(foundRoute -> {
+    public Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO) {
+        AtomicReference<Optional<RouteDTO>> atomicReference = new AtomicReference<>();
+
+        routeRepository.findById(routeId).ifPresentOrElse(foundRoute -> {
             if (StringUtils.hasText(routeDTO.getName())) {
                 foundRoute.setName(routeDTO.getName());
             }
-            routeRepository.save(foundRoute);
+            if (StringUtils.hasText(routeDTO.getDescription())) {
+                foundRoute.setDescription(routeDTO.getDescription());
+            }
+            atomicReference.set(Optional.of(routeMapper.routeToRouteDto(routeRepository.save(foundRoute))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
         });
-
+        return atomicReference.get();
     }
 
     @Override

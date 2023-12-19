@@ -67,6 +67,7 @@ class MapLocationServiceJPATest {
 
         assertEquals(testMapLocationDTO.getId(), mapLocation.getId());
         assertEquals(testMapLocationDTO.getName(), mapLocation.getName());
+        assertEquals(testMapLocationDTO.getDescription(), testMapLocation.getDescription());
 
 
     }
@@ -108,6 +109,7 @@ class MapLocationServiceJPATest {
 
         assertEquals(savedMapLocation.getId(), mapLocationDTO.getId());
         assertEquals(savedMapLocation.getName(), mapLocationDTO.getName());
+        assertEquals(savedMapLocation.getDescription(), mapLocationDTO.getDescription());
 
     }
 
@@ -121,6 +123,7 @@ class MapLocationServiceJPATest {
         assertNotNull(savedMapLocation.getId());
 
         assertEquals(testMapLocationDTO.getName(), savedMapLocation.getName());
+        assertEquals(testMapLocationDTO.getDescription(), savedMapLocation.getDescription());
 
 
         assertTrue(mapLocationRepository.existsById(savedMapLocation.getId()));
@@ -153,18 +156,21 @@ class MapLocationServiceJPATest {
 
         assertEquals(mapLocationDTO.getId(), mapLocation.getId());
         assertEquals(mapLocationDTO.getName(), mapLocation.getName());
+        assertEquals(mapLocationDTO.getDescription(), mapLocation.getDescription());
 
     }
 
     MapLocationDTO getMapLocationDTO() {
         return MapLocationDTO.builder()
                 .name("testMapLocationttttt")
+                .description("descDTO")
                 .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
                 .build();
     }
     MapLocation getMapLocation() {
         return MapLocation.builder()
                 .name("Test Name 2")
+                .description("desc")
                 .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
                 .build();
     }

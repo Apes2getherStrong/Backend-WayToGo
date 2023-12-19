@@ -154,6 +154,7 @@ public class MapLocationControllerIT {
         MapLocation updatedMapLocation = mapLocationRepository.findById(mapLocation.getId()).get();
         assertThat(updatedMapLocation.getName()).isEqualTo(newName);
         assertThat(updatedMapLocation.getCoordinates()).isEqualTo(point);
+        assertThat(updatedMapLocation.getDescription()).isEqualTo(mapLocation.getDescription());
 
 
     }
@@ -165,6 +166,7 @@ public class MapLocationControllerIT {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder()
                 .coordinates(geometryFactory.createPoint(new Coordinate(11.6,21.52)))
                 .name("test mapLocation")
+                .description("desc")
                 .build();
 
         ResponseEntity<Void> response = mapLocationController.postMapLocation(mapLocationDTO);
@@ -178,7 +180,8 @@ public class MapLocationControllerIT {
 
         MapLocation mapLocation = mapLocationRepository.findById(savedUUID).get();
         assertThat(mapLocation.getId()).isNotNull();
-
+        assertThat(mapLocation.getName()).isEqualTo(mapLocationDTO.getName());
+        assertThat(mapLocation.getDescription()).isEqualTo(mapLocationDTO.getDescription());
 
     }
 
@@ -197,6 +200,8 @@ public class MapLocationControllerIT {
         assertThat(mapLocationDTO).isNotNull();
         assertThat(mapLocationDTO.getId()).isEqualTo(mapLocation.getId());
         assertThat(mapLocationDTO.getCoordinates()).isEqualTo(mapLocation.getCoordinates());
+        assertThat(mapLocationDTO.getName()).isEqualTo(mapLocation.getName());
+        assertThat(mapLocationDTO.getDescription()).isEqualTo(mapLocation.getDescription());
     }
 
     @Test

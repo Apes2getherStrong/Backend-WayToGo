@@ -27,6 +27,9 @@ public class MapLocationDTO {
     @Size(max = 100)
     private String name;
 
+    @Size(max = 255)
+    private String description;
+
     @NotNull
     private Point coordinates;
 
