@@ -24,6 +24,9 @@ class AudioMapperTest {
     @Autowired
     AudioMapper audioMapper;
 
+    @Autowired
+    GeometryFactory geometryFactory;
+
     Audio audio;
     AudioDTO audioDTO;
 
@@ -32,9 +35,6 @@ class AudioMapperTest {
 
     MapLocation mapLocation;
     MapLocationDTO mapLocationDTO;
-
-    @Autowired
-    GeometryFactory geometryFactory;
 
     @BeforeEach
     void setUp() {
@@ -101,6 +101,8 @@ class AudioMapperTest {
         assertThat(mapped.getMapLocation().getName()).isEqualTo(audio.getMapLocation().getName());
         assertThat(mapped.getMapLocation().getDescription()).isEqualTo(audio.getMapLocation().getDescription());
         assertThat(mapped.getMapLocation().getCoordinates()).isEqualTo(audio.getMapLocation().getCoordinates());
+        assertThat(mapped.getMapLocation().getUpdateDate()).isEqualTo(audio.getMapLocation().getUpdateDate());
+        assertThat(mapped.getMapLocation().getCreatedDate()).isEqualTo(audio.getMapLocation().getCreatedDate());
     }
 
     @Test
