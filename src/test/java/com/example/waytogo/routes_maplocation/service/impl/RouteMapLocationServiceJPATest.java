@@ -80,7 +80,10 @@ class RouteMapLocationServiceJPATest {
     @Test
     void updateRouteMapLocationById() {
         given(routeMapLocationRepository.save(any(RouteMapLocation.class))).willReturn(testRouteMapLocation);
-        RouteMapLocation routeMapLocation = routeMapLocationService.updateRouteMapLocationById(testRouteMapLocation.getId(), testRouteMapLocation);
+        given(routeMapLocationRepository.findById(any(UUID.class))).willReturn(Optional.of(testRouteMapLocation));
+
+        RouteMapLocation routeMapLocation = routeMapLocationService.updateRouteMapLocationById(testRouteMapLocation.getId(), testRouteMapLocation).get();
+
         assertThat(routeMapLocation).isEqualTo(testRouteMapLocation);
     }
 

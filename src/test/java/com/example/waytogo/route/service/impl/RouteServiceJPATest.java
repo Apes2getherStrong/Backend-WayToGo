@@ -1,8 +1,7 @@
 package com.example.waytogo.route.service.impl;
 
 import com.example.waytogo.route.repository.RouteRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,7 +22,6 @@ import com.example.waytogo.route.service.impl.RouteServiceJPA;
 import com.example.waytogo.user.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +90,7 @@ class RouteServiceJPATest {
         assertThat(routeDTO.get()).isEqualTo(testRouteDTO);
     }
 
+
     @Test
     void saveNewRoute() {
         given(routeMapper.routeDtoToRoute(any(RouteDTO.class))).willReturn(testRoute);
@@ -105,17 +104,18 @@ class RouteServiceJPATest {
     }
 
 
-    /*@Test
+    @Test
     void updateRouteById() {
         given(routeMapper.routeDtoToRoute(any(RouteDTO.class))).willReturn(testRoute);
         given(routeRepository.save(any(Route.class))).willReturn(testRoute);
+        given(routeRepository.findById(any(UUID.class))).willReturn(Optional.of(testRoute));
         given(routeMapper.routeToRouteDto(any(Route.class))).willReturn(testRouteDTO);
 
         RouteDTO routeDTO = routeService.updateRouteById(testRoute.getId(), testRouteDTO).get();
         assertThat(routeDTO).isNotNull();
         assertThat(routeDTO).isEqualTo(testRouteDTO);
 
-    }*/
+    }
 
     @Test
     void deleteRouteById() {
@@ -132,11 +132,15 @@ class RouteServiceJPATest {
     }
 
     //patch doesn't return anything
+    @Disabled
+    @DisplayName("Trzeba to dorobic")
     @Test
     void patchRouteById() {
     }
 
     //same as getAllRoutes()
+    @Disabled
+    @DisplayName("Trzeba to dorobic")
     @Test
     void getRoutesByUserId() {
     }

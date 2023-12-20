@@ -73,7 +73,7 @@ class RouteControllerIT {
     }
 
     @Test
-    void getRoutes() throws Exception {
+    void getAllRoutes() throws Exception {
         mockMvc.perform(get(RouteController.ROUTE_PATH)
                         .param("pageNumber", "0")
                         .param("pageSize", "1")
@@ -100,7 +100,7 @@ class RouteControllerIT {
 
     @Transactional
     @Test
-    void getRoute() throws Exception{
+    void getRouteById() throws Exception{
 
         RouteDTO testRouteDTO = routeMapper.routeToRouteDto(routeRepository.findAll().get(0));
 
@@ -256,6 +256,13 @@ class RouteControllerIT {
         Route patchedRoute = routeRepository.findById(route.getId()).get();
         assertThat(patchedRoute.getName()).isEqualTo(newRouteName);
         assertThat(patchedRoute.getDescription()).isEqualTo(route.getDescription());
+    }
+
+    @Test
+    void testPatchRouteByIdNotFound() {
+        assertThrows(ResponseStatusException.class, () -> {
+            routeController.patchRouteById(UUID.randomUUID(), RouteDTO.builder().build());
+        });
     }
 
     @Rollback
