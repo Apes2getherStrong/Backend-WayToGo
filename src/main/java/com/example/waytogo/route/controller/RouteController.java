@@ -52,7 +52,7 @@ public class RouteController {
         RouteDTO savedRoute = routeService.saveNewRoute(routeDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", ROUTE_PATH + savedRoute.getId().toString());
+        headers.add("Location", ROUTE_PATH + "/" + savedRoute.getId().toString());
 
         return new ResponseEntity<>(savedRoute, headers, HttpStatus.CREATED);
     }
@@ -75,8 +75,7 @@ public class RouteController {
     @DeleteMapping(ROUTE_PATH_ID)
     public ResponseEntity<Void> deleteRoute (@PathVariable("routeId") UUID routeId) {
 
-        if( !routeService.deleteRouteById(routeId))
-        {
+        if( !routeService.deleteRouteById(routeId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
