@@ -90,7 +90,11 @@ class RouteControllerIT {
     @Transactional
     @Test
     void getRoutesEmpty() {
-        routeRepository.deleteAll();
+        for(Route r : routeRepository.findAll()) {
+            routeService.deleteRouteById(r.getId());
+        }
+
+
         Page<RouteDTO> page = routeController.getRoutes(1,20).getBody();
         assertThat(page.getContent().size()).isEqualTo(0);
     }
