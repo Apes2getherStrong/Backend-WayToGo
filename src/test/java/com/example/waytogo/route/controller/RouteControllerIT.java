@@ -260,16 +260,24 @@ class RouteControllerIT {
     @Rollback
     @Transactional
     @Test
-    @Disabled
-    @DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
+    //@Disabled
+    //@DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
     void testRouteExistanceAfterUserDeletion() {
         User user = userRepository.findAll().get(0);
         user.setRoutes(Collections.emptyList());
-        Route route = routeRepository.findAll().get(0);
-        route.setUser(user);
+        //Route route = routeRepository.findAll().get(0);
+        //route.setUser(user);
 
-        //userRepository.deleteById(user.getUserId());
-        //assertThat(routeRepository.existsById(route.getId())).isTrue();
+        Route newRoute = Route.builder()
+                        .user(user)
+                        .name("name")
+                        .id(UUID.randomUUID())
+                        .description(" ")
+                        .build();
+        routeRepository.save(newRoute);
+
+        userRepository.deleteById(user.getId());
+        assertThat(routeRepository.existsById(newRoute.getId())).isTrue();
 
     }
 
