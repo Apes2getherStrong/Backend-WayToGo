@@ -208,8 +208,7 @@ class RouteControllerTest {
     }
 
     @Test
-    void testDeleteRoute()  throws Exception {
-
+    void testDeleteRoute() throws Exception {
         given(routeService.deleteRouteById(any(UUID.class))).willReturn(true);
 
         mockMvc.perform(delete(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
@@ -222,7 +221,6 @@ class RouteControllerTest {
 
     @Test
     void testDeleteRouteNotFound()  throws Exception {
-
         given(routeService.deleteRouteById(any(UUID.class))).willReturn(false);
 
         mockMvc.perform(delete(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())

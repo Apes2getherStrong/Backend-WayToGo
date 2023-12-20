@@ -25,12 +25,12 @@ public class RouteMapLocation {
     private UUID id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="map_location_id")
     private MapLocation mapLocation;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="route_id")
     private Route route;
 

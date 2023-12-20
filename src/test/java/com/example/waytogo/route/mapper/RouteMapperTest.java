@@ -59,9 +59,30 @@ class RouteMapperTest {
     }
 
     @Test
-    void testMapping() {
-        RouteDTO routeDTO = routeMapper.routeToRouteDto(testRoute);
-        assertThat(routeDTO).isEqualTo(testRouteDTO);
-        assertThat(routeDTO.getUser()).isEqualTo(userDTO);
+    void testRouteToRouteDto() {
+        RouteDTO mapped = routeMapper.routeToRouteDto(testRoute);
+
+        assertEquals(mapped.getId(), testRoute.getId());
+        assertEquals(mapped.getName(), testRoute.getName());
+        assertEquals(mapped.getDescription(), testRoute.getDescription());
+
+        assertEquals(mapped.getUser().getId(), testRoute.getUser().getId());
+        assertEquals(mapped.getUser().getPassword(), testRoute.getUser().getPassword());
+        assertEquals(mapped.getUser().getLogin(), testRoute.getUser().getLogin());
+        assertEquals(mapped.getUser().getUsername(), testRoute.getUser().getUsername());
+    }
+
+    @Test
+    void testRouteDtoToRoute() {
+        Route mapped = routeMapper.routeDtoToRoute(testRouteDTO);
+
+        assertEquals(mapped.getId(), testRouteDTO.getId());
+        assertEquals(mapped.getName(), testRouteDTO.getName());
+        assertEquals(mapped.getDescription(), testRouteDTO.getDescription());
+
+        assertEquals(mapped.getUser().getId(), testRouteDTO.getUser().getId());
+        assertEquals(mapped.getUser().getPassword(), testRouteDTO.getUser().getPassword());
+        assertEquals(mapped.getUser().getLogin(), testRouteDTO.getUser().getLogin());
+        assertEquals(mapped.getUser().getUsername(), testRouteDTO.getUser().getUsername());
     }
 }

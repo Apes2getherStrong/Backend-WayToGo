@@ -24,9 +24,10 @@ public class AudioController {
     private final AudioService audioService;
 
     @GetMapping(AUDIO_PATH)
-    public Page<AudioDTO> getAllAudios(@RequestParam(required = false) Integer pageNumber,
+    public ResponseEntity<Page<AudioDTO>> getAllAudios(@RequestParam(required = false) Integer pageNumber,
                                        @RequestParam(required = false) Integer pageSize) {
-        return audioService.getAllAudios(pageNumber, pageSize);
+        Page<AudioDTO> audioDTOPage = audioService.getAllAudios(pageNumber, pageSize);
+        return new ResponseEntity<>(audioDTOPage, HttpStatus.OK);
     }
 
     @GetMapping(AUDIO_PATH_ID)

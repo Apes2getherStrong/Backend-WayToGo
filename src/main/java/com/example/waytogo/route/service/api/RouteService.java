@@ -13,13 +13,13 @@ public interface RouteService {
 
     Optional<RouteDTO> getRouteById(UUID routeId);
 
+    Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
+
     RouteDTO saveNewRoute(@Valid RouteDTO routeDTO);
 
-    Optional<RouteDTO> updateRouteById(UUID routeId, RouteDTO routeDTO);
+    Optional<RouteDTO> updateRouteById(UUID routeId, @Valid RouteDTO routeDTO);
 
     Boolean deleteRouteById(UUID routeId);
 
     Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
-
-    Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 }

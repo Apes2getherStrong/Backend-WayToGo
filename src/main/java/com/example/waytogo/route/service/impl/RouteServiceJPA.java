@@ -5,6 +5,7 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
+import com.example.waytogo.user.mapper.UserMapper;
 import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class RouteServiceJPA implements RouteService {
     private final RouteRepository routeRepository;
     private final RouteMapper routeMapper;
 
+    private final UserMapper userMapper;
+
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
 
@@ -45,6 +48,16 @@ public class RouteServiceJPA implements RouteService {
     public Optional<RouteDTO> getRouteById(UUID routeId) {
         return Optional.ofNullable(routeMapper.routeToRouteDto(routeRepository.findById(routeId)
                 .orElse(null)));
+    }
+
+    @Override
+    public Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+        Page<Route> routePage;
+        routePage = routeRepository.findByUser_Id(userId, pageRequest);
+
+        return routePage.map(routeMapper::routeToRouteDto);
     }
 
     @Override
@@ -88,23 +101,15 @@ public class RouteServiceJPA implements RouteService {
             if (StringUtils.hasText(routeDTO.getDescription())) {
                 foundRoute.setDescription(routeDTO.getDescription());
             }
+            if(routeDTO.getUser() != null) {
+                foundRoute.setUser(userMapper.userDtoToUser(routeDTO.getUser()));
+            }
             atomicReference.set(Optional.of(routeMapper.routeToRouteDto(routeRepository.save(foundRoute))));
         }, () -> {
             atomicReference.set(Optional.empty());
         });
         return atomicReference.get();
     }
-
-    @Override
-    public Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
-
-        Page<Route> routePage;
-        routePage = routeRepository.findByUser_Id(userId, pageRequest);
-
-        return routePage.map(routeMapper::routeToRouteDto);
-    }
-
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;

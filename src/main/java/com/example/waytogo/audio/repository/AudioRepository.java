@@ -10,7 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface AudioRepository extends JpaRepository<Audio, UUID> {
-    //Page<Audio> findByUser_UserId(UUID userId);
-    //Page<Audio> findByUser_UserId(UUID uuid, PageRequest pageRequest);
     Page<Audio> findByUser_Id(UUID uuid, PageRequest pageRequest);
 }

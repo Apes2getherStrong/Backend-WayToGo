@@ -26,7 +26,7 @@ public class Route {
     @Column(name="route_id", updatable=false, nullable=false)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
@@ -42,14 +42,11 @@ public class Route {
     private String description;
 
     /*
+    //Potrzebne do zdjecia
     @Transient
     MultipartFile file;
 
     @Column(name = "file_path")
     String filePath;
-
-    @Column(name = "description"
-    @Size(max=150)
-    String description;
     */
 }

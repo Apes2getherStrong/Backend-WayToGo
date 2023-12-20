@@ -6,6 +6,7 @@ import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.entity.User;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -69,6 +70,7 @@ class AudioServiceTest {
         audioDTO2 = audioMapper.audioToAudioDto(audio2);
     }
 
+    @Transactional
     @Test
     void testGetAllAudios() {
         Page<AudioDTO> audios = audioService.getAllAudios(1, 25);
@@ -98,7 +100,7 @@ class AudioServiceTest {
     }
 
     @Disabled
-    @DisplayName("Nie wiem czemu to nie dziala XD")
+    @DisplayName("Nie wiem czemu to nie dziala XD, \"object references an unsaved transient instance\"")
     @Rollback
     @Transactional
     @Test
@@ -123,17 +125,16 @@ class AudioServiceTest {
         assertEquals(audio.getDescription(), savedAudio.getDescription());
     }
 
-    @Disabled
-    @DisplayName("Nie wiem czemy nie rzuca wyjatku :((")
     @Transactional
     @Rollback
     @Test
     void testSaveAudioNotValid() {
-        assertThrows(CertPathValidatorException.class, () -> {
+        assertThrows(ConstraintViolationException.class, () -> {
             audioService.saveNewAudio(AudioDTO.builder().build());
         });
     }
 
+    @Transactional
     @Test
     void testUpdateAudioById() {
         AudioDTO dto = audioMapper.audioToAudioDto(audioRepository.findAll().get(0));
@@ -146,7 +147,7 @@ class AudioServiceTest {
     }
 
     @Disabled
-    @DisplayName("Znowu nie wiem czemu nie dziala")
+    @DisplayName("Znowu nie wiem czemu nie dziala, \"object references an unsaved transient instance\"")
     @Rollback
     @Transactional
     @Test

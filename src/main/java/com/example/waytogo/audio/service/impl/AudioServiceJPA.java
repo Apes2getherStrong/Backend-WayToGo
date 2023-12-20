@@ -7,27 +7,31 @@ import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.user.mapper.UserMapper;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Primary
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
+@Validated
 public class AudioServiceJPA implements AudioService {
-    AudioMapper audioMapper;
-    AudioRepository audioRepository;
+    private final AudioMapper audioMapper;
+    private final AudioRepository audioRepository;
 
-    MapLocationMapper mapLocationMapper;
-    UserMapper userMapper;
+    private final MapLocationMapper mapLocationMapper;
+    private final UserMapper userMapper;
 
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
@@ -60,12 +64,12 @@ public class AudioServiceJPA implements AudioService {
 
 
     @Override
-    public AudioDTO saveNewAudio(AudioDTO audioDTO) {
+    public AudioDTO saveNewAudio(@Valid AudioDTO audioDTO) {
         return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
     }
 
     @Override
-    public Optional<AudioDTO> updateUserById(UUID audioId, AudioDTO audioDTO) {
+    public Optional<AudioDTO> updateUserById(UUID audioId, @Valid AudioDTO audioDTO) {
         AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
 
         audioRepository.findById(audioId).ifPresentOrElse(found -> {
@@ -73,13 +77,15 @@ public class AudioServiceJPA implements AudioService {
             atomicReference.set(Optional.of(audioMapper
                     .audioToAudioDto(audioRepository
                             .save(audioMapper.audioDtoToAudio(audioDTO)))));
-        }, () -> atomicReference.set(Optional.empty()));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
 
         return atomicReference.get();
     }
 
     @Override
-    public boolean deleteAudioById(UUID audioId) {
+    public Boolean deleteAudioById(UUID audioId) {
         if (audioRepository.existsById(audioId)) {
             audioRepository.deleteById(audioId);
             return true;

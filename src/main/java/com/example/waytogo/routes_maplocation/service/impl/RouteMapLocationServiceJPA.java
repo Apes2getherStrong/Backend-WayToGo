@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Validated
@@ -35,16 +36,35 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
     }
 
     @Override
+    public Page<MapLocationDTO> getAllMapLocationsByRouteId(UUID routeId, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+        Page<MapLocation> mapLocationPage = routeMapLocationRepository.findMapLocationsByRouteId(routeId ,pageRequest);
+
+        return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
+    }
+
+    @Override
     public RouteMapLocation saveNewRouteMapLocation(@Valid RouteMapLocation routeMapLocation) {
 
         return routeMapLocationRepository.save(routeMapLocation);
     }
 
     @Override
-    public RouteMapLocation updateRouteMapLocationById(UUID routeMapLocationId, RouteMapLocation routeMapLocation) {
+    public Optional<RouteMapLocation> updateRouteMapLocationById(UUID routeMapLocationId, RouteMapLocation routeMapLocation) {
+        AtomicReference<Optional<RouteMapLocation>> atomicReference = new AtomicReference<>();
+        Optional<RouteMapLocation> test;
 
-        routeMapLocation.setId(routeMapLocationId);
-        return this.saveNewRouteMapLocation(routeMapLocation);
+
+        routeMapLocationRepository.findById(routeMapLocationId).ifPresentOrElse(found -> {
+            routeMapLocation.setId(routeMapLocationId);
+            atomicReference.set(Optional.of(routeMapLocationRepository
+                    .save(routeMapLocation)));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
+
+        return atomicReference.get();
     }
 
     @Override
@@ -57,14 +77,7 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
 
         return false;
     }
-    @Override
-    public Page<MapLocationDTO> getAllMapLocationsByRouteId(UUID routeId ,Integer pageNumber, Integer pageSize) {
-        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-        Page<MapLocation> mapLocationPage = routeMapLocationRepository.findMapLocationsByRouteId(routeId ,pageRequest);
-
-        return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
-    }
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;
