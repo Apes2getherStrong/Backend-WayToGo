@@ -6,18 +6,22 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Primary
 @RequiredArgsConstructor
 @Service
+@Validated
 public class UserServiceJPA implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;

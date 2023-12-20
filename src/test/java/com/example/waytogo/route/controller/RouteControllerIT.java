@@ -98,6 +98,7 @@ class RouteControllerIT {
         });
     }
 
+    @Transactional
     @Test
     void getRoute() throws Exception{
 

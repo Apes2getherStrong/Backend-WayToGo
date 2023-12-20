@@ -43,7 +43,7 @@ public class Audio {
     String filePath;
 */
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 

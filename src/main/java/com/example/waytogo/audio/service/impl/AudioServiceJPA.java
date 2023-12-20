@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Primary
 @RequiredArgsConstructor
 @Service
+@Validated
 public class AudioServiceJPA implements AudioService {
     private final AudioMapper audioMapper;
     private final AudioRepository audioRepository;
