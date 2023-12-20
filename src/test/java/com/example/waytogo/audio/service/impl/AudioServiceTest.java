@@ -5,7 +5,12 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.maplocation.repository.MapLocationRepository;
+import com.example.waytogo.maplocation.service.api.MapLocationService;
+import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.user.model.entity.User;
+import com.example.waytogo.user.repository.UserRepository;
+import com.example.waytogo.user.service.api.UserService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -20,6 +25,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.cert.CertPathValidatorException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +43,18 @@ class AudioServiceTest {
 
     @Autowired
     AudioMapper audioMapper;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    MapLocationService mapLocationService;
+
+    @Autowired
+    MapLocationRepository mapLocationRepository;
 
     Audio audio;
     Audio audio2;
@@ -183,6 +201,39 @@ class AudioServiceTest {
     void testPatchAudioByIdBadId() {
         assertThat(audioService.patchAudioById(UUID.randomUUID(), audioDTO)).isEmpty();
     }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testAudioExistanceAfterUserDeletion() {
+        User user = userRepository.findAll().get(0);
+        user.setRoutes(Collections.emptyList());
+
+        Audio audio = audioRepository.findAll().get(0);
+        audio.setUser(user);
+
+        userService.deleteUserById(user.getId());
+
+        assertThat(audioRepository.existsById(audio.getId())).isTrue();
+        assertThat(audioRepository.findById(audio.getId()).get().getUser()).isNull();
+
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testAudioExistanceAfterMapLocationDeletion() {
+        MapLocation mapLocation = mapLocationRepository.findAll().get(0);
+        Audio audio = audioRepository.findAll().get(0);
+        audio.setMapLocation(mapLocation);
+
+        mapLocationService.deleteMapLocationById(mapLocation.getId());
+
+        assertThat(audioRepository.existsById(audio.getId())).isFalse();
+
+
+    }
+
 }
 
 

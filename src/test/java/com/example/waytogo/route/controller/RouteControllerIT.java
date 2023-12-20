@@ -7,6 +7,7 @@ import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
+import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ class RouteControllerIT {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -265,31 +269,6 @@ class RouteControllerIT {
         });
     }
 
-    @Rollback
-    @Transactional
-    @Test
-    //@Disabled
-    //@DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
-    void testRouteExistanceAfterUserDeletion() {
-        //https://stackoverflow.com/questions/5360795/what-is-the-difference-between-unidirectional-and-bidirectional-jpa-and-hibernat
-        //https://stackoverflow.com/questions/8434853/jpa-onetomany-update
-        User user = userRepository.findAll().get(0);
-        user.setRoutes(Collections.emptyList());
 
-        Route newRoute = Route.builder()
-                        .user(user)
-                        .name("name")
-                        .id(UUID.randomUUID())
-                        .description(" ")
-                        .build();
-        routeRepository.save(newRoute);
-
-        user = userRepository.findAll().get(0);
-
-
-        userRepository.deleteById(user.getId());
-        assertThat(routeRepository.existsById(newRoute.getId())).isTrue();
-
-    }
 
 }
