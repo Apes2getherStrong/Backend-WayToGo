@@ -8,6 +8,7 @@ import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.user.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,14 +21,14 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Primary
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AudioServiceJPA implements AudioService {
-    AudioMapper audioMapper;
-    AudioRepository audioRepository;
+    private final AudioMapper audioMapper;
+    private final AudioRepository audioRepository;
 
-    MapLocationMapper mapLocationMapper;
-    UserMapper userMapper;
+    private final MapLocationMapper mapLocationMapper;
+    private final UserMapper userMapper;
 
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
@@ -73,13 +74,15 @@ public class AudioServiceJPA implements AudioService {
             atomicReference.set(Optional.of(audioMapper
                     .audioToAudioDto(audioRepository
                             .save(audioMapper.audioDtoToAudio(audioDTO)))));
-        }, () -> atomicReference.set(Optional.empty()));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
 
         return atomicReference.get();
     }
 
     @Override
-    public boolean deleteAudioById(UUID audioId) {
+    public Boolean deleteAudioById(UUID audioId) {
         if (audioRepository.existsById(audioId)) {
             audioRepository.deleteById(audioId);
             return true;
