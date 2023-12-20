@@ -44,20 +44,9 @@ public class User {
     @Column(length = 50)
     String login;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<Audio> audios;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     List<Route> routes;
-
-    @PreRemove
-    private void preRemove() {
-        for (Route r : routes) {
-            r.setUser(null);
-        }
-
-        for (Audio a : audios) {
-            a.setUser(null);
-        }
-    }
 }
