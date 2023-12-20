@@ -5,6 +5,9 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
+import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
+import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import com.example.waytogo.user.mapper.UserMapper;
 import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -30,6 +34,9 @@ public class RouteServiceJPA implements RouteService {
     private final RouteMapper routeMapper;
 
     private final UserMapper userMapper;
+
+    private final RouteMapLocationService routeMapLocationService;
+    private final RouteMapLocationRepository routeMapLocationRepository;
 
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
@@ -84,6 +91,11 @@ public class RouteServiceJPA implements RouteService {
     @Override
     public Boolean deleteRouteById(UUID routeId) {
         if (routeRepository.existsById(routeId)) {
+            List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
+            for(RouteMapLocation rmp : routeMapLocations) {
+                routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
+            }
+
             routeRepository.deleteById(routeId);
             return true;
         }

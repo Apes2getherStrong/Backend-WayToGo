@@ -62,6 +62,16 @@ public class AudioServiceJPA implements AudioService {
         return audioPage.map(audioMapper::audioToAudioDto);
     }
 
+    @Override
+    public Page<AudioDTO> getAllAudiosByMapLocationId(UUID mapLocationId, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+        Page<Audio> audioPage;
+        audioPage = audioRepository.findByMapLocation_Id(mapLocationId, pageRequest);
+
+        return audioPage.map(audioMapper::audioToAudioDto);
+    }
+
 
     @Override
     public AudioDTO saveNewAudio(@Valid AudioDTO audioDTO) {
