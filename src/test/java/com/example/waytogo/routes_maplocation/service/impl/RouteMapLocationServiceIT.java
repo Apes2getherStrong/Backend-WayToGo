@@ -2,9 +2,11 @@ package com.example.waytogo.routes_maplocation.service.impl;
 
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
+import com.example.waytogo.maplocation.service.api.MapLocationService;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
+import com.example.waytogo.route.service.api.RouteService;
 import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
@@ -37,7 +39,13 @@ class RouteMapLocationServiceIT {
     MapLocationRepository mapLocationRepository;
 
     @Autowired
+    MapLocationService mapLocationService;
+
+    @Autowired
     RouteRepository routeRepository;
+
+    @Autowired
+    RouteService routeService;
 
     @Autowired
     GeometryFactory geometryFactory;
@@ -46,6 +54,7 @@ class RouteMapLocationServiceIT {
     RouteDTO testRouteDTO;
     RouteMapLocation testRouteMapLocation;
     MapLocation testMapLocation;
+
 
     @BeforeEach
     void setUp() {
@@ -116,6 +125,32 @@ class RouteMapLocationServiceIT {
         assertThat(result).isNotNull();
         assertThat(result.isEmpty()).isFalse();
         assertThat(result.get().getSequenceNr()).isEqualTo(routeMapLocation.getSequenceNr());
+
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testRouteMapLocationExistenceAfterRouteDeletion() {
+        RouteMapLocation rmp = routeMapLocationRepository.findAll().get(0);
+        Route route = routeRepository.findAll().get(0);
+        rmp.setRoute(route);
+
+        routeService.deleteRouteById(route.getId());
+        assertThat(routeMapLocationRepository.existsById(rmp.getId())).isFalse();
+
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testRouteMapLocationExistenceAfterMapLocationDeletion() {
+        RouteMapLocation rmp = routeMapLocationRepository.findAll().get(0);
+        MapLocation mapLocation = mapLocationRepository.findAll().get(0);
+        rmp.setMapLocation(mapLocation);
+
+        mapLocationService.deleteMapLocationById(mapLocation.getId());
+        assertThat(routeMapLocationRepository.existsById(rmp.getId())).isFalse();
 
     }
 
