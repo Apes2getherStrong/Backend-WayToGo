@@ -26,9 +26,9 @@ public class RouteController {
 
 
     @GetMapping(ROUTE_PATH)
-    public Page<RouteDTO> getRoutes(@RequestParam(required = false) Integer pageNumber,
+    public ResponseEntity<Page<RouteDTO>> getRoutes(@RequestParam(required = false) Integer pageNumber,
                                     @RequestParam(required = false) Integer pageSize) {
-        return routeService.getAllRoutes(pageNumber, pageSize);
+        return new ResponseEntity<>(routeService.getAllRoutes(pageNumber, pageSize), HttpStatus.OK);
     }
 
     @GetMapping(ROUTE_PATH_ID)
@@ -38,11 +38,11 @@ public class RouteController {
     }
 
     @GetMapping(ROUTE_PATH_ID_USER)
-    public Page<RouteDTO> getRoutesByUserId(@PathVariable("userId") UUID userId,
+    public ResponseEntity<Page<RouteDTO>> getRoutesByUserId(@PathVariable("userId") UUID userId,
                                             @RequestParam(required = false) Integer pageNumber,
                                             @RequestParam(required = false) Integer pageSize) {
 
-        return routeService.getRoutesByUserId(userId, pageNumber, pageSize);
+        return new ResponseEntity<>(routeService.getRoutesByUserId(userId, pageNumber, pageSize), HttpStatus.OK);
 
     }
 
