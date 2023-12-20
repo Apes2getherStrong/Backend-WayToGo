@@ -29,7 +29,7 @@ public class Route {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
     private List<RouteMapLocation> routeMapLocations;
 
     @NotBlank

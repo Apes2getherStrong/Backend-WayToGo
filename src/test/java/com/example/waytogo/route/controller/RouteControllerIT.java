@@ -267,7 +267,6 @@ class RouteControllerIT {
 
     @Rollback
     @Transactional
-    @Commit
     @Test
     //@Disabled
     //@DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
