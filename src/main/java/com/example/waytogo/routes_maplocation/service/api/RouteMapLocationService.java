@@ -10,12 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RouteMapLocationService {
-    Page<MapLocationDTO> getAllMapLocationsByRouteId(UUID routeId, Integer pageNumber, Integer pageSize);
     Optional<RouteMapLocation> getRouteMapLocationById(UUID routeMapLocationId);
+
+    Page<MapLocationDTO> getAllMapLocationsByRouteId(UUID routeId, Integer pageNumber, Integer pageSize);
 
     RouteMapLocation saveNewRouteMapLocation(@Valid RouteMapLocation routeMapLocation);
 
-    RouteMapLocation updateRouteMapLocationById(UUID routeMapLocationId, RouteMapLocation routeMapLocation);
+    Optional<RouteMapLocation> updateRouteMapLocationById(UUID routeMapLocationId, @Valid RouteMapLocation routeMapLocation);
 
     Boolean deleteRouteMapLocationById(UUID routeMapLocationId);
 

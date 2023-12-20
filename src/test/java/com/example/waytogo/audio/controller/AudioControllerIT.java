@@ -210,6 +210,7 @@ class AudioControllerIT {
 
     @Disabled
     @DisplayName("Nie dziala blad przy za duzym description")
+    @Transactional
     @Test
     void testPatchUserByIdDescriptionTooLong() {
         Audio audio = audioRepository.findAll().get(0);

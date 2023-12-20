@@ -7,6 +7,7 @@ import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.user.mapper.UserMapper;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -63,12 +64,12 @@ public class AudioServiceJPA implements AudioService {
 
 
     @Override
-    public AudioDTO saveNewAudio(AudioDTO audioDTO) {
+    public AudioDTO saveNewAudio(@Valid AudioDTO audioDTO) {
         return audioMapper.audioToAudioDto(audioRepository.save(audioMapper.audioDtoToAudio(audioDTO)));
     }
 
     @Override
-    public Optional<AudioDTO> updateUserById(UUID audioId, AudioDTO audioDTO) {
+    public Optional<AudioDTO> updateUserById(UUID audioId, @Valid AudioDTO audioDTO) {
         AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
 
         audioRepository.findById(audioId).ifPresentOrElse(found -> {
