@@ -45,4 +45,14 @@ class UserMapperTest {
         assertEquals(mapped.getLogin(), user.getLogin());
         assertEquals(mapped.getPassword(), user.getPassword());
     }
+
+    @Test
+    void testUserDtoToUser() {
+        User mapped = userMapper.userDtoToUser(userDTO);
+
+        assertEquals(mapped.getId(), userDTO.getId());
+        assertEquals(mapped.getUsername(), userDTO.getUsername());
+        assertEquals(mapped.getLogin(), userDTO.getLogin());
+        assertEquals(mapped.getPassword(), userDTO.getPassword());
+    }
 }
