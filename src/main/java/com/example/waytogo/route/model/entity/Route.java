@@ -26,7 +26,7 @@ public class Route {
     @Column(name="route_id", updatable=false, nullable=false)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy = "route")

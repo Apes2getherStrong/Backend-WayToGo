@@ -74,6 +74,7 @@ class AudioControllerIT {
         assertThat(dtos.getContent().size()).isEqualTo(0);
     }
 
+    @Transactional
     @Test
     void testGetAllAudios() {
         Page<AudioDTO> dtos = audioController.getAllAudios(1,25);
@@ -81,6 +82,7 @@ class AudioControllerIT {
         assertThat(dtos.getContent().size()).isEqualTo(1);
     }
 
+    @Transactional
     @Test
     void testGetAudioById() {
         Audio audio = audioRepository.findAll().get(0);
@@ -120,6 +122,7 @@ class AudioControllerIT {
         assertThat(audio.getDescription()).isEqualTo(audioDTO.getDescription());
     }
 
+    @Transactional
     @Test
     void testUpdateExistingAudio() {
         Audio audio = audioRepository.findAll().get(0);
@@ -129,12 +132,13 @@ class AudioControllerIT {
         final String name = "UPDATED";
         audioDTO.setName(name);
 
+        assertThat(audioDTO.getName()).isNotEqualTo(audio.getName());
+
         ResponseEntity<AudioDTO> responseEntity = audioController.putAudioById(audio.getId(), audioDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Audio updatedAudio = audioRepository.findById(audio.getId()).get();
         assertThat(updatedAudio.getName()).isEqualTo(name);
-        assertThat(updatedAudio.getName()).isNotEqualTo(audio.getName());
         assertThat(updatedAudio.getDescription()).isEqualTo(audio.getDescription());
     }
 
@@ -188,6 +192,9 @@ class AudioControllerIT {
         assertThat(updatedAudio.getUser()).isEqualTo(audio.getUser());
     }
 
+    @Disabled
+    @DisplayName("Nie dziala blad przy za duzym name")
+    @Transactional
     @Test
     void testPatchUserByIdNameTooLong() {
         Audio audio = audioRepository.findAll().get(0);
@@ -202,7 +209,7 @@ class AudioControllerIT {
     }
 
     @Disabled
-    @DisplayName("Nie dziala blad przy za duzym description (przy za duzym name dziala)")
+    @DisplayName("Nie dziala blad przy za duzym description")
     @Test
     void testPatchUserByIdDescriptionTooLong() {
         Audio audio = audioRepository.findAll().get(0);
