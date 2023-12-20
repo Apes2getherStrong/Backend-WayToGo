@@ -87,7 +87,7 @@ class RouteControllerIT {
     @Test
     void getRoutesEmpty() {
         routeRepository.deleteAll();
-        Page<RouteDTO> page = routeController.getRoutes(1,20);
+        Page<RouteDTO> page = routeController.getRoutes(1,20).getBody();
         assertThat(page.getContent().size()).isEqualTo(0);
     }
 
@@ -137,7 +137,7 @@ class RouteControllerIT {
         Route route = routeRepository.findAll().get(0);
         route.setUser(user);
 
-        Page<RouteDTO> routePage = routeController.getRoutesByUserId(user.getId(), 0, 10);
+        Page<RouteDTO> routePage = routeController.getRoutesByUserId(user.getId(), 0, 10).getBody();
         List<RouteDTO> routes = routePage.stream().toList();
 
         assertThat(routes.size()).isEqualTo(1);

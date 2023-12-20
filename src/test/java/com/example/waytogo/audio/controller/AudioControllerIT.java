@@ -69,7 +69,7 @@ class AudioControllerIT {
     @Test
     void testGetAllAudiosEmpty() {
         audioRepository.deleteAll();
-        Page<AudioDTO> dtos = audioController.getAllAudios(1,25);
+        Page<AudioDTO> dtos = audioController.getAllAudios(1,25).getBody();
 
         assertThat(dtos.getContent().size()).isEqualTo(0);
     }
@@ -77,7 +77,7 @@ class AudioControllerIT {
     @Transactional
     @Test
     void testGetAllAudios() {
-        Page<AudioDTO> dtos = audioController.getAllAudios(1,25);
+        Page<AudioDTO> dtos = audioController.getAllAudios(1,25).getBody();
 
         assertThat(dtos.getContent().size()).isEqualTo(1);
     }
