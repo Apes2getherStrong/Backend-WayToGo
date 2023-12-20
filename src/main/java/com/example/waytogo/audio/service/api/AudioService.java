@@ -18,7 +18,7 @@ public interface AudioService {
 
     Optional<AudioDTO> updateUserById(UUID audioId, @Valid AudioDTO audioDTO);
 
-    boolean deleteAudioById(UUID audioId);
+    Boolean deleteAudioById(UUID audioId);
 
     Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO);
 }
