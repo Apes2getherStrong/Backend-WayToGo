@@ -83,16 +83,9 @@ class AudioMapperTest {
                 .build();
     }
 
-    @Disabled
-    @DisplayName("Ogolnie dziala, ale nie na ten issue")
     @Test
     void testAudioToAudioDto() {
         AudioDTO mapped = audioMapper.audioToAudioDto(audio);
-
-        /*
-        Tak tego NIE ROBIC:
-        assertThat(mapped).isEqualTo(audioDTO);
-        */
 
         assertThat(mapped.getId()).isEqualTo(audio.getId());
         assertThat(mapped.getName()).isEqualTo(audio.getName());
@@ -108,6 +101,25 @@ class AudioMapperTest {
         assertThat(mapped.getMapLocation().getName()).isEqualTo(audio.getMapLocation().getName());
         assertThat(mapped.getMapLocation().getDescription()).isEqualTo(audio.getMapLocation().getDescription());
         assertThat(mapped.getMapLocation().getCoordinates()).isEqualTo(audio.getMapLocation().getCoordinates());
+    }
 
+    @Test
+    void testAudioDtoToAudio() {
+        Audio mapped = audioMapper.audioDtoToAudio(audioDTO);
+
+        assertThat(mapped.getId()).isEqualTo(audioDTO.getId());
+        assertThat(mapped.getName()).isEqualTo(audioDTO.getName());
+        assertThat(mapped.getDescription()).isEqualTo(audioDTO.getDescription());
+
+        assertThat(mapped.getUser().getId()).isEqualTo(audioDTO.getUser().getId());
+        assertThat(mapped.getUser().getLogin()).isEqualTo(audioDTO.getUser().getLogin());
+        assertThat(mapped.getUser().getPassword()).isEqualTo(audioDTO.getUser().getPassword());
+        assertThat(mapped.getUser().getUsername()).isEqualTo(audioDTO.getUser().getUsername());
+
+
+        assertThat(mapped.getMapLocation().getId()).isEqualTo(audioDTO.getMapLocation().getId());
+        assertThat(mapped.getMapLocation().getName()).isEqualTo(audioDTO.getMapLocation().getName());
+        assertThat(mapped.getMapLocation().getDescription()).isEqualTo(audioDTO.getMapLocation().getDescription());
+        assertThat(mapped.getMapLocation().getCoordinates()).isEqualTo(audioDTO.getMapLocation().getCoordinates());
     }
 }
