@@ -51,6 +51,17 @@ class MapLocationMapperTest {
         assertEquals(mapped.getCoordinates(), mapLocation.getCoordinates());
         assertEquals(mapped.getUpdateDate(), mapLocation.getUpdateDate());
         assertEquals(mapped.getCreatedDate(), mapLocation.getCreatedDate());
+    }
 
+    @Test
+    void testMapLocationDtoToMapLocation() {
+        MapLocation mapped = mapLocationMapper.mapLocationDtoToMapLocation(mapLocationDTO);
+
+        assertEquals(mapped.getId(), mapLocationDTO.getId());
+        assertEquals(mapped.getName(), mapLocationDTO.getName());
+        assertEquals(mapped.getDescription(), mapLocationDTO.getDescription());
+        assertEquals(mapped.getCoordinates(), mapLocationDTO.getCoordinates());
+        assertEquals(mapped.getUpdateDate(), mapLocationDTO.getUpdateDate());
+        assertEquals(mapped.getCreatedDate(), mapLocationDTO.getCreatedDate());
     }
 }
