@@ -267,14 +267,15 @@ class RouteControllerIT {
 
     @Rollback
     @Transactional
+    @Commit
     @Test
     //@Disabled
     //@DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
     void testRouteExistanceAfterUserDeletion() {
+        //https://stackoverflow.com/questions/5360795/what-is-the-difference-between-unidirectional-and-bidirectional-jpa-and-hibernat
+        //https://stackoverflow.com/questions/8434853/jpa-onetomany-update
         User user = userRepository.findAll().get(0);
         user.setRoutes(Collections.emptyList());
-        //Route route = routeRepository.findAll().get(0);
-        //route.setUser(user);
 
         Route newRoute = Route.builder()
                         .user(user)
@@ -283,6 +284,9 @@ class RouteControllerIT {
                         .description(" ")
                         .build();
         routeRepository.save(newRoute);
+
+        user = userRepository.findAll().get(0);
+
 
         userRepository.deleteById(user.getId());
         assertThat(routeRepository.existsById(newRoute.getId())).isTrue();
