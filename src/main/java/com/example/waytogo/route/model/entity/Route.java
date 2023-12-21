@@ -26,10 +26,11 @@ public class Route {
     @Column(name="route_id", updatable=false, nullable=false)
     private UUID id;
 
+    //why fetch type lazy? user is not a collection
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<RouteMapLocation> routeMapLocations;
 
     @NotBlank

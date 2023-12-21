@@ -5,12 +5,18 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
+import com.example.waytogo.user.model.entity.User;
+import com.example.waytogo.user.repository.UserRepository;
+import com.example.waytogo.user.service.api.UserService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +34,12 @@ class RouteServiceIT {
 
     @Autowired
     RouteRepository routeRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
 
     Route testRoute;
     RouteDTO testRouteDTO;
@@ -56,6 +68,24 @@ class RouteServiceIT {
             RouteDTO routeDTO = routeService.saveNewRoute(testRouteDTO);
         });
 
+
+    }
+
+
+    @Rollback
+    @Transactional
+    @Test
+    void testRouteExistanceAfterUserDeletion() {
+        User user = userRepository.findAll().get(0);
+        user.setRoutes(Collections.emptyList());
+
+        Route route = routeRepository.findAll().get(0);
+        route.setUser(user);
+
+        userService.deleteUserById(user.getId());
+
+        assertThat(routeRepository.existsById(route.getId())).isTrue();
+        assertThat(routeRepository.findById(route.getId()).get().getUser()).isNull();
 
     }
 

@@ -1,5 +1,9 @@
 package com.example.waytogo.user.service.impl;
 
+import com.example.waytogo.audio.model.entity.Audio;
+import com.example.waytogo.audio.repository.AudioRepository;
+import com.example.waytogo.route.model.entity.Route;
+import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.user.mapper.UserMapper;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,6 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UserServiceJPA implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final RouteRepository routeRepository;
+    private final AudioRepository audioRepository;
 
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
@@ -70,6 +77,16 @@ public class UserServiceJPA implements UserService {
     @Override
     public boolean deleteUserById(UUID userId) {
         if (userRepository.existsById(userId)) {
+            List<Route> routes = routeRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
+            for(Route r : routes) {
+                r.setUser(null);
+            }
+
+            List<Audio> audios = audioRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
+            for(Audio a : audios) {
+                a.setUser(null);
+            }
+
             userRepository.deleteById(userId);
             return true;
         }

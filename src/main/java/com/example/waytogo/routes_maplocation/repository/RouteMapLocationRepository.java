@@ -3,6 +3,7 @@ package com.example.waytogo.routes_maplocation.repository;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,7 @@ public interface RouteMapLocationRepository extends JpaRepository<RouteMapLocati
      */
     @Query("SELECT rml.mapLocation FROM RouteMapLocation rml WHERE rml.route.id = :routeId")
     Page<MapLocation> findMapLocationsByRouteId(@Param("routeId") UUID routeId, Pageable pageable);
+
+    Page<RouteMapLocation> findByMapLocation_Id(UUID id, PageRequest pageRequest);
+    Page<RouteMapLocation> findByRoute_Id(UUID id, PageRequest pageRequest);
 }

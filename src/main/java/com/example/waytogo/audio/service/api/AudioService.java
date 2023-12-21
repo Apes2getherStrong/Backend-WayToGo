@@ -14,6 +14,8 @@ public interface AudioService {
 
     Page<AudioDTO> getAllAudiosByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 
+    Page<AudioDTO> getAllAudiosByMapLocationId(UUID mapLocationId, Integer pageNumber, Integer pageSize);
+
     AudioDTO saveNewAudio(@Valid AudioDTO audioDTO);
 
     Optional<AudioDTO> updateUserById(UUID audioId, @Valid AudioDTO audioDTO);

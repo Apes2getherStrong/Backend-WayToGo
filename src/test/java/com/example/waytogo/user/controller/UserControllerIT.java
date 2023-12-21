@@ -61,7 +61,9 @@ class UserControllerIT {
     @Transactional
     @Test
     void testEmptyGetAllUsers() {
-        userRepository.deleteAll();
+        for(User u : userRepository.findAll()) {
+            userService.deleteUserById(u.getId());
+        }
         Page<UserDTO> dtos = userController.getAllUsers(1, 25);
 
         assertThat(dtos.getContent().size()).isEqualTo(0);

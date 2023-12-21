@@ -7,6 +7,7 @@ import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
+import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,9 @@ class RouteControllerIT {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -86,7 +90,11 @@ class RouteControllerIT {
     @Transactional
     @Test
     void getRoutesEmpty() {
-        routeRepository.deleteAll();
+        for(Route r : routeRepository.findAll()) {
+            routeService.deleteRouteById(r.getId());
+        }
+
+
         Page<RouteDTO> page = routeController.getRoutes(1,20).getBody();
         assertThat(page.getContent().size()).isEqualTo(0);
     }
@@ -265,20 +273,6 @@ class RouteControllerIT {
         });
     }
 
-    @Rollback
-    @Transactional
-    @Test
-    @Disabled
-    @DisplayName("kumalale kumalale trzeba dorobić bo naruszenie wiezow integralnosci")
-    void testRouteExistanceAfterUserDeletion() {
-        User user = userRepository.findAll().get(0);
-        user.setRoutes(Collections.emptyList());
-        Route route = routeRepository.findAll().get(0);
-        route.setUser(user);
 
-        //userRepository.deleteById(user.getUserId());
-        //assertThat(routeRepository.existsById(route.getId())).isTrue();
-
-    }
 
 }

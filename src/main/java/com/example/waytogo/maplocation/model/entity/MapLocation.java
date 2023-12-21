@@ -30,10 +30,10 @@ public class MapLocation {
     @Column(name = "map_location_id", updatable = false, nullable = false)
     private UUID id;
 
-    @OneToMany(mappedBy="mapLocation")
+    @OneToMany(mappedBy="mapLocation", fetch = FetchType.LAZY)
     private List<Audio> audios;
 
-    @OneToMany(mappedBy = "mapLocation")
+    @OneToMany(mappedBy = "mapLocation", fetch = FetchType.LAZY)
     private List<RouteMapLocation> routes;
 
     @Column(name = "name")
