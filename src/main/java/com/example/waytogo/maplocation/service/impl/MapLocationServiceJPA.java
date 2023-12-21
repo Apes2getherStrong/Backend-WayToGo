@@ -30,12 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MapLocationServiceJPA implements MapLocationService {
     private final MapLocationMapper mapLocationMapper;
     private final MapLocationRepository mapLocationRepository;
-
-    private final AudioService audioService;            //TODO is it correct? :
-    private final AudioRepository audioRepository;      //audio service is used for deleting audio when deleting map location
-                                                        //audio repository is used to get all audios by map location
-                                                        //if we wanted to use only audioservice we would have to map the result of service's method
-                                                        //to convert audioDTO to audio
+    private final AudioService audioService;
+    private final AudioRepository audioRepository;
     private final RouteMapLocationService routeMapLocationService;
     private final RouteMapLocationRepository routeMapLocationRepository;
 
