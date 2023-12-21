@@ -32,7 +32,7 @@ class RouteMapLocationRepositoryTest {
 
     @Test
     @Disabled
-    @DisplayName("jakis test na ta metode co zwraca malocations po route Id")
+    @DisplayName("jakis test na ta metode co zwraca malocations po  route Id")
     void doZrobienia() {
     }
 
