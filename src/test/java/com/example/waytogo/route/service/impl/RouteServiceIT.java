@@ -76,8 +76,6 @@ class RouteServiceIT {
     @Transactional
     @Test
     void testRouteExistanceAfterUserDeletion() {
-        //https://stackoverflow.com/questions/5360795/what-is-the-difference-between-unidirectional-and-bidirectional-jpa-and-hibernat
-        //https://stackoverflow.com/questions/8434853/jpa-onetomany-update
         User user = userRepository.findAll().get(0);
         user.setRoutes(Collections.emptyList());
 
