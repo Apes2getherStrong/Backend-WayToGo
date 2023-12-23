@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.UUID;
 
@@ -45,9 +48,11 @@ public class Audio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    //@OnDelete(action = OnDeleteAction.SET_NULL) //why not working pls start work because me sad :(
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "map_location_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     MapLocation mapLocation;
 }

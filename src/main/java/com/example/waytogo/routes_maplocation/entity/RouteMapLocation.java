@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
@@ -27,11 +29,13 @@ public class RouteMapLocation {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="map_location_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MapLocation mapLocation;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="route_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Route route;
 
     @NotNull

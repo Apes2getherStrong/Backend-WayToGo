@@ -1,5 +1,6 @@
 package com.example.waytogo.route.service.impl;
 
+import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.route.mapper.RouteMapper;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
@@ -88,13 +90,10 @@ public class RouteServiceJPA implements RouteService {
         return atomicReference.get();
     }
 
+    @Transactional
     @Override
     public Boolean deleteRouteById(UUID routeId) {
         if (routeRepository.existsById(routeId)) {
-            List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(RouteMapLocation rmp : routeMapLocations) {
-                routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
-            }
 
             routeRepository.deleteById(routeId);
             return true;
@@ -121,6 +120,17 @@ public class RouteServiceJPA implements RouteService {
             atomicReference.set(Optional.empty());
         });
         return atomicReference.get();
+    }
+
+    @Transactional
+    @Override
+    public void setUserToNullByUserId(UUID userId) {
+
+        for( Route r : routeRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent()) {
+            r.setUser(null);
+        }
+
+        //routeRepository.setUserToNullByUserId(userId); dlaczego nie dziala?
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {

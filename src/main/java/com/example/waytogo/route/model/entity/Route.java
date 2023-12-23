@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -26,11 +29,12 @@ public class Route {
     @Column(name="route_id", updatable=false, nullable=false)
     private UUID id;
 
-    //why fetch type lazy? user is not a collection
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    //@OnDelete(action = OnDeleteAction.SET_NULL) //tell me why (there nothing but a heartache)
     private User user;
 
-    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<RouteMapLocation> routeMapLocations;
 
     @NotBlank

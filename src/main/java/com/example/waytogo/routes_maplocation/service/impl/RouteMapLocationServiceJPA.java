@@ -78,6 +78,17 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
         return false;
     }
 
+    @Override
+    public void deleteByMapLocationId(UUID mapLocationId) {
+        routeMapLocationRepository.deleteByMapLocationId(mapLocationId);
+    }
+
+    @Override
+    public void deleteByRouteId(UUID routeId) {
+        routeMapLocationRepository.deleteByRouteId(routeId);
+    }
+
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;

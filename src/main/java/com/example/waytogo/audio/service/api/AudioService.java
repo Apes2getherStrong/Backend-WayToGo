@@ -23,4 +23,8 @@ public interface AudioService {
     Boolean deleteAudioById(UUID audioId);
 
     Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO);
+
+    void deleteByMapLocationId(UUID mapLocationId);
+
+    void setUserToNullByUserId(UUID userId);
 }

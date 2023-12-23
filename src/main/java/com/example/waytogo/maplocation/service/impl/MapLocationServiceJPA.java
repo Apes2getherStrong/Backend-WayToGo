@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -30,10 +31,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MapLocationServiceJPA implements MapLocationService {
     private final MapLocationMapper mapLocationMapper;
     private final MapLocationRepository mapLocationRepository;
+
     private final AudioService audioService;
-    private final AudioRepository audioRepository;
     private final RouteMapLocationService routeMapLocationService;
-    private final RouteMapLocationRepository routeMapLocationRepository;
+
 
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
@@ -54,19 +55,13 @@ public class MapLocationServiceJPA implements MapLocationService {
      * @param mapLocationId
      * @return Boolean
      */
+    @Transactional
     @Override
     public Boolean deleteMapLocationById(UUID mapLocationId) {
         if (mapLocationRepository.existsById(mapLocationId)) {
 
-            List<Audio> audios = audioRepository.findByMapLocation_Id(mapLocationId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(Audio a : audios) {
-                audioService.deleteAudioById(a.getId());
-            }
-
-            List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByMapLocation_Id(mapLocationId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(RouteMapLocation rmp : routeMapLocations) {
-                routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
-            }
+            //routeMapLocationService.deleteByMapLocationId(mapLocationId);
+            //audioService.deleteByMapLocationId(mapLocationId);
 
             mapLocationRepository.deleteById(mapLocationId);
             return true;

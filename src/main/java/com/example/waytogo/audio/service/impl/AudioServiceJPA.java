@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
@@ -151,5 +152,19 @@ public class AudioServiceJPA implements AudioService {
         Sort sort = Sort.by(Sort.Order.asc("name"));
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
+    }
+
+    @Override
+    public void deleteByMapLocationId(UUID mapLocationId) {
+        audioRepository.deleteByMapLocation_Id(mapLocationId);
+    }
+
+    @Transactional
+    @Override
+    public void setUserToNullByUserId(UUID userId) {
+        for( Audio a : audioRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent()) {
+           a.setUser(null);
+        }
+        //audioRepository.setUserToNullByUserId(userId); //dlaczego nie działa?
     }
 }
