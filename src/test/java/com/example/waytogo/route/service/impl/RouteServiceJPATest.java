@@ -124,7 +124,7 @@ class RouteServiceJPATest {
     @Test
     void deleteRouteById() {
         given(routeRepository.existsById(any(UUID.class))).willReturn(true);
-        given( routeMapLocationRepository.findByRoute_Id(any(UUID.class),any(PageRequest.class))).willReturn(Page.empty());
+        //given( routeMapLocationRepository.findByRoute_Id(any(UUID.class),any(PageRequest.class))).willReturn(Page.empty());
         Boolean result = routeService.deleteRouteById(testRoute.getId());
         assertThat(result).isTrue();
     }

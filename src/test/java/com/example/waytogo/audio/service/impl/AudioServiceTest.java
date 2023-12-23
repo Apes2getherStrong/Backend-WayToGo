@@ -215,6 +215,7 @@ class AudioServiceTest {
         userService.deleteUserById(user.getId());
 
         assertThat(audioRepository.existsById(audio.getId())).isTrue();
+
         assertThat(audioRepository.findById(audio.getId()).get().getUser()).isNull();
 
     }
