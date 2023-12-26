@@ -1,5 +1,6 @@
 package com.example.waytogo.route.service.impl;
 
+import com.example.waytogo.route.controller.RouteController;
 import com.example.waytogo.route.mapper.RouteMapper;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
@@ -9,7 +10,6 @@ import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import com.example.waytogo.user.mapper.UserMapper;
-import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -19,8 +19,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -121,6 +127,64 @@ public class RouteServiceJPA implements RouteService {
             atomicReference.set(Optional.empty());
         });
         return atomicReference.get();
+    }
+
+
+    //TODO when replacing image old image should be deleted.
+    //TODO when deleting route image should be deleted
+    //TODO check if routeRepository.save(route); is necessary
+
+    @Override
+    public Boolean saveNewImage(MultipartFile file, UUID routeId) throws IOException {
+
+        Optional <Route> optRoute = routeRepository.findById(routeId);
+        if(optRoute.isEmpty())
+            return false;
+        Route route = optRoute.get();
+
+        byte[] bytes = file.getBytes();
+        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
+        Files.createDirectories(directoryPath);
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = StringUtils.getFilenameExtension(originalFilename);
+
+        String newFilename = UUID.randomUUID().toString() + "." + fileExtension;
+        String filePath = directoryPath.resolve(newFilename).toString();
+
+        Files.write(Paths.get(filePath), bytes);
+        route.setImageFilename(newFilename);
+        routeRepository.save(route); //necessary?
+        return true;
+    }
+
+    //TODO weird function output. Instead of looking at the output of the function, exception handling or
+    //TODO controler advisor can be implemented. Disadvantage: exceptions are slower
+
+    //TODO possible problem with non-existing image
+
+    //empty optional when route not found, empty array when route found but image not found
+    @Override
+    public Optional<byte[]> getImageByRouteId(UUID routeId) throws IOException {
+
+        Optional<Route> optRoute = routeRepository.findById(routeId);
+        if(optRoute.isEmpty()) {
+            //no route
+            return Optional.empty();
+        }
+
+        String imageFilename = optRoute.get().getImageFilename();
+
+
+        Path imagePath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH, imageFilename);
+
+        if (Files.exists(imagePath)) {
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+            return Optional.of(imageBytes);
+        } else {
+            //no file
+            return Optional.of(new byte[0]);
+        }
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
