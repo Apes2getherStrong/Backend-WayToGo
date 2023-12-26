@@ -6,20 +6,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
     public static final String ROUTE_PATH = "/api/v1/routes";
     public static final String ROUTE_PATH_ID = ROUTE_PATH + "/{routeId}";
     public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
+    public static final String ROUTE_PATH_ID_IMAGE = ROUTE_PATH_ID + "/image";
+    //TODO change the path (it shouldn't be hardcoded)
+    public static final String IMAGE_DIRECTORY_PATH = "src/main/java/com/example/waytogo/route/route_images/";
+
     private final RouteService routeService;
 
 

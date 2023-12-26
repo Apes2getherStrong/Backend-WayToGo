@@ -48,12 +48,9 @@ public class Route {
     @Column(length = 255)
     private String description;
 
-    /*
-    //Potrzebne do zdjecia
-    @Transient
-    MultipartFile file;
+    //it is better to save only the path to the file:
+    //https://stackoverflow.com/questions/50363639/how-spring-boot-jpahibernate-saves-images
+    @Column(name = "image_filename")
+    String imageFilename;
 
-    @Column(name = "file_path")
-    String filePath;
-    */
 }
