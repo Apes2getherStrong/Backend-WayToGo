@@ -48,8 +48,8 @@ public class Audio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@OnDelete(action = OnDeleteAction.SET_NULL) //why not working pls start work because me sad :(
-    private User user;
+    //@OnDelete(action = OnDeleteAction.SET_NULL) //WHYYYY IS IT NOT WORKINGGG :(
+    User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "map_location_id")

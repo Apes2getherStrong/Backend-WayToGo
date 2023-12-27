@@ -154,11 +154,6 @@ public class AudioServiceJPA implements AudioService {
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
 
-    @Override
-    public void deleteByMapLocationId(UUID mapLocationId) {
-        audioRepository.deleteByMapLocation_Id(mapLocationId);
-    }
-
     @Transactional
     @Override
     public void setUserToNullByUserId(UUID userId) {

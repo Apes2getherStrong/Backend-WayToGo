@@ -24,7 +24,5 @@ public interface AudioService {
 
     Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO);
 
-    void deleteByMapLocationId(UUID mapLocationId);
-
     void setUserToNullByUserId(UUID userId);
 }

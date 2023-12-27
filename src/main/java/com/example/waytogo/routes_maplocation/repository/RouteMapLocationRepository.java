@@ -27,8 +27,4 @@ public interface RouteMapLocationRepository extends JpaRepository<RouteMapLocati
 
     Page<RouteMapLocation> findByMapLocation_Id(UUID id, PageRequest pageRequest);
     Page<RouteMapLocation> findByRoute_Id(UUID id, PageRequest pageRequest);
-
-    void deleteByRouteId(UUID id);
-
-    void deleteByMapLocationId(UUID id);
 }

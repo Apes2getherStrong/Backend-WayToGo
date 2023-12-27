@@ -60,9 +60,6 @@ public class MapLocationServiceJPA implements MapLocationService {
     public Boolean deleteMapLocationById(UUID mapLocationId) {
         if (mapLocationRepository.existsById(mapLocationId)) {
 
-            //routeMapLocationService.deleteByMapLocationId(mapLocationId);
-            //audioService.deleteByMapLocationId(mapLocationId);
-
             mapLocationRepository.deleteById(mapLocationId);
             return true;
         }

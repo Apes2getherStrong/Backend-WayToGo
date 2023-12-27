@@ -20,7 +20,6 @@ public interface RouteMapLocationService {
 
     Boolean deleteRouteMapLocationById(UUID routeMapLocationId);
 
-    void deleteByMapLocationId(UUID mapLocationId);
-    void deleteByRouteId(UUID routeId);
+
 
 }
