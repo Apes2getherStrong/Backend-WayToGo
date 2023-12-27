@@ -34,7 +34,7 @@ public class Route {
     //@OnDelete(action = OnDeleteAction.SET_NULL) //tell me why (there nothing but a heartache)
     private User user;
 
-    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<RouteMapLocation> routeMapLocations;
 
     @NotBlank
