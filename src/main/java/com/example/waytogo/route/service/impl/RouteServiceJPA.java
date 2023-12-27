@@ -130,7 +130,6 @@ public class RouteServiceJPA implements RouteService {
     }
 
 
-    //TODO when replacing image old image should be deleted.
     //TODO when deleting route image should be deleted
     //TODO check if routeRepository.save(route); is necessary
 
@@ -145,6 +144,15 @@ public class RouteServiceJPA implements RouteService {
         byte[] bytes = file.getBytes();
         Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
         Files.createDirectories(directoryPath);
+
+        //delete old image
+        String filename = route.getImageFilename();
+        if(filename != null) {
+            Path oldFilePath = directoryPath.resolve(filename);
+            if (Files.exists(oldFilePath)) {
+                Files.delete(oldFilePath);
+            }
+        }
 
         String originalFilename = file.getOriginalFilename();
         String fileExtension = StringUtils.getFilenameExtension(originalFilename);
@@ -161,8 +169,6 @@ public class RouteServiceJPA implements RouteService {
     //TODO weird function output. Instead of looking at the output of the function, exception handling or
     //TODO controler advisor can be implemented. Disadvantage: exceptions are slower
 
-    //TODO possible problem with non-existing image
-
     //empty optional when route not found, empty array when route found but image not found
     @Override
     public Optional<byte[]> getImageByRouteId(UUID routeId) throws IOException {
@@ -175,6 +181,10 @@ public class RouteServiceJPA implements RouteService {
 
         String imageFilename = optRoute.get().getImageFilename();
 
+        //no image assigned
+        if(imageFilename == null) {
+            return Optional.of(new byte[0]);
+        }
 
         Path imagePath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH, imageFilename);
 
@@ -182,7 +192,7 @@ public class RouteServiceJPA implements RouteService {
             byte[] imageBytes = Files.readAllBytes(imagePath);
             return Optional.of(imageBytes);
         } else {
-            //no file
+            //image assigned but file not found
             return Optional.of(new byte[0]);
         }
     }
