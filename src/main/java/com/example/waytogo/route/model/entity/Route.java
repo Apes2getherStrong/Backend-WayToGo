@@ -7,9 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +28,9 @@ public class Route {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@OnDelete(action = OnDeleteAction.SET_NULL) //tell me why (there nothing but a heartache)
+    //@OnDelete(action = OnDeleteAction.SET_NULL)
+    //^ for some reason set null is not working.
+    //Instead, appropriate method in service was implemented
     private User user;
 
     @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)

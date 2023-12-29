@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -72,14 +73,16 @@ class RouteServiceIT {
     }
 
 
-    @Rollback
-    @Transactional
+    //why I deleted rollback and transactional annotations:
+    //https://dev.to/henrykeys/don-t-use-transactional-in-tests-40eb
     @Test
     void testRouteExistanceAfterUserDeletion() {
+
         User user = userRepository.findAll().get(0);
         user.setRoutes(Collections.emptyList());
 
         Route route = routeRepository.findAll().get(0);
+
         route.setUser(user);
 
         userService.deleteUserById(user.getId());
@@ -87,6 +90,12 @@ class RouteServiceIT {
         assertThat(routeRepository.existsById(route.getId())).isTrue();
         assertThat(routeRepository.findById(route.getId()).get().getUser()).isNull();
 
+        //"rollback"
+        userRepository.save(user);
+        route.setUser(user);
+        routeRepository.save(route);
+
     }
+
 
 }

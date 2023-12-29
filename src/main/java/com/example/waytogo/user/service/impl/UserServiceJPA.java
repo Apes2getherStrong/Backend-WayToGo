@@ -79,7 +79,7 @@ public class UserServiceJPA implements UserService {
         return atomicReference.get();
     }
 
-    @Transactional
+
     @Override
     public boolean deleteUserById(UUID userId) {
         if (userRepository.existsById(userId)) {

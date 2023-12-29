@@ -140,7 +140,7 @@ class RouteControllerIT {
     @Test
     void getRoutesByUserId() throws Exception{
 
-        User user = userRepository.findAll().get(0);
+        User user = userRepository.findAll().get(userRepository.findAll().size() - 1);
         user.setRoutes(Collections.emptyList());
         Route route = routeRepository.findAll().get(0);
         route.setUser(user);

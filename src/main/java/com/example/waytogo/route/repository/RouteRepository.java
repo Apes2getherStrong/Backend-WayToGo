@@ -17,8 +17,6 @@ public interface RouteRepository  extends JpaRepository<Route, UUID> {
 
     Page<Route> findByUser_Id(UUID userId, PageRequest pageRequest);
 
-
-    //why is it not working. (Select query is expected)
     @Modifying
     @Transactional
     @Query("UPDATE Route r SET r.user = null WHERE r.user.id = :userId")

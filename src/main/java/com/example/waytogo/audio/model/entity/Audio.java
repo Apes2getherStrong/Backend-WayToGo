@@ -48,7 +48,9 @@ public class Audio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@OnDelete(action = OnDeleteAction.SET_NULL) //WHYYYY IS IT NOT WORKINGGG :(
+    //@OnDelete(action = OnDeleteAction.SET_NULL)
+    //^ for some reason set null is not working.
+    //Instead, appropriate method in service was implemented
     User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
