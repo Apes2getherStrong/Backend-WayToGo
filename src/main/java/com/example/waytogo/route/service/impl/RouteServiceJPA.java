@@ -90,6 +90,7 @@ public class RouteServiceJPA implements RouteService {
         return atomicReference.get();
     }
 
+    @Transactional
     @Override
     public Boolean deleteRouteById(UUID routeId) {
         if (routeRepository.existsById(routeId)) {
@@ -121,8 +122,18 @@ public class RouteServiceJPA implements RouteService {
         return atomicReference.get();
     }
 
+    @Transactional
+    @Override
+    public void setUserToNullByUserId(UUID userId) {
 
+        for( Route r : routeRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent()) {
+            r.setUser(null);
+        }
 
+        //routeRepository.setUserToNullByUserId(userId);
+        //for some reason changes made by query are not visible in tests. (check repository for more info)
+
+    }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;

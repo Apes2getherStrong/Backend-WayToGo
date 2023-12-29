@@ -202,8 +202,8 @@ class AudioServiceTest {
         assertThat(audioService.patchAudioById(UUID.randomUUID(), audioDTO)).isEmpty();
     }
 
-    //why I deleted rollback and transactional annotations:
-    //https://dev.to/henrykeys/don-t-use-transactional-in-tests-40eb
+    @Rollback
+    @Transactional
     @Test
     void testAudioExistanceAfterUserDeletion() {
         User user = userRepository.findAll().get(0);
@@ -216,11 +216,6 @@ class AudioServiceTest {
 
         assertThat(audioRepository.existsById(audio.getId())).isTrue();
         assertThat(audioRepository.findById(audio.getId()).get().getUser()).isNull();
-
-        //"rollback"
-        userRepository.save(user);
-        audio.setUser(user);
-        audioRepository.save(audio);
 
     }
 

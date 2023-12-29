@@ -35,6 +35,9 @@ public class UserServiceJPA implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
+    private final RouteService routeService;
+    private final AudioService audioService;
+
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
 
@@ -76,10 +79,14 @@ public class UserServiceJPA implements UserService {
         return atomicReference.get();
     }
 
-
+    @Transactional
     @Override
     public boolean deleteUserById(UUID userId) {
         if (userRepository.existsById(userId)) {
+
+            routeService.setUserToNullByUserId(userId);
+            audioService.setUserToNullByUserId(userId);
+
             userRepository.deleteById(userId);
             return true;
         }
