@@ -32,10 +32,6 @@ public class MapLocationServiceJPA implements MapLocationService {
     private final MapLocationMapper mapLocationMapper;
     private final MapLocationRepository mapLocationRepository;
 
-    private final AudioService audioService;
-    private final RouteMapLocationService routeMapLocationService;
-
-
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
 

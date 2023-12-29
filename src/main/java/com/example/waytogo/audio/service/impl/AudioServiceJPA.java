@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
@@ -152,12 +151,5 @@ public class AudioServiceJPA implements AudioService {
         Sort sort = Sort.by(Sort.Order.asc("name"));
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort);
-    }
-
-    @Transactional
-    @Override
-    public void setUserToNullByUserId(UUID userId) {
-        audioRepository.setUserToNullByUserId(userId);
-
     }
 }
