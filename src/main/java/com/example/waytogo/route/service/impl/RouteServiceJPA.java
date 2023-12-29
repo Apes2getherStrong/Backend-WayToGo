@@ -122,10 +122,7 @@ public class RouteServiceJPA implements RouteService {
     }
 
 
-    @Override
-    public void setUserToNullByUserId(UUID userId) {
-        routeRepository.setUserToNullByUserId(userId);
-    }
+
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber;

@@ -22,6 +22,4 @@ public interface RouteService {
     Boolean deleteRouteById(UUID routeId);
 
     Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
-
-    void setUserToNullByUserId(UUID userId);
 }
