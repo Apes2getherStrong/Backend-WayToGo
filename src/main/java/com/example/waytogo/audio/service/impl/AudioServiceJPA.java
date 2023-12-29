@@ -157,9 +157,7 @@ public class AudioServiceJPA implements AudioService {
     @Transactional
     @Override
     public void setUserToNullByUserId(UUID userId) {
-        for( Audio a : audioRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent()) {
-           a.setUser(null);
-        }
-        //audioRepository.setUserToNullByUserId(userId); //dlaczego nie działa?
+        audioRepository.setUserToNullByUserId(userId);
+
     }
 }
