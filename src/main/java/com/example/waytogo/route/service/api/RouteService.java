@@ -19,7 +19,7 @@ public interface RouteService {
 
     Optional<RouteDTO> updateRouteById(UUID routeId, @Valid RouteDTO routeDTO);
 
-    Boolean deleteRouteById(UUID routeId);
+    Boolean deleteRouteById (UUID routeId) throws IOException;
 
     Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
 

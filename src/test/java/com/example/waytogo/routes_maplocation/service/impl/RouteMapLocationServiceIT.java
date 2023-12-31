@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -130,7 +131,7 @@ class RouteMapLocationServiceIT {
     @Rollback
     @Transactional
     @Test
-    void testRouteMapLocationExistenceAfterRouteDeletion() {
+    void testRouteMapLocationExistenceAfterRouteDeletion() throws IOException {
         RouteMapLocation rmp = routeMapLocationRepository.findAll().get(0);
         Route route = routeRepository.findAll().get(0);
         rmp.setRoute(route);
