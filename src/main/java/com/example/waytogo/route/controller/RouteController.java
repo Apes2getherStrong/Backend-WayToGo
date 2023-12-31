@@ -150,10 +150,15 @@ public class RouteController {
     @DeleteMapping(ROUTE_PATH_ID)
     public ResponseEntity<Void> deleteRoute (@PathVariable("routeId") UUID routeId) {
 
-        if( !routeService.deleteRouteById(routeId)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        try {
+            if (!routeService.deleteRouteById(routeId)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 

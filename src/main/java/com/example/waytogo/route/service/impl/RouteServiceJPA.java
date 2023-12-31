@@ -95,17 +95,35 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public Boolean deleteRouteById(UUID routeId) {
-        if (routeRepository.existsById(routeId)) {
-            List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(RouteMapLocation rmp : routeMapLocations) {
-                routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
-            }
+    public Boolean deleteRouteById(UUID routeId) throws IOException{
+        Optional <Route> optRoute = routeRepository.findById(routeId);
+        if(optRoute.isEmpty())
+            return false;
+        Route route = optRoute.get();
 
-            routeRepository.deleteById(routeId);
-            return true;
+        List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
+        for(RouteMapLocation rmp : routeMapLocations) {
+            routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
         }
-        return false;
+
+        //delete old image
+        deleteImage(route);
+
+        routeRepository.deleteById(routeId);
+        return true;
+
+    }
+
+    private void deleteImage(Route route) throws IOException{
+        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
+        String filename = route.getImageFilename();
+        if(filename != null) {
+
+            Path oldFilePath = directoryPath.resolve(filename);
+            if (Files.exists(oldFilePath)) {
+                Files.delete(oldFilePath);
+            }
+        }
     }
 
     @Override
@@ -130,29 +148,25 @@ public class RouteServiceJPA implements RouteService {
     }
 
 
-    //TODO when deleting route image should be deleted
+
     //TODO check if routeRepository.save(route); is necessary
+    //TODO write tests
 
     @Override
     public Boolean saveNewImage(MultipartFile file, UUID routeId) throws IOException {
+
+        byte[] bytes = file.getBytes();
+
+        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
+        Files.createDirectories(directoryPath);
 
         Optional <Route> optRoute = routeRepository.findById(routeId);
         if(optRoute.isEmpty())
             return false;
         Route route = optRoute.get();
 
-        byte[] bytes = file.getBytes();
-        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
-        Files.createDirectories(directoryPath);
-
         //delete old image
-        String filename = route.getImageFilename();
-        if(filename != null) {
-            Path oldFilePath = directoryPath.resolve(filename);
-            if (Files.exists(oldFilePath)) {
-                Files.delete(oldFilePath);
-            }
-        }
+        deleteImage(route);
 
         String originalFilename = file.getOriginalFilename();
         String fileExtension = StringUtils.getFilenameExtension(originalFilename);

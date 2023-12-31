@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,7 +90,7 @@ class RouteControllerIT {
     @Rollback
     @Transactional
     @Test
-    void getRoutesEmpty() {
+    void getRoutesEmpty() throws IOException {
         for(Route r : routeRepository.findAll()) {
             routeService.deleteRouteById(r.getId());
         }
