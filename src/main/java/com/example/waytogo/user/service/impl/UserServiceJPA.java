@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UserServiceJPA implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-
     private final RouteService routeService;
     private final AudioService audioService;
 

@@ -21,9 +21,10 @@ public interface RouteRepository  extends JpaRepository<Route, UUID> {
     //for some reason changes made by the query are not visible in tests.
     //One solution is to delete @Transactional annotation in test but then tests on github are failing
     //(Even though they pass locally)
-    @Modifying
-    @Transactional
-    @Query("UPDATE Route r SET r.user = null WHERE r.user.id = :userId")
-    int setUserToNullByUserId(@Param("userId") UUID userId);
+    //
+    //@Modifying
+    //@Transactional
+    //@Query("UPDATE Route r SET r.user = null WHERE r.user.id = :userId")
+    //int setUserToNullByUserId(@Param("userId") UUID userId);
 
 }
