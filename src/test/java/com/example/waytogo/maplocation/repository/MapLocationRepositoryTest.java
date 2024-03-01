@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-@Import({InitializationBasic.class, CsvServiceLoader.class , CsvConverterGeneric.class})
+@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class})
 class MapLocationRepositoryTest {
 
 

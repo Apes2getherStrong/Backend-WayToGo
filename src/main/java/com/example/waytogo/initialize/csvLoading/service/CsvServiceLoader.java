@@ -65,7 +65,7 @@ public class CsvServiceLoader {
 
         List<RoutesCsvRecord> routesCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, RoutesCsvRecord.class);
 
-        String sql = "INSERT INTO routes (route_id, user_user_id, name, description) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO routes (route_id, user_id, name, description) VALUES(?, ?, ?, ?)";
 
         routesCsv.forEach(routesCsvRecord -> {
             jdbcTemplate.update(sql, routesCsvRecord.getId(), routesCsvRecord.getUser(), routesCsvRecord.getName(), routesCsvRecord.getDescription());

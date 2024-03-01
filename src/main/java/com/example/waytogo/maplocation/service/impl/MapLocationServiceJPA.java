@@ -1,15 +1,11 @@
 package com.example.waytogo.maplocation.service.impl;
 
-import com.example.waytogo.audio.model.entity.Audio;
-import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
-import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -20,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -90,7 +85,7 @@ public class MapLocationServiceJPA implements MapLocationService {
             if (StringUtils.hasText(mapLocationDTO.getName())) {
                 mapLocation.setName(mapLocationDTO.getName());
 
-                if (mapLocationDTO.getCoordinates() != null){
+                if (mapLocationDTO.getCoordinates() != null) {
                     mapLocation.setCoordinates(mapLocationDTO.getCoordinates());
                 }
 
@@ -103,6 +98,7 @@ public class MapLocationServiceJPA implements MapLocationService {
 
         return atomicReference.get();
     }
+
     @Override
     public Page<MapLocationDTO> getAllMapLocations(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
@@ -111,6 +107,7 @@ public class MapLocationServiceJPA implements MapLocationService {
 
         return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
     }
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;

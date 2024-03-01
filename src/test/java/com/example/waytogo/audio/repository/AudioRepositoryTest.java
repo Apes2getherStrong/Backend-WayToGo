@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@Import({InitializationBasic.class,CsvServiceLoader.class ,CsvConverterGeneric.class})
+@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class})
 class AudioRepositoryTest {
 
     @Autowired
