@@ -1,17 +1,17 @@
-package com.example.waytogo.maplocation.model.csvModel;
+package com.example.waytogo.audio.model.csvModel;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
 import java.util.UUID;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MapLocationCsvRecord {
+public class AudioCsvRecord {
 
     @CsvBindByName
     UUID id;
@@ -22,10 +22,12 @@ public class MapLocationCsvRecord {
     @CsvBindByName
     String description;
 
-    @CsvBindByName
-    Float coord_x;
+    @CsvBindByName(column = "image_filename")
+    String imageFilename;
 
-    @CsvBindByName
-    Float coord_y;
+    @CsvBindByName(column = "user_id")
+    UUID user;
 
+    @CsvBindByName(column = "map_location_id")
+    UUID mapLocation;
 }

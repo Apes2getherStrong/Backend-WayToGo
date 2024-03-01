@@ -25,94 +25,15 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class InitializationBasic implements InitializingBean {
-    private final MapLocationRepository mapLocationRepository;
-    private final RouteMapLocationRepository routeMapLocationRepository;
-    private final RouteRepository routeRepository;
-    private final UserRepository userRepository;
-    private final AudioRepository audioRepository;
-    private final GeometryFactory geometryFactory;
     private final CsvServiceLoader csvServiceLoader;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         csvServiceLoader.loadUsers("classpath:csvData/users.csv");
-        csvServiceLoader.loadMapLocations("classpath:csvData/maplocations.csv");
-
-
-//        MapLocation mapLocation = MapLocation.builder()
-//                .name("skurwysyn posejdon")
-//                .description("krul moża")
-//                .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
-//                .build();
-//        mapLocationRepository.save(mapLocation);
-//        System.out.println(mapLocationRepository.findAll().get(0).getCoordinates());
-//
-//        MapLocation mapLocation2 = MapLocation.builder()
-//                .name("gmach weti")
-//                .description("gniazdo potworów")
-//                .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
-//                .build();
-//        mapLocationRepository.save(mapLocation2);
-//
-//        tuSieBawiOskar();
-//        hejkaTuLenka();
+        csvServiceLoader.loadMapLocations("classpath:csvData/map_locations.csv");
+        csvServiceLoader.loadAudios("classpath:csvData/audios.csv");
+        csvServiceLoader.loadRoutes("classpath:csvData/routes.csv");
+        csvServiceLoader.loadRoutes("classpath:csvData/route_map_locations.csv");
     }
 
-    private void hejkaTuLenka() {
-        User user1 = User.builder()
-                .username("KUBALSON")
-                .login("Mareczek")
-                .password("KochamGrafy123!")
-                .build();
-        userRepository.save(user1);
-
-        Audio audio1 = Audio.builder()
-                .name("Wyklad 1")
-                .description("problem listonosza")
-                .user(user1)
-                .build();
-        audioRepository.save(audio1);
-
-        Route route1 = Route.builder()
-                .name("Dijkstra")
-                .user(user1)
-                .description("description")
-                .build();
-        routeRepository.save(route1);
-
-        List<User> users = userRepository.findAll();
-    }
-
-    private void tuSieBawiOskar() {
-        User u1 = User.builder()
-                .username("u1")
-                .password("p1")
-                .login("l1")
-                .build();
-        userRepository.save(u1);
-
-        Route r1 = Route.builder()
-                .user(u1)
-                .name("route1")
-                .description("description")
-                .build();
-        routeRepository.save(r1);
-
-        MapLocation p1 = MapLocation.builder()
-                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
-                .name("p1")
-                .description("d1")
-                .build();
-        mapLocationRepository.save(p1);
-
-        RouteMapLocation rp1 = RouteMapLocation.builder()
-                .sequenceNr(1)
-                .mapLocation(p1)
-                .route(r1)
-                .build();
-        routeMapLocationRepository.save(rp1);
-
-
-
-    }
 }
