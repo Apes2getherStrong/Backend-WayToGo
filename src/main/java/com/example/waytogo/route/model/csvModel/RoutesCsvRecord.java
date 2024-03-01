@@ -1,20 +1,22 @@
-package com.example.waytogo.maplocation.model.csvModel;
+package com.example.waytogo.route.model.csvModel;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MapLocationCsvRecord {
+public class RoutesCsvRecord {
 
     @CsvBindByName
     UUID id;
+
+    @CsvBindByName(column = "user_id")
+    UUID user;
 
     @CsvBindByName
     String name;
@@ -22,10 +24,5 @@ public class MapLocationCsvRecord {
     @CsvBindByName
     String description;
 
-    @CsvBindByName
-    Float coord_x;
-
-    @CsvBindByName
-    Float coord_y;
 
 }
