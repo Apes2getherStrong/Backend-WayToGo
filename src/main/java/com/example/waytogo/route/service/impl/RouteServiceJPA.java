@@ -32,16 +32,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 @Validated
 public class RouteServiceJPA implements RouteService {
-    private final RouteRepository routeRepository;
-    private final RouteMapper routeMapper;
-
-    private final UserMapper userMapper;
-
-    private final RouteMapLocationService routeMapLocationService;
-    private final RouteMapLocationRepository routeMapLocationRepository;
-
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
+    private final RouteRepository routeRepository;
+    private final RouteMapper routeMapper;
+    private final UserMapper userMapper;
+    private final RouteMapLocationService routeMapLocationService;
+    private final RouteMapLocationRepository routeMapLocationRepository;
 
     @Override
     public Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize) {

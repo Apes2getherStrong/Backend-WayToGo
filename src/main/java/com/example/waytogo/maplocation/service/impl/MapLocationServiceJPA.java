@@ -29,15 +29,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @Primary
 @RequiredArgsConstructor
 public class MapLocationServiceJPA implements MapLocationService {
+    private static final Integer DEFAULT_PAGE = 0;
+    private static final Integer DEFAULT_PAGE_SIZE = 25;
     private final MapLocationMapper mapLocationMapper;
     private final MapLocationRepository mapLocationRepository;
 
     private final AudioService audioService;
     private final RouteMapLocationService routeMapLocationService;
 
-
-    private static final Integer DEFAULT_PAGE = 0;
-    private static final Integer DEFAULT_PAGE_SIZE = 25;
 
     @Override
     public MapLocationDTO saveNewMapLocation(MapLocationDTO mapLocation) {
