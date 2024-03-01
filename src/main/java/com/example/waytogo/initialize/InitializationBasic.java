@@ -2,6 +2,7 @@ package com.example.waytogo.initialize;
 
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
+import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.route.model.entity.Route;
@@ -30,26 +31,31 @@ public class InitializationBasic implements InitializingBean {
     private final UserRepository userRepository;
     private final AudioRepository audioRepository;
     private final GeometryFactory geometryFactory;
+    private final CsvServiceLoader csvServiceLoader;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        MapLocation mapLocation = MapLocation.builder()
-                .name("skurwysyn posejdon")
-                .description("krul moża")
-                .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
-                .build();
-        mapLocationRepository.save(mapLocation);
-        System.out.println(mapLocationRepository.findAll().get(0).getCoordinates());
+        csvServiceLoader.loadUsers("classpath:csvData/users.csv");
+        csvServiceLoader.loadMapLocations("classpath:csvData/maplocations.csv");
 
-        MapLocation mapLocation2 = MapLocation.builder()
-                .name("gmach weti")
-                .description("gniazdo potworów")
-                .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
-                .build();
-        mapLocationRepository.save(mapLocation2);
 
-        tuSieBawiOskar();
-        hejkaTuLenka();
+//        MapLocation mapLocation = MapLocation.builder()
+//                .name("skurwysyn posejdon")
+//                .description("krul moża")
+//                .coordinates(geometryFactory.createPoint(new Coordinate(10.2,32.1)))
+//                .build();
+//        mapLocationRepository.save(mapLocation);
+//        System.out.println(mapLocationRepository.findAll().get(0).getCoordinates());
+//
+//        MapLocation mapLocation2 = MapLocation.builder()
+//                .name("gmach weti")
+//                .description("gniazdo potworów")
+//                .coordinates(geometryFactory.createPoint(new Coordinate(12.1,52.1)))
+//                .build();
+//        mapLocationRepository.save(mapLocation2);
+//
+//        tuSieBawiOskar();
+//        hejkaTuLenka();
     }
 
     private void hejkaTuLenka() {
