@@ -28,13 +28,13 @@ public class RouteMapLocation {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="map_location_id")
+    @JoinColumn(name = "map_location_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private MapLocation mapLocation;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="route_id")
+    @JoinColumn(name = "route_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Route route;
 

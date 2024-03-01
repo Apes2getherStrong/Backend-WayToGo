@@ -1,12 +1,7 @@
 package com.example.waytogo.user.service.impl;
 
-import com.example.waytogo.audio.model.entity.Audio;
-import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
-import com.example.waytogo.route.model.entity.Route;
-import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.route.service.impl.RouteServiceJPA;
 import com.example.waytogo.user.mapper.UserMapper;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
@@ -22,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
