@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @Primary
 @RequiredArgsConstructor
 public class RouteMapLocationServiceJPA implements RouteMapLocationService {
-    private final RouteMapLocationRepository routeMapLocationRepository;
-    private final MapLocationMapper mapLocationMapper;
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
+    private final RouteMapLocationRepository routeMapLocationRepository;
+    private final MapLocationMapper mapLocationMapper;
 
     @Override
     public Optional<RouteMapLocation> getRouteMapLocationById(UUID routeMapLocationId) {
