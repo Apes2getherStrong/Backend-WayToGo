@@ -17,6 +17,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
