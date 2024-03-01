@@ -2,7 +2,8 @@
 -- 2. Uruchom pgAdmin.
 -- 3. Kliknij Databases prawym klawiszem myszy i wybierz New Database.
 -- 4. Nadaj bazie nazwe waytogo, pozostaw pozostale pola na wartosciach domyslnych.
--- 5. Nowa baza danych pojawi sie na liscie, ale w pgAdmin moze miec czerwony znak X, co oznacza, ze narzedzie nie jest z nia polaczone.
+-- 5. Nowa baza danych pojawi sie na liscie, ale w pgAdmin moze miec czerwony znak X,
+-- co oznacza, ze narzedzie nie jest z nia polaczone.
 --  Kliknij ja dwukrotnie, aby sie polaczyc. Czerwony X zniknie i zobaczysz opcje.
 -- 6. daj prawy na baze i create query czy jakos tak
 -- 7. Wyswietli sie edytor zapytan.
