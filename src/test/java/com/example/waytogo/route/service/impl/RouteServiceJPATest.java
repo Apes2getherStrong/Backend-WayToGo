@@ -137,14 +137,14 @@ class RouteServiceJPATest {
 
     //patch doesn't return anything
     @Disabled
-    @DisplayName("Trzeba to dorobic")
+    @DisplayName("OSKAR NAPRAW -Trzeba to dorobic")
     @Test
     void patchRouteById() {
     }
 
     //same as getAllRoutes()
     @Disabled
-    @DisplayName("Trzeba to dorobic")
+    @DisplayName("OSKAR NAPRAW -Trzeba to dorobic")
     @Test
     void getRoutesByUserId() {
     }

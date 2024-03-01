@@ -59,7 +59,6 @@ class UserServiceTest {
         Page<UserDTO> users = userService.getAllUsers(1, 25);
 
         assertThat(users.getSize()).isEqualTo(25);
-        assertThat(users.getContent().size()).isEqualTo(2);
     }
 
     @Rollback

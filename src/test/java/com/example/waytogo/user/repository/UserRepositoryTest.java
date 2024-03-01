@@ -1,6 +1,8 @@
 package com.example.waytogo.user.repository;
 
 import com.example.waytogo.initialize.InitializationBasic;
+import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
+import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@Import(InitializationBasic.class)
+@Import({InitializationBasic.class, CsvServiceLoader.class , CsvConverterGeneric.class})
 class UserRepositoryTest {
 
     @Autowired
@@ -29,7 +31,7 @@ class UserRepositoryTest {
         List<User> list = userRepository.findAll();
 
         assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(500);
     }
 
     @Test

@@ -70,7 +70,7 @@ class UserControllerIT {
     void testGetAllUsers() {
         Page<UserDTO> dtos = userController.getAllUsers(1, 25);
 
-        assertThat(dtos.getContent().size()).isEqualTo(2);
+        assertThat(dtos.getContent().size()).isEqualTo(25);
     }
 
     @Test

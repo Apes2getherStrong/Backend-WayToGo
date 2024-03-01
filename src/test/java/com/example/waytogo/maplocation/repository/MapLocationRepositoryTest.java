@@ -1,6 +1,8 @@
 package com.example.waytogo.maplocation.repository;
 
 import com.example.waytogo.initialize.InitializationBasic;
+import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
+import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -13,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-@Import({InitializationBasic.class}) // potem dodac tutaj MapLocationCSVServiceImpl
+@Import({InitializationBasic.class, CsvServiceLoader.class , CsvConverterGeneric.class})
 class MapLocationRepositoryTest {
 
 

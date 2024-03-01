@@ -53,7 +53,7 @@ class MapLocationControllerTest {
 
     @Test
     @Disabled
-    @DisplayName("dorobic test do tego szukania po route punktow")
+    @DisplayName("JANEK NAPRAWdorobic test do tego szukania po route punktow")
     void aaa() {
     }
 

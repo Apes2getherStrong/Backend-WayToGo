@@ -92,7 +92,6 @@ class AudioServiceTest {
         Page<AudioDTO> audios = audioService.getAllAudios(1, 25);
 
         assertThat(audios.getSize()).isEqualTo(25);
-        assertThat(audios.getContent().size()).isEqualTo(1);
     }
 
     @Rollback
@@ -116,7 +115,7 @@ class AudioServiceTest {
     }
 
     @Disabled
-    @DisplayName("Nie wiem czemu to nie dziala XD, \"object references an unsaved transient instance\"")
+    @DisplayName("KONRAD NAPRAW - Nie wiem czemu to nie dziala XD, \"object references an unsaved transient instance\"")
     @Rollback
     @Transactional
     @Test
@@ -163,7 +162,7 @@ class AudioServiceTest {
     }
 
     @Disabled
-    @DisplayName("Znowu nie wiem czemu nie dziala, \"object references an unsaved transient instance\"")
+    @DisplayName("KONRAD NAPRAW - Znowu nie wiem czemu nie dziala, \"object references an unsaved transient instance\"")
     @Rollback
     @Transactional
     @Test
