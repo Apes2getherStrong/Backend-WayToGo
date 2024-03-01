@@ -12,13 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import java.util.*;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -54,7 +51,6 @@ class RouteControllerTest {
     RouteDTO testRouteDTO;
 
 
-
     @BeforeEach
     void setUp() {
         testRouteDTO = RouteDTO.builder()
@@ -66,9 +62,8 @@ class RouteControllerTest {
     }
 
 
-
     @Test
-    void getRoutes() throws Exception{
+    void getRoutes() throws Exception {
         given(routeService.getAllRoutes(any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
 
         mockMvc.perform(get(RouteController.ROUTE_PATH)
@@ -107,7 +102,7 @@ class RouteControllerTest {
 
     @Test
     void testGetRoutesByUserId() throws Exception {
-        given(routeService.getRoutesByUserId(any(UUID.class), any(),any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
+        given(routeService.getRoutesByUserId(any(UUID.class), any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
 
         mockMvc.perform(get(RouteController.ROUTE_PATH_ID_USER, UUID.randomUUID())
                         .param("pageNumber", "0")
@@ -116,7 +111,6 @@ class RouteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)));
-
 
 
     }
@@ -159,7 +153,7 @@ class RouteControllerTest {
     }
 
     @Test
-    void testPostRouteTooLongDescription() throws Exception{
+    void testPostRouteTooLongDescription() throws Exception {
         testRouteDTO.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         given(routeService.saveNewRoute(any(RouteDTO.class))).willReturn(testRouteDTO);
 
@@ -172,7 +166,7 @@ class RouteControllerTest {
 
     //update test
     @Test
-    void testPutRoute() throws Exception{
+    void testPutRoute() throws Exception {
         given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
         mockMvc.perform(put(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
@@ -185,7 +179,7 @@ class RouteControllerTest {
     }
 
     @Test
-    void testPutRouteBlankName() throws Exception{
+    void testPutRouteBlankName() throws Exception {
         testRouteDTO.setName("");
         given(routeService.updateRouteById(any(UUID.class), any(RouteDTO.class))).willReturn(Optional.of(testRouteDTO));
 
@@ -220,7 +214,7 @@ class RouteControllerTest {
     }
 
     @Test
-    void testDeleteRouteNotFound()  throws Exception {
+    void testDeleteRouteNotFound() throws Exception {
         given(routeService.deleteRouteById(any(UUID.class))).willReturn(false);
 
         mockMvc.perform(delete(RouteController.ROUTE_PATH_ID, testRouteDTO.getId())
@@ -251,7 +245,7 @@ class RouteControllerTest {
     }
 
     @Test
-    void testPatchRouteByIdNotFound() throws Exception{
+    void testPatchRouteByIdNotFound() throws Exception {
         Map<String, Object> routeMap = new HashMap<>();
         routeMap.put("namee", "AAAAAA");
 

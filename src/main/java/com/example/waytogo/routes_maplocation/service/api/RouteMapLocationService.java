@@ -21,5 +21,4 @@ public interface RouteMapLocationService {
     Boolean deleteRouteMapLocationById(UUID routeMapLocationId);
 
 
-
 }

@@ -30,7 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class AudioControllerIT {
@@ -56,7 +56,6 @@ class AudioControllerIT {
     GeometryFactory geometryFactory;
 
 
-
     MockMvc mockMvc;
 
     @BeforeEach
@@ -69,7 +68,7 @@ class AudioControllerIT {
     @Test
     void testGetAllAudiosEmpty() {
         audioRepository.deleteAll();
-        Page<AudioDTO> dtos = audioController.getAllAudios(1,25).getBody();
+        Page<AudioDTO> dtos = audioController.getAllAudios(1, 25).getBody();
 
         assertThat(dtos.getContent().size()).isEqualTo(0);
     }
@@ -77,7 +76,7 @@ class AudioControllerIT {
     @Transactional
     @Test
     void testGetAllAudios() {
-        Page<AudioDTO> dtos = audioController.getAllAudios(1,25).getBody();
+        Page<AudioDTO> dtos = audioController.getAllAudios(1, 25).getBody();
 
         assertThat(dtos.getContent().size()).isEqualTo(1);
     }
@@ -113,7 +112,7 @@ class AudioControllerIT {
 
         String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
         System.out.println(responseEntity.getHeaders().getLocation().getPath());
-        System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[4] );
+        System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[4]);
         UUID savedUUID = UUID.fromString(locationUUID[4]);
 
         Audio audio = audioRepository.findById(savedUUID).get();
@@ -242,7 +241,7 @@ class AudioControllerIT {
                         .username("u")
                         .build())
                 .mapLocation(MapLocationDTO.builder()
-                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
+                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1, 30.2)))
                         .name("n")
                         .build())
                 .build();

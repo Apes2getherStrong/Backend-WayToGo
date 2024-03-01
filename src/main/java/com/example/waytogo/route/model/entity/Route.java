@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 import java.util.UUID;
 
-@Table(name="routes")
+@Table(name = "routes")
 @Builder
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class Route {
     @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="route_id", updatable=false, nullable=false)
+    @Column(name = "route_id", updatable = false, nullable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +41,7 @@ public class Route {
 
     @NotBlank
     @NotNull
-    @Size(max=32)
+    @Size(max = 32)
     private String name;
 
     @Size(max = 255)

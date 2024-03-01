@@ -2,7 +2,6 @@ package com.example.waytogo.initialize.csvLoading.repository;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.FileNotFoundException;

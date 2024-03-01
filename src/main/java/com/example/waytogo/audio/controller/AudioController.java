@@ -25,7 +25,7 @@ public class AudioController {
 
     @GetMapping(AUDIO_PATH)
     public ResponseEntity<Page<AudioDTO>> getAllAudios(@RequestParam(required = false) Integer pageNumber,
-                                       @RequestParam(required = false) Integer pageSize) {
+                                                       @RequestParam(required = false) Integer pageSize) {
         Page<AudioDTO> audioDTOPage = audioService.getAllAudios(pageNumber, pageSize);
         return new ResponseEntity<>(audioDTOPage, HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class AudioController {
 
     @DeleteMapping(AUDIO_PATH_ID)
     public ResponseEntity<Void> deleteAudioById(@PathVariable("audioId") UUID audioId) {
-        if(!audioService.deleteAudioById(audioId)) {
+        if (!audioService.deleteAudioById(audioId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 

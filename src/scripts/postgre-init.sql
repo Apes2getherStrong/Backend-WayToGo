@@ -22,7 +22,7 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 DROP USER IF EXISTS waytogo;
 
-CREATE USER  waytogo WITH PASSWORD 'waytogo';
+CREATE USER waytogo WITH PASSWORD 'waytogo';
 
 ALTER ROLE waytogo SET client_encoding TO 'utf8';
 ALTER ROLE waytogo SET default_transaction_isolation TO 'read committed';

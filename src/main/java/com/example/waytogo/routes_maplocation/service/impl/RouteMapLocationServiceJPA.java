@@ -39,7 +39,7 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
     public Page<MapLocationDTO> getAllMapLocationsByRouteId(UUID routeId, Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-        Page<MapLocation> mapLocationPage = routeMapLocationRepository.findMapLocationsByRouteId(routeId ,pageRequest);
+        Page<MapLocation> mapLocationPage = routeMapLocationRepository.findMapLocationsByRouteId(routeId, pageRequest);
 
         return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
     }
@@ -69,8 +69,7 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
 
     @Override
     public Boolean deleteRouteMapLocationById(UUID routeMapLocationId) {
-        if(routeMapLocationRepository.existsById(routeMapLocationId))
-        {
+        if (routeMapLocationRepository.existsById(routeMapLocationId)) {
             routeMapLocationRepository.deleteById(routeMapLocationId);
             return true;
         }

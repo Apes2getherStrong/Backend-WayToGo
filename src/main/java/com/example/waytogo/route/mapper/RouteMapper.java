@@ -8,5 +8,6 @@ import org.mapstruct.Mapper;
 public interface RouteMapper {
 
     RouteDTO routeToRouteDto(Route route);
+
     Route routeDtoToRoute(RouteDTO routeDTO);
 }

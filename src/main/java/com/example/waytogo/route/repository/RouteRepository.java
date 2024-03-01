@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Repository
-public interface RouteRepository  extends JpaRepository<Route, UUID> {
+public interface RouteRepository extends JpaRepository<Route, UUID> {
 
     Page<Route> findByUser_Id(UUID userId, PageRequest pageRequest);
 

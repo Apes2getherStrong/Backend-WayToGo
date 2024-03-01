@@ -2,9 +2,8 @@ package com.example.waytogo.maplocation.model.entity.coordinateTools;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.locationtech.jts.geom.Coordinate;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;

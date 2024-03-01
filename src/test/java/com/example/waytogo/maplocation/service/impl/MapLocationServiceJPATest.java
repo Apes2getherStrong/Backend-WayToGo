@@ -47,7 +47,7 @@ class MapLocationServiceJPATest {
 
         mapLocationService.updateMapLocationById(testMapLocationDTO.getId(), testMapLocationDTO);
 
-        Optional<MapLocation> mapLocation =  mapLocationRepository.findById(testMapLocationDTO.getId());
+        Optional<MapLocation> mapLocation = mapLocationRepository.findById(testMapLocationDTO.getId());
         assertFalse(mapLocation.isPresent());
 
     }
@@ -71,6 +71,7 @@ class MapLocationServiceJPATest {
 
 
     }
+
     @Transactional
     @Rollback
     @Test
@@ -91,6 +92,7 @@ class MapLocationServiceJPATest {
 
         assertFalse(mapLocationRepository.existsById(testMapLocation.getId()));
     }
+
     @Transactional
     @Rollback
     @Test
@@ -164,14 +166,15 @@ class MapLocationServiceJPATest {
         return MapLocationDTO.builder()
                 .name("testMapLocationttttt")
                 .description("descDTO")
-                .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(25.2, 13.6)))
                 .build();
     }
+
     MapLocation getMapLocation() {
         return MapLocation.builder()
                 .name("Test Name 2")
                 .description("desc")
-                .coordinates(geometryFactory.createPoint(new Coordinate(25.2,13.6)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(25.2, 13.6)))
                 .build();
     }
 }

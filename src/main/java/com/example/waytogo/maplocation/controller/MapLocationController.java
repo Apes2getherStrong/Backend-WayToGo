@@ -30,7 +30,7 @@ public class MapLocationController {
     public ResponseEntity<Page<MapLocationDTO>> getAllMapLocationsByRoute(@PathVariable("routeId") UUID routeId, @RequestParam(required = false) Integer pageNumber,
                                                                           @RequestParam(required = false) Integer pageSize) {
 
-        Page<MapLocationDTO> mapLocationsPage = routeMapLocationService.getAllMapLocationsByRouteId(routeId ,pageNumber, pageSize);
+        Page<MapLocationDTO> mapLocationsPage = routeMapLocationService.getAllMapLocationsByRouteId(routeId, pageNumber, pageSize);
         return new ResponseEntity<>(mapLocationsPage, HttpStatus.OK);
     }
 

@@ -11,6 +11,7 @@ public class WayToGoApplication {
     public static void main(String[] args) {
         SpringApplication.run(WayToGoApplication.class, args);
     }
+
     @Bean
     public GeometryFactory geometryFactory() {
         return new GeometryFactory();
