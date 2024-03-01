@@ -121,7 +121,7 @@ class AudioControllerTest {
 
     @Test
     void testGetAudiosByUserId() throws Exception {
-        given(audioService.getAllAudiosByUserId(any(), any(), any())).willReturn(new PageImpl<>(new ArrayList<>(Arrays.asList(audioDTO1))));
+        given(audioService.getAllAudiosByUserId(any(), any(), any())).willReturn(new PageImpl<>(new ArrayList<>(Collections.singletonList(audioDTO1))));
 
         mockMvc.perform(get(AudioController.USER_PATH_ID_AUDIOS, audioDTO1.getUser().getId())
                         .accept(MediaType.APPLICATION_JSON))
@@ -135,7 +135,7 @@ class AudioControllerTest {
     void testCreateAudio() throws Exception {
         given(audioService.saveNewAudio(any())).willReturn(audioDTO1);
 
-         mockMvc.perform(post(AudioController.AUDIO_PATH)
+        mockMvc.perform(post(AudioController.AUDIO_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(audioDTO1)))
                 .andExpect(status().isCreated())

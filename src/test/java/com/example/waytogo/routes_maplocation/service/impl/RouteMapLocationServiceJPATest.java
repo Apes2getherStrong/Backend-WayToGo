@@ -61,7 +61,6 @@ class RouteMapLocationServiceJPATest {
     }
 
 
-
     @Test
     void getRouteMapLocationById() {
         given(routeMapLocationRepository.findById(any(UUID.class))).willReturn(Optional.of(testRouteMapLocation));

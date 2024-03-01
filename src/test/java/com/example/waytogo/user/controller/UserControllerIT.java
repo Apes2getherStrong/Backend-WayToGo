@@ -24,10 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class UserControllerIT {
@@ -61,7 +58,7 @@ class UserControllerIT {
     @Transactional
     @Test
     void testEmptyGetAllUsers() {
-        for(User u : userRepository.findAll()) {
+        for (User u : userRepository.findAll()) {
             userService.deleteUserById(u.getId());
         }
         Page<UserDTO> dtos = userController.getAllUsers(1, 25);
@@ -109,7 +106,7 @@ class UserControllerIT {
 
         String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
         System.out.println(responseEntity.getHeaders().getLocation().getPath());
-        System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[4] );
+        System.out.println(responseEntity.getHeaders().getLocation().getPath().split("/")[4]);
         UUID savedUUID = UUID.fromString(locationUUID[4]);
 
         User user = userRepository.findById(savedUUID).get();
@@ -138,9 +135,9 @@ class UserControllerIT {
     void testUpdateUserNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
             userController.putUserById(UUID.randomUUID(), UserDTO.builder()
-                            .login("l")
-                            .username("u")
-                            .password("p")
+                    .login("l")
+                    .username("u")
+                    .password("p")
                     .build());
         });
     }

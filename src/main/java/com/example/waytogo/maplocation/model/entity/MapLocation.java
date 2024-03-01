@@ -30,7 +30,7 @@ public class MapLocation {
     @Column(name = "map_location_id", updatable = false, nullable = false)
     private UUID id;
 
-    @OneToMany(mappedBy="mapLocation", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mapLocation", fetch = FetchType.LAZY)
     private List<Audio> audios;
 
     @OneToMany(mappedBy = "mapLocation", fetch = FetchType.LAZY)
@@ -50,11 +50,5 @@ public class MapLocation {
     @ValidCoordinates
     private Point coordinates;
 
-
-    @CreationTimestamp
-    private LocalDateTime createdDate;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDate;
 
 }

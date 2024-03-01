@@ -1,17 +1,12 @@
 package com.example.waytogo.user.service.impl;
 
 import com.example.waytogo.user.mapper.UserMapper;
-import com.example.waytogo.user.mapper.UserMapperImpl;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -23,8 +18,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -63,7 +56,7 @@ class UserServiceTest {
 
     @Test
     void testGetAllUsers() {
-        Page<UserDTO> users = userService.getAllUsers(1,25);
+        Page<UserDTO> users = userService.getAllUsers(1, 25);
 
         assertThat(users.getSize()).isEqualTo(25);
         assertThat(users.getContent().size()).isEqualTo(2);
@@ -113,8 +106,8 @@ class UserServiceTest {
         //No username
         assertThrows(ConstraintViolationException.class, () -> {
             userService.saveNewUser(UserDTO.builder()
-                            .login("l")
-                            .password("p")
+                    .login("l")
+                    .password("p")
                     .build());
         });
 
@@ -179,7 +172,7 @@ class UserServiceTest {
         assertThat(updated).isNotNull();
         assertThat(updated.getUsername()).isEqualTo(userDTONoLogin.getUsername());
         assertThat(updated.getPassword()).isEqualTo(userDTONoLogin.getPassword());
-        
+
         assertThat(updated.getLogin()).isEqualTo(userDTO.getLogin());
 
 

@@ -59,12 +59,12 @@ public class MapLocationServiceJPA implements MapLocationService {
         if (mapLocationRepository.existsById(mapLocationId)) {
 
             List<Audio> audios = audioRepository.findByMapLocation_Id(mapLocationId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(Audio a : audios) {
+            for (Audio a : audios) {
                 audioService.deleteAudioById(a.getId());
             }
 
             List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByMapLocation_Id(mapLocationId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(RouteMapLocation rmp : routeMapLocations) {
+            for (RouteMapLocation rmp : routeMapLocations) {
                 routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
             }
 
@@ -99,7 +99,7 @@ public class MapLocationServiceJPA implements MapLocationService {
             if (StringUtils.hasText(mapLocationDTO.getName())) {
                 mapLocation.setName(mapLocationDTO.getName());
 
-                if (mapLocationDTO.getCoordinates() != null){
+                if (mapLocationDTO.getCoordinates() != null) {
                     mapLocation.setCoordinates(mapLocationDTO.getCoordinates());
                 }
 
@@ -112,6 +112,7 @@ public class MapLocationServiceJPA implements MapLocationService {
 
         return atomicReference.get();
     }
+
     @Override
     public Page<MapLocationDTO> getAllMapLocations(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
@@ -120,6 +121,7 @@ public class MapLocationServiceJPA implements MapLocationService {
 
         return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
     }
+
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
         int queryPageNumber = DEFAULT_PAGE;
         int queryPageSize = DEFAULT_PAGE_SIZE;

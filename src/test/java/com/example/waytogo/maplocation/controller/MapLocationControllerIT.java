@@ -80,7 +80,7 @@ public class MapLocationControllerIT {
     @Test
     @Disabled
     @DisplayName("z usuwaniem problem przez polaczenia z reszta")
-    void testyNaListBrakuje(){
+    void testyNaListBrakuje() {
 
     }
 
@@ -94,7 +94,6 @@ public class MapLocationControllerIT {
     // no ogolnie to cos mi tu nie dzialalo jak chcialem parametry coordinates zmienic w sensie to do zapisywania jakos nie sprawdzalo poprawnosci zbytnio
     @Test
     @DisplayName("dodac pointa sprawdzanie, jakas dzicz sie dziala z zapetlaniem jak probowalem")
-
     void testPatchMapLocationBadName() throws Exception {
         MapLocation mapLocation = mapLocationRepository.findAll().get(0);
 
@@ -130,7 +129,7 @@ public class MapLocationControllerIT {
     @Test
     void testUpdateNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
-            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").coordinates(geometryFactory.createPoint(new Coordinate(21.1,11.5))).build());
+            mapLocationController.putMapLocationById(UUID.randomUUID(), MapLocationDTO.builder().name("test").coordinates(geometryFactory.createPoint(new Coordinate(21.1, 11.5))).build());
         });
     }
 
@@ -142,7 +141,7 @@ public class MapLocationControllerIT {
         MapLocationDTO mapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(mapLocation);
 
         final String newName = "changed name";
-        final Point point =  geometryFactory.createPoint(new Coordinate(21.1,11.5));
+        final Point point = geometryFactory.createPoint(new Coordinate(21.1, 11.5));
 
         mapLocationDTO.setName("changed name");
         mapLocationDTO.setCoordinates(point);
@@ -164,7 +163,7 @@ public class MapLocationControllerIT {
     @Test
     void saveNewMapLocationTest() {
         MapLocationDTO mapLocationDTO = MapLocationDTO.builder()
-                .coordinates(geometryFactory.createPoint(new Coordinate(11.6,21.52)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(11.6, 21.52)))
                 .name("test mapLocation")
                 .description("desc")
                 .build();

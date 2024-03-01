@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class MapLocationMapperTest {
@@ -30,14 +30,14 @@ class MapLocationMapperTest {
                 .id(UUID.fromString("6cfc986f-3c82-41ef-bcb6-ff7936e9f600"))
                 .name("n")
                 .description("d")
-                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(5.2, 11.33)))
                 .build();
 
         mapLocationDTO = MapLocationDTO.builder()
                 .id(UUID.fromString("6cfc986f-3c82-41ef-bcb6-ff7936e9f600"))
                 .name("n")
                 .description("d")
-                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(5.2, 11.33)))
                 .build();
     }
 
@@ -49,8 +49,7 @@ class MapLocationMapperTest {
         assertEquals(mapped.getName(), mapLocation.getName());
         assertEquals(mapped.getDescription(), mapLocation.getDescription());
         assertEquals(mapped.getCoordinates(), mapLocation.getCoordinates());
-        assertEquals(mapped.getUpdateDate(), mapLocation.getUpdateDate());
-        assertEquals(mapped.getCreatedDate(), mapLocation.getCreatedDate());
+
     }
 
     @Test
@@ -61,7 +60,6 @@ class MapLocationMapperTest {
         assertEquals(mapped.getName(), mapLocationDTO.getName());
         assertEquals(mapped.getDescription(), mapLocationDTO.getDescription());
         assertEquals(mapped.getCoordinates(), mapLocationDTO.getCoordinates());
-        assertEquals(mapped.getUpdateDate(), mapLocationDTO.getUpdateDate());
-        assertEquals(mapped.getCreatedDate(), mapLocationDTO.getCreatedDate());
+
     }
 }

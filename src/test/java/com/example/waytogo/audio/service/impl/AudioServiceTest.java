@@ -7,7 +7,6 @@ import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
-import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.cert.CertPathValidatorException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -76,7 +74,7 @@ class AudioServiceTest {
                         .password("p")
                         .build())
                 .mapLocation(MapLocation.builder()
-                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1,30.2)))
+                        .coordinates(geometryFactory.createPoint(new Coordinate(30.1, 30.2)))
                         .name("n")
                         .build())
                 .build();
@@ -125,7 +123,7 @@ class AudioServiceTest {
     void testGetAudioByUserId() {
         Audio savedAudio = audioRepository.save(audio);
 
-        AudioDTO foundDTO = audioService.getAllAudiosByUserId(savedAudio.getUser().getId(),1,25).getContent().get(0);
+        AudioDTO foundDTO = audioService.getAllAudiosByUserId(savedAudio.getUser().getId(), 1, 25).getContent().get(0);
 
         assertEquals(savedAudio.getId(), foundDTO.getId());
         assertEquals(savedAudio.getName(), foundDTO.getName());

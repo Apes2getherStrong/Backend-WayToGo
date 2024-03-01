@@ -78,12 +78,12 @@ public class UserServiceJPA implements UserService {
     public boolean deleteUserById(UUID userId) {
         if (userRepository.existsById(userId)) {
             List<Route> routes = routeRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(Route r : routes) {
+            for (Route r : routes) {
                 r.setUser(null);
             }
 
             List<Audio> audios = audioRepository.findByUser_Id(userId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(Audio a : audios) {
+            for (Audio a : audios) {
                 a.setUser(null);
             }
 

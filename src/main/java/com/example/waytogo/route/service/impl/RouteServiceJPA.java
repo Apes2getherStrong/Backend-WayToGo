@@ -9,7 +9,6 @@ import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import com.example.waytogo.user.mapper.UserMapper;
-import com.example.waytogo.user.model.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -92,7 +91,7 @@ public class RouteServiceJPA implements RouteService {
     public Boolean deleteRouteById(UUID routeId) {
         if (routeRepository.existsById(routeId)) {
             List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-            for(RouteMapLocation rmp : routeMapLocations) {
+            for (RouteMapLocation rmp : routeMapLocations) {
                 routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
             }
 
@@ -113,7 +112,7 @@ public class RouteServiceJPA implements RouteService {
             if (StringUtils.hasText(routeDTO.getDescription())) {
                 foundRoute.setDescription(routeDTO.getDescription());
             }
-            if(routeDTO.getUser() != null) {
+            if (routeDTO.getUser() != null) {
                 foundRoute.setUser(userMapper.userDtoToUser(routeDTO.getUser()));
             }
             atomicReference.set(Optional.of(routeMapper.routeToRouteDto(routeRepository.save(foundRoute))));

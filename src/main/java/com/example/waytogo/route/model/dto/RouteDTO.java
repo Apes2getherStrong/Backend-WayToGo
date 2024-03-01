@@ -23,7 +23,7 @@ public class RouteDTO {
 
     @NotBlank
     @NotNull
-    @Size(max=32)
+    @Size(max = 32)
     private String name;
 
     @Size(max = 255)

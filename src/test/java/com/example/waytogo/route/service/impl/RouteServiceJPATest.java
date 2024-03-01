@@ -1,43 +1,29 @@
 package com.example.waytogo.route.service.impl;
 
-import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
 import com.example.waytogo.route.mapper.RouteMapper;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
-import static org.assertj.core.api.Assertions.assertThat;
 import com.example.waytogo.route.repository.RouteRepository;
-import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.route.service.impl.RouteServiceJPA;
-import com.example.waytogo.user.model.entity.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
+import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 //https://www.javaguides.net/2022/03/spring-boot-unit-testing-service-layer.html
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +63,7 @@ class RouteServiceJPATest {
     @Test
     void getAllRoutes() {
         given(routeRepository.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(testRoute)));
-        Page<RouteDTO> result = routeService.getAllRoutes(1,1);
+        Page<RouteDTO> result = routeService.getAllRoutes(1, 1);
         assertThat(result).isNotNull();
         assertThat(result.getSize()).isEqualTo(1);
     }
@@ -124,7 +110,7 @@ class RouteServiceJPATest {
     @Test
     void deleteRouteById() {
         given(routeRepository.existsById(any(UUID.class))).willReturn(true);
-        given( routeMapLocationRepository.findByRoute_Id(any(UUID.class),any(PageRequest.class))).willReturn(Page.empty());
+        given(routeMapLocationRepository.findByRoute_Id(any(UUID.class), any(PageRequest.class))).willReturn(Page.empty());
         Boolean result = routeService.deleteRouteById(testRoute.getId());
         assertThat(result).isTrue();
     }

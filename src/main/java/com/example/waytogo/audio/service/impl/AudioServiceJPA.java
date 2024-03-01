@@ -8,7 +8,6 @@ import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.user.mapper.UserMapper;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
