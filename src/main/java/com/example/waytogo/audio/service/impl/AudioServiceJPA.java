@@ -31,6 +31,7 @@ public class AudioServiceJPA implements AudioService {
     private final static int DEFAULT_PAGE_SIZE = 25;
     private final AudioMapper audioMapper;
     private final AudioRepository audioRepository;
+
     private final MapLocationMapper mapLocationMapper;
     private final UserMapper userMapper;
 
