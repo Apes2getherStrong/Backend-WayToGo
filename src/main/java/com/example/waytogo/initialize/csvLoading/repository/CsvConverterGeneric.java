@@ -1,4 +1,4 @@
-package com.example.waytogo.initialize.repository;
+package com.example.waytogo.initialize.csvLoading.repository;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Component;

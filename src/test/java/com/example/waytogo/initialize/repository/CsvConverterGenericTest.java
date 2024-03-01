@@ -1,9 +1,8 @@
 package com.example.waytogo.initialize.repository;
 
-import com.example.waytogo.initialize.service.CsvServiceLoader;
+import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
 import com.example.waytogo.user.model.csvModel.UserCsvRecord;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.ResourceUtils;
 
