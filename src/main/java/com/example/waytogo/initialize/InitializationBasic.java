@@ -19,8 +19,6 @@ public class InitializationBasic implements InitializingBean {
         csvServiceLoader.loadUsers("classpath:csvData/users.csv");
         csvServiceLoader.loadRoutes("classpath:csvData/routes.csv");
         csvServiceLoader.loadMapLocations("classpath:csvData/map_locations.csv");
-
-        System.out.println("aaa");
         csvServiceLoader.loadAudios("classpath:csvData/audios.csv");
         csvServiceLoader.loadRoutesMapLocations("classpath:csvData/route_map_locations.csv");
     }

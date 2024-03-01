@@ -28,13 +28,12 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Validated
 public class UserServiceJPA implements UserService {
+    private final static int DEFAULT_PAGE = 0;
+    private final static int DEFAULT_PAGE_SIZE = 25;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final RouteRepository routeRepository;
     private final AudioRepository audioRepository;
-
-    private final static int DEFAULT_PAGE = 0;
-    private final static int DEFAULT_PAGE_SIZE = 25;
 
     @Override
     public Page<UserDTO> getAllUsers(Integer pageNumber, Integer pageSize) {

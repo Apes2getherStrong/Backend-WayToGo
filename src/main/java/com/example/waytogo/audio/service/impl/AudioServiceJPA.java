@@ -26,14 +26,12 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Validated
 public class AudioServiceJPA implements AudioService {
-    private final AudioMapper audioMapper;
-    private final AudioRepository audioRepository;
-
-    private final MapLocationMapper mapLocationMapper;
-    private final UserMapper userMapper;
-
     private final static int DEFAULT_PAGE = 0;
     private final static int DEFAULT_PAGE_SIZE = 25;
+    private final AudioMapper audioMapper;
+    private final AudioRepository audioRepository;
+    private final MapLocationMapper mapLocationMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Page<AudioDTO> getAllAudios(Integer pageNumber, Integer pageSize) {
