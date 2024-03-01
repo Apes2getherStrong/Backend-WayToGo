@@ -66,20 +66,16 @@ public class MapLocationControllerIT {
                 .build();
     }
 
-    @Test
-    @Disabled
-    void tenPierwszy() {
-    }
 
     @Test
     @Disabled
-    @DisplayName("dorobic test do tego szukania po route punktow")
+    @DisplayName("JANEK NAPRAW -dorobic test do tego szukania po route punktow")
     void aaa() {
     }
 
     @Test
     @Disabled
-    @DisplayName("z usuwaniem problem przez polaczenia z reszta")
+    @DisplayName("JANEK NAPRAW - z usuwaniem problem przez polaczenia z reszta")
     void testyNaListBrakuje() {
 
     }
@@ -204,7 +200,7 @@ public class MapLocationControllerIT {
     }
 
     @Test
-    @DisplayName("jak bedzie wiecej danych to odpalic")
+    @DisplayName("JANEK NAPRAW -jak bedzie wiecej danych to odpalic")
     @Disabled
     void listMapLocations() {
         Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 2141).getBody();
@@ -215,7 +211,7 @@ public class MapLocationControllerIT {
     @Transactional
     @Test
     @Disabled
-    @DisplayName("z usuwaniem problem przez polaczenia z reszta")
+    @DisplayName("JANEK NAPRAW - z usuwaniem problem przez polaczenia z reszta")
     void testEmptyList() {
         mapLocationRepository.deleteAll();
         Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 25).getBody();

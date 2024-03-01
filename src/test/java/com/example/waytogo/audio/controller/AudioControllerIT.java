@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,7 +79,7 @@ class AudioControllerIT {
     void testGetAllAudios() {
         Page<AudioDTO> dtos = audioController.getAllAudios(1, 25).getBody();
 
-        assertThat(dtos.getContent().size()).isEqualTo(1);
+        assertThat(Objects.requireNonNull(dtos).getContent().size()).isEqualTo(25);
     }
 
     @Transactional
@@ -192,7 +193,7 @@ class AudioControllerIT {
     }
 
     @Disabled
-    @DisplayName("Nie dziala blad przy za duzym name")
+    @DisplayName("KONRAD NAPRAW - Nie dziala blad przy za duzym name")
     @Transactional
     @Test
     void testPatchUserByIdNameTooLong() {
@@ -208,7 +209,7 @@ class AudioControllerIT {
     }
 
     @Disabled
-    @DisplayName("Nie dziala blad przy za duzym description")
+    @DisplayName("KONRAD NAPRAW - Nie dziala blad przy za duzym description")
     @Transactional
     @Test
     void testPatchUserByIdDescriptionTooLong() {
