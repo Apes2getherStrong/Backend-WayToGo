@@ -1,5 +1,6 @@
-package com.example.waytogo.initialize.service;
+package com.example.waytogo.initialize.repository;
 
+import com.example.waytogo.initialize.service.CsvServiceLoader;
 import com.example.waytogo.user.model.csvModel.UserCsvRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CsvServiceGenericTest {
-    @Autowired
-    private CsvServiceGeneric<UserCsvRecord> csvService;
+class CsvConverterGenericTest {
 
     @Test
     public void testConvertCsvFileToCsvModel() throws FileNotFoundException {
         File file = ResourceUtils.getFile("classpath:csvData/users.csv");
 
-        List<UserCsvRecord> csvModels = csvService.convertCsvFileToCsvModel(file, UserCsvRecord.class);
+        List<UserCsvRecord> csvModels = CsvConverterGeneric.convertCsvFileToCsvModel(file, UserCsvRecord.class);
 
         assertFalse(csvModels.isEmpty(), "Lista wynikowa nie powinna być pusta");
 //        for (UserCsvRecord usr: csvModels){
