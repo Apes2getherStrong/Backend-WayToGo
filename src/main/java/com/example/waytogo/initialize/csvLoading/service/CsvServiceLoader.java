@@ -13,6 +13,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -32,17 +33,16 @@ public class CsvServiceLoader {
         });
     }
 
-    public void loadMapLocations(String filePath) throws FileNotFoundException {
+    public void loadMapLocations(String filePath) throws FileNotFoundException, SQLException {
         File file = ResourceUtils.getFile(filePath);
 
         List<MapLocationCsvRecord> mapLocationsCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, MapLocationCsvRecord.class);
 
-        String sql = "INSERT INTO map_locations (map_location_id, name, description, coordinates) VALUES(?, ?, ?, ST_SetSRID(ST_MakePoint(?, ?), 4326))";
+        String sql = "INSERT INTO map_locations (map_location_id, name, description, coordinates) VALUES(?, ?, ?, 'POINT(' || ? || ' ' || ? || ')')";
 
         mapLocationsCsv.forEach(mapLocationCsvRecord -> {
             jdbcTemplate.update(sql, mapLocationCsvRecord.getId(), mapLocationCsvRecord.getName(), mapLocationCsvRecord.getDescription(), mapLocationCsvRecord.getCoord_x(), mapLocationCsvRecord.getCoord_y());
         });
-
 
     }
 
