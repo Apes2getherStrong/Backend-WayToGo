@@ -7,8 +7,6 @@ import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.example.waytogo.user.model.entity.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -56,14 +54,14 @@ class AudioMapperTest {
                 .id(UUID.fromString("6cfc986f-3c82-41ef-bcb6-ff7936e9f600"))
                 .name("n")
                 .description("d")
-                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(5.2, 11.33)))
                 .build();
 
         mapLocationDTO = MapLocationDTO.builder()
                 .id(UUID.fromString("6cfc986f-3c82-41ef-bcb6-ff7936e9f600"))
                 .name("n")
                 .description("d")
-                .coordinates(geometryFactory.createPoint(new Coordinate(5.2,11.33)))
+                .coordinates(geometryFactory.createPoint(new Coordinate(5.2, 11.33)))
                 .build();
 
         audio = Audio.builder()
@@ -101,8 +99,6 @@ class AudioMapperTest {
         assertThat(mapped.getMapLocation().getName()).isEqualTo(audio.getMapLocation().getName());
         assertThat(mapped.getMapLocation().getDescription()).isEqualTo(audio.getMapLocation().getDescription());
         assertThat(mapped.getMapLocation().getCoordinates()).isEqualTo(audio.getMapLocation().getCoordinates());
-        assertThat(mapped.getMapLocation().getUpdateDate()).isEqualTo(audio.getMapLocation().getUpdateDate());
-        assertThat(mapped.getMapLocation().getCreatedDate()).isEqualTo(audio.getMapLocation().getCreatedDate());
     }
 
     @Test

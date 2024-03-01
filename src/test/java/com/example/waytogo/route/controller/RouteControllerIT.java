@@ -9,37 +9,31 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -90,12 +84,12 @@ class RouteControllerIT {
     @Transactional
     @Test
     void getRoutesEmpty() {
-        for(Route r : routeRepository.findAll()) {
+        for (Route r : routeRepository.findAll()) {
             routeService.deleteRouteById(r.getId());
         }
 
 
-        Page<RouteDTO> page = routeController.getRoutes(1,20).getBody();
+        Page<RouteDTO> page = routeController.getRoutes(1, 20).getBody();
         assertThat(page.getContent().size()).isEqualTo(0);
     }
 
@@ -108,7 +102,7 @@ class RouteControllerIT {
 
     @Transactional
     @Test
-    void getRouteById() throws Exception{
+    void getRouteById() throws Exception {
 
         RouteDTO testRouteDTO = routeMapper.routeToRouteDto(routeRepository.findAll().get(0));
 
@@ -123,7 +117,7 @@ class RouteControllerIT {
 
 
     @Test
-    void getRoutesByUserIdEmpty() throws Exception{
+    void getRoutesByUserIdEmpty() throws Exception {
 
         mockMvc.perform(get(RouteController.ROUTE_PATH_ID_USER, UUID.randomUUID())
                         .param("pageNumber", "0")
@@ -138,7 +132,7 @@ class RouteControllerIT {
     @Rollback
     @Transactional
     @Test
-    void getRoutesByUserId() throws Exception{
+    void getRoutesByUserId() throws Exception {
 
         User user = userRepository.findAll().get(0);
         user.setRoutes(Collections.emptyList());
@@ -272,7 +266,6 @@ class RouteControllerIT {
             routeController.patchRouteById(UUID.randomUUID(), RouteDTO.builder().build());
         });
     }
-
 
 
 }
