@@ -70,7 +70,7 @@ public class RouteController {
 
     @PutMapping(ROUTE_PATH_ID_IMAGE)
     @ResponseBody
-    public ResponseEntity<Void> postImage(@PathVariable("routeId") UUID routeId,
+    public ResponseEntity<Void> putImage(@PathVariable("routeId") UUID routeId,
                                    @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
@@ -133,7 +133,7 @@ public class RouteController {
     }
 
     @PutMapping(ROUTE_PATH_ID)
-    public ResponseEntity<RouteDTO> putRoute(@PathVariable("routeId") UUID routeId, @Validated @RequestBody RouteDTO routeDTO){
+    public ResponseEntity<RouteDTO> putRoute(@PathVariable("routeId") UUID routeId, @Validated @RequestBody RouteDTO routeDTO) {
 
         Optional<RouteDTO> updatedRoute = routeService.updateRouteById(routeId, routeDTO);
 

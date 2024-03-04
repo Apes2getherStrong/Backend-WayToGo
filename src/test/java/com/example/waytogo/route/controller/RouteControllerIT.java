@@ -86,7 +86,7 @@ class RouteControllerIT {
     @Rollback
     @Transactional
     @Test
-    void getRoutesEmpty() {
+    void getRoutesEmpty() throws Exception {
         for (Route r : routeRepository.findAll()) {
             routeService.deleteRouteById(r.getId());
         }

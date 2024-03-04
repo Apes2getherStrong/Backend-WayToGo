@@ -166,7 +166,7 @@ class AudioServiceTest {
     @Rollback
     @Transactional
     @Test
-    void testDeleteAudioById() {
+    void testDeleteAudioById() throws Exception {
         Audio saved = audioRepository.save(audio);
 
         assertThat(audioService.getAudioById(saved.getId())).isNotEmpty();
@@ -177,7 +177,7 @@ class AudioServiceTest {
     }
 
     @Test
-    void testDeleteAudioByIdNotExist() {
+    void testDeleteAudioByIdNotExist() throws Exception {
         assertFalse(audioService.deleteAudioById(UUID.randomUUID()));
     }
 
@@ -219,7 +219,7 @@ class AudioServiceTest {
     @Rollback
     @Transactional
     @Test
-    void testAudioExistanceAfterMapLocationDeletion() {
+    void testAudioExistanceAfterMapLocationDeletion() throws Exception {
         MapLocation mapLocation = mapLocationRepository.findAll().get(0);
         Audio audio = audioRepository.findAll().get(0);
         audio.setMapLocation(mapLocation);

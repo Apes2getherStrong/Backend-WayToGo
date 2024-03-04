@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public interface MapLocationService {
 
     Page<MapLocationDTO> getAllMapLocations(Integer pageNumber, Integer pageSize);
 
-    Boolean deleteMapLocationById(UUID mapLocationId);
+    Boolean deleteMapLocationById(UUID mapLocationId) throws IOException;
 
     Optional<MapLocationDTO> updateMapLocationById(UUID mapLocationId, @Valid MapLocationDTO mapLocationDTO);
 

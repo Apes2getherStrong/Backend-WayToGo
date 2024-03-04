@@ -144,7 +144,7 @@ class RouteMapLocationServiceIT {
     @Rollback
     @Transactional
     @Test
-    void testRouteMapLocationExistenceAfterMapLocationDeletion() {
+    void testRouteMapLocationExistenceAfterMapLocationDeletion() throws Exception {
         RouteMapLocation rmp = routeMapLocationRepository.findAll().get(0);
         MapLocation mapLocation = mapLocationRepository.findAll().get(0);
         rmp.setMapLocation(mapLocation);
