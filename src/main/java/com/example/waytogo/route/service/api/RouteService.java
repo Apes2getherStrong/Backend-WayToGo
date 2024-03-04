@@ -3,7 +3,9 @@ package com.example.waytogo.route.service.api;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,4 +26,8 @@ public interface RouteService {
     Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO);
 
     void setUserToNullByUserId(UUID userId);
+
+    Boolean saveNewImage (MultipartFile file, UUID routeId) throws IOException;
+
+    Optional<byte[]> getImageByRouteId(UUID routeId) throws IOException;
 }
