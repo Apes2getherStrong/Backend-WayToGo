@@ -102,7 +102,7 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO) {
+    public Optional<AudioDTO> patchAudioById(UUID audioId,@Valid AudioDTO audioDTO) {
         AtomicReference<Optional<AudioDTO>> atomicReference = new AtomicReference<>();
 
         audioRepository.findById(audioId).ifPresentOrElse(foundAudio -> {
