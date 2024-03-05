@@ -18,7 +18,7 @@ public class InitializationBasic implements InitializingBean {
     @Override
     @Transactional
     public void afterPropertiesSet() throws Exception {
-        if(audioRepository.count() < 20) {
+        if (audioRepository.count() < 20) {
             csvServiceLoader.loadUsers("classpath:csvData/users.csv");
             csvServiceLoader.loadRoutes("classpath:csvData/routes.csv");
             csvServiceLoader.loadMapLocations("classpath:csvData/map_locations.csv");
