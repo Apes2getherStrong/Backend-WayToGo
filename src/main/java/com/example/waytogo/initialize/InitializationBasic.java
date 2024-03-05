@@ -26,5 +26,4 @@ public class InitializationBasic implements InitializingBean {
             csvServiceLoader.loadRoutesMapLocations("classpath:csvData/route_map_locations.csv");
         }
     }
-
 }
