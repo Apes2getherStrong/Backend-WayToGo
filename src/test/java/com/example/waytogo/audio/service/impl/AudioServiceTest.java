@@ -172,6 +172,7 @@ class AudioServiceTest {
         Optional<AudioDTO> got =audioService.getAudioById(saved.getId());
 
         assertThat(got).isNotEmpty();
+        assertThat(got.get().getMapLocation()).isNotNull();
 
         assertTrue(audioService.deleteAudioById(got.get().getId()));
 
