@@ -44,13 +44,4 @@ public class Route {
     @Size(max = 255)
     @Column(length = 255)
     private String description;
-
-    /*
-    //Potrzebne do zdjecia
-    @Transient
-    MultipartFile file;
-
-    @Column(name = "file_path")
-    String filePath;
-    */
 }

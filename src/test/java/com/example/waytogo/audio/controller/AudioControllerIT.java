@@ -8,6 +8,7 @@ import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -192,8 +193,6 @@ class AudioControllerIT {
         assertThat(updatedAudio.getUser()).isEqualTo(audio.getUser());
     }
 
-    @Disabled
-    @DisplayName("KONRAD NAPRAW - Nie dziala blad przy za duzym name")
     @Transactional
     @Test
     void testPatchUserByIdNameTooLong() {
@@ -203,13 +202,11 @@ class AudioControllerIT {
         audioDTO.setId(null);
         audioDTO.setName("namenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename");
 
-        assertThrows(TransactionSystemException.class, () -> {
+        assertThrows(ConstraintViolationException.class, () -> {
             audioController.patchAudioById(audio.getId(), audioDTO);
         });
     }
 
-    @Disabled
-    @DisplayName("KONRAD NAPRAW - Nie dziala blad przy za duzym description")
     @Transactional
     @Test
     void testPatchUserByIdDescriptionTooLong() {
@@ -220,7 +217,7 @@ class AudioControllerIT {
         audioDTO.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         System.out.println(audio.getDescription().length());
 
-        assertThrows(TransactionSystemException.class, () -> {
+        assertThrows(ConstraintViolationException.class, () -> {
             audioController.patchAudioById(audio.getId(), audioDTO);
         });
     }

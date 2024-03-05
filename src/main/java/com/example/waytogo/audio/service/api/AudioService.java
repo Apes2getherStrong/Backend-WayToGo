@@ -22,7 +22,7 @@ public interface AudioService {
 
     Boolean deleteAudioById(UUID audioId);
 
-    Optional<AudioDTO> patchAudioById(UUID audioId, AudioDTO audioDTO);
+    Optional<AudioDTO> patchAudioById(UUID audioId,@Valid AudioDTO audioDTO);
 
     void setUserToNullByUserId(UUID userId);
 }
