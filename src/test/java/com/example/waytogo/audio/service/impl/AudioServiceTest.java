@@ -169,11 +169,14 @@ class AudioServiceTest {
     void testDeleteAudioById() throws Exception {
         Audio saved = audioRepository.save(audio);
 
-        assertThat(audioService.getAudioById(saved.getId())).isNotEmpty();
+        Optional<AudioDTO> got =audioService.getAudioById(saved.getId());
 
-        assertTrue(audioService.deleteAudioById(saved.getId()));
+        assertThat(got).isNotEmpty();
+        assertThat(got.get().getMapLocation()).isNotNull();
 
-        assertThat(audioService.getAudioById(saved.getId())).isEmpty();
+        assertTrue(audioService.deleteAudioById(got.get().getId()));
+
+        assertThat(audioService.getAudioById(got.get().getId())).isEmpty();
     }
 
     @Test

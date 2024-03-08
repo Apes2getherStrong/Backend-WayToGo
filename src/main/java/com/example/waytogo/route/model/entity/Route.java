@@ -47,7 +47,6 @@ public class Route {
     @Size(max = 255)
     @Column(length = 255)
     private String description;
-
     //it is better to save only the path to the file:
     //https://stackoverflow.com/questions/50363639/how-spring-boot-jpahibernate-saves-images
     @Column(name = "image_filename")
