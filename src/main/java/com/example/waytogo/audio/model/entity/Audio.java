@@ -54,6 +54,13 @@ public class Audio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "map_location_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     MapLocation mapLocation;
+
+    //it is better to save only the path to the file:
+    //https://stackoverflow.com/questions/50363639/how-spring-boot-jpahibernate-saves-images
+    @Column(name = "audio_filename")
+    String audioFilename;
 }
+
+

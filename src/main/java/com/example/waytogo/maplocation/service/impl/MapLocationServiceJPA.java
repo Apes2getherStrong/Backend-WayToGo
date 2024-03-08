@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -51,9 +52,10 @@ public class MapLocationServiceJPA implements MapLocationService {
      */
     @Transactional
     @Override
-    public Boolean deleteMapLocationById(UUID mapLocationId) {
+    public Boolean deleteMapLocationById(UUID mapLocationId) throws IOException {
         if (mapLocationRepository.existsById(mapLocationId)) {
 
+            audioService.deleteAudioByMapLocationId(mapLocationId);
             mapLocationRepository.deleteById(mapLocationId);
             return true;
         }

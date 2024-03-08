@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -108,15 +109,17 @@ class RouteServiceJPATest {
     }
 
     @Test
-    void deleteRouteById() {
-        given(routeRepository.existsById(any(UUID.class))).willReturn(true);
+    void deleteRouteById() throws IOException {
+        given(routeRepository.findById(any(UUID.class))).willReturn(Optional.of(testRoute));
+        given( routeMapLocationRepository.findByRoute_Id(any(UUID.class),any(PageRequest.class))).willReturn(Page.empty());
+
         Boolean result = routeService.deleteRouteById(testRoute.getId());
         assertThat(result).isTrue();
     }
 
     @Test
-    void deleteRouteByIdNotFound() {
-        given(routeRepository.existsById(any(UUID.class))).willReturn(false);
+    void deleteRouteByIdNotFound() throws IOException{
+        given(routeRepository.findById(any(UUID.class))).willReturn(Optional.empty());
         Boolean result = routeService.deleteRouteById(testRoute.getId());
         assertThat(result).isFalse();
     }

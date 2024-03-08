@@ -85,7 +85,7 @@ class MapLocationServiceJPATest {
     @Transactional
     @Rollback
     @Test
-    void testDeleteByIdDeleted() {
+    void testDeleteByIdDeleted() throws Exception{
         testMapLocation = mapLocationRepository.findAll().get(0);
 
         mapLocationService.deleteMapLocationById(testMapLocation.getId());
@@ -96,7 +96,7 @@ class MapLocationServiceJPATest {
     @Transactional
     @Rollback
     @Test
-    void testDeleteByIdRandomReturnsFalse() {
+    void testDeleteByIdRandomReturnsFalse() throws Exception {
         assertFalse(mapLocationService.deleteMapLocationById(UUID.randomUUID()));
     }
 

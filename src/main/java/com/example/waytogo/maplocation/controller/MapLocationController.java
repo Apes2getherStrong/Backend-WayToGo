@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
@@ -68,11 +69,17 @@ public class MapLocationController {
 
     @DeleteMapping(MAP_LOCATION_PATH_ID)
     public ResponseEntity<Void> deleteMapLocationById(@PathVariable("mapLocationId") UUID mapLocationId) {
-        if (!mapLocationService.deleteMapLocationById(mapLocationId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        try {
+            if (!mapLocationService.deleteMapLocationById(mapLocationId)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            return ResponseEntity.noContent().build();
+        }
+        catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(MAP_LOCATION_PATH_ID)

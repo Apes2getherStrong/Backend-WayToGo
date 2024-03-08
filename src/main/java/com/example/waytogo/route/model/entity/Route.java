@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -44,4 +47,9 @@ public class Route {
     @Size(max = 255)
     @Column(length = 255)
     private String description;
+    //it is better to save only the path to the file:
+    //https://stackoverflow.com/questions/50363639/how-spring-boot-jpahibernate-saves-images
+    @Column(name = "image_filename")
+    String imageFilename;
+
 }
