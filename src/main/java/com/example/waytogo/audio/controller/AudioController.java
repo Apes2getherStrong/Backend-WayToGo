@@ -103,7 +103,7 @@ public class AudioController {
 
     @PostMapping(AUDIO_PATH_ID_AUDIO)
     @ResponseBody
-    public ResponseEntity<Void> postAudio(@PathVariable("audioId") UUID audioId,
+    public ResponseEntity<Void> postAudioFile(@PathVariable("audioId") UUID audioId,
                                           @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {

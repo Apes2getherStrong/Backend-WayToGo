@@ -9,17 +9,16 @@ import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,11 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AudioControllerIT {
@@ -57,12 +61,37 @@ class AudioControllerIT {
     @Autowired
     GeometryFactory geometryFactory;
 
+    static MockMultipartFile testFile;
+    static String testImagePath = "src/test/java/com/example/waytogo/test_resources/cute_kittens.jpg";
+    static String testAudioPath = "src/test/java/com/example/waytogo/test_resources/can_you_hear_me.mp3";
 
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+    }
+
+    @BeforeAll
+    static void initialization()  throws Exception {
+        prepareTestFile(testAudioPath);
+    }
+
+    static void prepareTestFile(String filePath)  throws Exception {
+
+        File imageFile = new File(filePath);
+        // Check if the file exists
+        if (!imageFile.exists()) {
+            System.out.println("no file found");
+            throw new IOException("Audio file not found");
+        }
+
+        testFile = new MockMultipartFile(
+                "testAudio",
+                "testAudio.mp3",
+                "audio/mpeg",
+                Files.readAllBytes(imageFile.toPath())
+        );
     }
 
     @Rollback
@@ -243,6 +272,76 @@ class AudioControllerIT {
                         .name("n")
                         .build())
                 .build();
+    }
+
+
+    @Test
+    @Rollback
+    void testSaveNewAudioFile() throws Exception{
+        String destinationDirectoryPath = AudioController.AUDIO_DIRECTORY_PATH;
+
+        Audio testAudio = audioRepository.findAll().get(0);
+
+        ResponseEntity<Void> responseEntity = audioController.postAudioFile(testAudio.getId(), testFile);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+
+        testAudio = audioRepository.findById(testAudio.getId()).get(); //refresh
+        Path newFilePath = Paths.get(destinationDirectoryPath, testAudio.getAudioFilename());
+        assertThat(Files.exists(newFilePath)).isEqualTo(true);
+
+        //deleting testing file
+        Files.delete(newFilePath);
+    }
+
+    @Test
+    @Rollback
+    void testSaveNewAudioFileWrongExtension() throws Exception{
+        //change test file to image
+        File imageFile = new File(testImagePath);
+        // Check if the file exists
+        if (!imageFile.exists()) {
+            System.out.println("no file found");
+            throw new IOException("Image file not found");
+        }
+
+        testFile = new MockMultipartFile(
+                "testImage",
+                "testImage.jpeg",
+                MediaType.IMAGE_JPEG_VALUE,
+                Files.readAllBytes(imageFile.toPath())
+        );
+
+        Audio testAudio = audioRepository.findAll().get(0);
+
+        assertThrows(ResponseStatusException.class, () -> {
+            audioController.postAudioFile(testAudio.getId(), testFile);
+        });
+
+        //change test file back to audio
+        prepareTestFile(testAudioPath);
+    }
+
+    @Test
+    @Rollback
+    void testGetAudioFile() throws Exception {
+        Audio testAudio = audioRepository.findAll().get(0);
+
+        //prepare image to get
+        audioService.saveNewAudioFile(testFile, testAudio.getId());
+        testAudio = audioRepository.findById(testAudio.getId()).get(); //refresh
+        //check if saved
+        assertThat(Files.exists(Paths.get(AudioController.AUDIO_DIRECTORY_PATH, testAudio.getAudioFilename()))).isEqualTo(true);
+
+        //testGet
+        ResponseEntity<byte[]> responseEntity = audioController.getAudioFile(testAudio.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+
+        byte[] imageData = responseEntity.getBody();
+        assertNotNull(imageData);
+        assertTrue(imageData.length > 0);
+
+        //deleting testing file
+        Files.delete(Paths.get(AudioController.AUDIO_DIRECTORY_PATH, testAudio.getAudioFilename()));
     }
 }
 

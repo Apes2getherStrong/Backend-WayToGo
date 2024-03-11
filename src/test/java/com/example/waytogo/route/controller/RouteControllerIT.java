@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.http.MediaType;
 
 
 @SpringBootTest
@@ -70,8 +71,9 @@ class RouteControllerIT {
     @Autowired
     UserService userService;
 
-    static MockMultipartFile testImage;
+    static MockMultipartFile testFile;
     static String testImagePath = "src/test/java/com/example/waytogo/test_resources/cute_kittens.jpg";
+    static String testAudioPath = "src/test/java/com/example/waytogo/test_resources/can_you_hear_me.mp3";
 
     @BeforeEach
     void setUp() {
@@ -81,16 +83,19 @@ class RouteControllerIT {
 
     @BeforeAll
     static void initialization()  throws Exception {
+        prepareTestFile(testImagePath);
+    }
 
-        //setting up image files for testing
-        File imageFile = new File(testImagePath);
+    static void prepareTestFile(String filePath)  throws Exception {
+
+        File imageFile = new File(filePath);
         // Check if the file exists
         if (!imageFile.exists()) {
             System.out.println("no file found");
             throw new IOException("Image file not found");
         }
 
-        testImage = new MockMultipartFile(
+        testFile = new MockMultipartFile(
                 "testImage",
                 "testImage.jpeg",
                 MediaType.IMAGE_JPEG_VALUE,
@@ -305,7 +310,7 @@ class RouteControllerIT {
 
         Route testRoute = routeRepository.findAll().get(0);
 
-        ResponseEntity<Void> responseEntity = routeController.putImage(testRoute.getId(), testImage);
+        ResponseEntity<Void> responseEntity = routeController.putImage(testRoute.getId(), testFile);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
 
         testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
@@ -318,11 +323,38 @@ class RouteControllerIT {
 
     @Test
     @Rollback
+    void testSaveNewImageWrongExtension() throws Exception{
+        //change test file to audio
+        File audioFile = new File(testAudioPath);
+        // Check if the file exists
+        if (!audioFile.exists()) {
+            System.out.println("no file found");
+            throw new IOException("Audio file not found");
+        }
+        testFile = new MockMultipartFile(
+                "testAduio",
+                "testAudio.mp3",
+                "audio/mpeg",
+                Files.readAllBytes(audioFile.toPath())
+        );
+
+        Route testRoute = routeRepository.findAll().get(0);
+
+        assertThrows(ResponseStatusException.class, () -> {
+            routeController.putImage(testRoute.getId(), testFile);
+        });
+
+        //change test file back to image
+        prepareTestFile(testImagePath);
+    }
+
+    @Test
+    @Rollback
     void testGetImage() throws Exception {
         Route testRoute = routeRepository.findAll().get(0);
 
         //prepare image to get
-        routeService.saveNewImage(testImage, testRoute.getId());
+        routeService.saveNewImage(testFile, testRoute.getId());
         testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
         //check if saved
         assertThat(Files.exists(Paths.get(RouteController.IMAGE_DIRECTORY_PATH, testRoute.getImageFilename()))).isEqualTo(true);
