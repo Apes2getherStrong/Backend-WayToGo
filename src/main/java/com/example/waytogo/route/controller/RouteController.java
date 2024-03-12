@@ -30,7 +30,7 @@ public class RouteController {
     public static final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
     public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
     public static final String ROUTE_PATH_ID_IMAGE = ROUTE_PATH_ID + "/image";
-    //TODO change the path (it shouldn't be hardcoded)
+    //TODO change  the path (it shouldn't be hardcoded)
     public static final String IMAGE_DIRECTORY_PATH = "src/main/java/com/example/waytogo/route/route_images/";
 
     private final RouteService routeService;
