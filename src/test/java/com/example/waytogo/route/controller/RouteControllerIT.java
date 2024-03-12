@@ -9,10 +9,7 @@ import com.example.waytogo.user.model.entity.User;
 import com.example.waytogo.user.repository.UserRepository;
 import com.example.waytogo.user.service.api.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
@@ -20,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -34,10 +37,11 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.http.MediaType;
 
 
 @SpringBootTest
@@ -67,10 +71,36 @@ class RouteControllerIT {
     @Autowired
     UserService userService;
 
+    static MockMultipartFile testFile;
+    static String testImagePath = "src/test/java/com/example/waytogo/test_resources/cute_kittens.jpg";
+    static String testAudioPath = "src/test/java/com/example/waytogo/test_resources/can_you_hear_me.mp3";
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .build();
+    }
+
+    @BeforeAll
+    static void initialization()  throws Exception {
+        prepareTestFile(testImagePath);
+    }
+
+    static void prepareTestFile(String filePath)  throws Exception {
+
+        File imageFile = new File(filePath);
+        // Check if the file exists
+        if (!imageFile.exists()) {
+            System.out.println("no file found");
+            throw new IOException("Image file not found");
+        }
+
+        testFile = new MockMultipartFile(
+                "testImage",
+                "testImage.jpeg",
+                MediaType.IMAGE_JPEG_VALUE,
+                Files.readAllBytes(imageFile.toPath())
+        );
     }
 
     @Test
@@ -155,8 +185,6 @@ class RouteControllerIT {
 
     @Rollback
     @Transactional
-    @Disabled
-    @DisplayName("OSKAR NAPRAW - pod dodaniu danych cos tam ")
     @Test
     void postRoute() throws Exception {
         RouteDTO testRouteDTO = RouteDTO.builder()
@@ -273,6 +301,74 @@ class RouteControllerIT {
         assertThrows(ResponseStatusException.class, () -> {
             routeController.patchRouteById(UUID.randomUUID(), RouteDTO.builder().build());
         });
+    }
+
+    @Test
+    @Rollback
+    void testSaveNewImage() throws Exception{
+        String destinationDirectoryPath = RouteController.IMAGE_DIRECTORY_PATH;
+
+        Route testRoute = routeRepository.findAll().get(0);
+
+        ResponseEntity<Void> responseEntity = routeController.putImage(testRoute.getId(), testFile);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+
+        testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
+        Path newFilePath = Paths.get(destinationDirectoryPath, testRoute.getImageFilename());
+        assertThat(Files.exists(newFilePath)).isEqualTo(true);
+
+        //deleting testing file
+        Files.delete(newFilePath);
+    }
+
+    @Test
+    @Rollback
+    void testSaveNewImageWrongExtension() throws Exception{
+        //change test file to audio
+        File audioFile = new File(testAudioPath);
+        // Check if the file exists
+        if (!audioFile.exists()) {
+            System.out.println("no file found");
+            throw new IOException("Audio file not found");
+        }
+        testFile = new MockMultipartFile(
+                "testAduio",
+                "testAudio.mp3",
+                "audio/mpeg",
+                Files.readAllBytes(audioFile.toPath())
+        );
+
+        Route testRoute = routeRepository.findAll().get(0);
+
+        assertThrows(ResponseStatusException.class, () -> {
+            routeController.putImage(testRoute.getId(), testFile);
+        });
+
+        //change test file back to image
+        prepareTestFile(testImagePath);
+    }
+
+    @Test
+    @Rollback
+    void testGetImage() throws Exception {
+        Route testRoute = routeRepository.findAll().get(0);
+
+        //prepare image to get
+        routeService.saveNewImage(testFile, testRoute.getId());
+        testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
+        //check if saved
+        assertThat(Files.exists(Paths.get(RouteController.IMAGE_DIRECTORY_PATH, testRoute.getImageFilename()))).isEqualTo(true);
+
+        //testGet
+        ResponseEntity<byte[]> responseEntity = routeController.getImage(testRoute.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+
+        byte[] imageData = responseEntity.getBody();
+        assertNotNull(imageData);
+        assertTrue(imageData.length > 0);
+
+        //deleting testing file
+        Files.delete(Paths.get(RouteController.IMAGE_DIRECTORY_PATH, testRoute.getImageFilename()));
     }
 
 
