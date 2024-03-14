@@ -1,33 +1,31 @@
 version: '3'
 
+# okej laczy sie teraz ale nie wiem czasem czy nie z lokalnym postgresem xdd ogarnac to i potem next bledy
 services:
   waytogo-db:
-    image: postgres:16.1
+    container_name: waytogo-db
+    build:
+      context: .
+      dockerfile: Dockerfile-db
     restart: always
     environment:
       POSTGRES_DB: "waytogo_db"
       POSTGRES_USER: "waytogo_user"
       POSTGRES_PASSWORD: "waytogo_password"
-#    volumes:
-#      - waytogo-data:/var/lib/postgresql/data
+#    ports:
+#      - "5433:5432" # zmień port z 5432 na 5433
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
 
   waytogo:
-    build:
-      #context: ./order-service
-      dockerfile: Dockerfile
+    build: .
     restart: always
     environment:
+      SPRING_PROFILES_ACTIVE: "postgres"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
-      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
       SPRING_DATASOURCE_USERNAME: "waytogo_user"
       SPRING_DATASOURCE_PASSWORD: "waytogo_password"
-      SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.PostgreSQLDialect"
-      SPRING_JPA_GENERATE_DDL: true
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      # jak bedzie schemat we flyway to te dwa zmienic wyzej
     ports:
-      - "8080:8080"
-
-
-#volumes:
-#  waytogo-data:
+      - "8090:8090"
+    depends_on:
+      - waytogo-db

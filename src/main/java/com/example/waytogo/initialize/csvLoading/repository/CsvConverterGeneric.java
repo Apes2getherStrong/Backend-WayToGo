@@ -3,21 +3,17 @@ package com.example.waytogo.initialize.csvLoading.repository;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
 public class CsvConverterGeneric {
-    public static <T> List<T> convertCsvFileToCsvModel(File csvFile, Class<T> clazz) {
-        try {
-            return new CsvToBeanBuilder<T>(new FileReader(csvFile))
-                    .withType(clazz)
-                    .build()
-                    .parse();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> List<T> convertCsvFileToCsvModel(InputStream inputStream, Class<T> clazz) {
+        InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        return new CsvToBeanBuilder<T>(reader)
+                .withType(clazz)
+                .build()
+                .parse();
     }
 }

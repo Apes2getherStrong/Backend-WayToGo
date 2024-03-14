@@ -7,12 +7,15 @@ import com.example.waytogo.route.model.csvModel.RoutesCsvRecord;
 import com.example.waytogo.routes_maplocation.csvModel.RouteMapLocationCsvRecord;
 import com.example.waytogo.user.model.csvModel.UserCsvRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,10 +24,10 @@ import java.util.List;
 public class CsvServiceLoader {
     private final JdbcTemplate jdbcTemplate;
 
-    public void loadUsers(String filePath) throws FileNotFoundException {
-        File file = ResourceUtils.getFile(filePath);
+    public void loadUsers(Resource resource) throws IOException {
+        InputStream inputStream = resource.getInputStream();
 
-        List<UserCsvRecord> usersCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, UserCsvRecord.class);
+        List<UserCsvRecord> usersCsv = CsvConverterGeneric.convertCsvFileToCsvModel(inputStream, UserCsvRecord.class);
 
         String sql = "INSERT INTO USERS (user_id, username, password, login) VALUES(?, ?, ?, ?)";
 
@@ -33,10 +36,10 @@ public class CsvServiceLoader {
         });
     }
 
-    public void loadMapLocations(String filePath) throws FileNotFoundException, SQLException {
-        File file = ResourceUtils.getFile(filePath);
+    public void loadMapLocations(Resource resource) throws IOException, SQLException {
+        InputStream inputStream = resource.getInputStream();
 
-        List<MapLocationCsvRecord> mapLocationsCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, MapLocationCsvRecord.class);
+        List<MapLocationCsvRecord> mapLocationsCsv = CsvConverterGeneric.convertCsvFileToCsvModel(inputStream, MapLocationCsvRecord.class);
 
         String sql = "INSERT INTO map_locations (map_location_id, name, description, coordinates) VALUES(?, ?, ?, 'POINT(' || ? || ' ' || ? || ')')";
 
@@ -46,10 +49,10 @@ public class CsvServiceLoader {
 
     }
 
-    public void loadAudios(String filePath) throws FileNotFoundException {
-        File file = ResourceUtils.getFile(filePath);
+    public void loadAudios(Resource resource) throws IOException {
+        InputStream inputStream = resource.getInputStream();
 
-        List<AudioCsvRecord> audiosCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, AudioCsvRecord.class);
+        List<AudioCsvRecord> audiosCsv = CsvConverterGeneric.convertCsvFileToCsvModel(inputStream, AudioCsvRecord.class);
 
         String sql = "INSERT INTO audios (audio_id, audio_name, description, user_id, map_location_id) VALUES(?, ?, ?, ?, ?)";
 
@@ -60,10 +63,10 @@ public class CsvServiceLoader {
 
     }
 
-    public void loadRoutes(String filePath) throws FileNotFoundException {
-        File file = ResourceUtils.getFile(filePath);
+    public void loadRoutes(Resource resource) throws IOException {
+        InputStream inputStream = resource.getInputStream();
 
-        List<RoutesCsvRecord> routesCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, RoutesCsvRecord.class);
+        List<RoutesCsvRecord> routesCsv = CsvConverterGeneric.convertCsvFileToCsvModel(inputStream, RoutesCsvRecord.class);
 
         String sql = "INSERT INTO routes (route_id, user_id, name, description) VALUES(?, ?, ?, ?)";
 
@@ -74,10 +77,10 @@ public class CsvServiceLoader {
 
     }
 
-    public void loadRoutesMapLocations(String filePath) throws FileNotFoundException {
-        File file = ResourceUtils.getFile(filePath);
+    public void loadRoutesMapLocations(Resource resource) throws IOException {
+        InputStream inputStream = resource.getInputStream();
 
-        List<RouteMapLocationCsvRecord> routesMapLocationsCsv = CsvConverterGeneric.convertCsvFileToCsvModel(file, RouteMapLocationCsvRecord.class);
+        List<RouteMapLocationCsvRecord> routesMapLocationsCsv = CsvConverterGeneric.convertCsvFileToCsvModel(inputStream, RouteMapLocationCsvRecord.class);
 
         String sql = "INSERT INTO routes_map_locations (routes_map_location_id, map_location_id, route_id, sequence_nr) VALUES(?, ?, ?, ?)";
 

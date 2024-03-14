@@ -1,19 +1,19 @@
 FROM eclipse-temurin:17.0.9_9-jre
 
 ENV VERSION="0.0.1-SNAPSHOT"
+ENV SERVER_PORT=8090
 
-ENV SERVER_PORT=8080
 
-ENV SPRING_DATASOURCE_URL=jdbc:h2:mem:waytogo
-ENV SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver
-ENV SPRING_DATASOURCE_USERNAME=admin
-ENV SPRING_DATASOURCE_PASSWORD=password
+ENV spring_datasource_url=jdbc:postgresql://localhost:5432/waytogo
+ENV spring_datasource_username=waytogo
+ENV spring_datasource_password=waytogo
+ENV spring_jpa_hibernate.ddl-auto=validate
+ENV spring_jpa_database=postgresql
+ENV spring_datasource_driverClassName=org.postgresql.Driver
+ENV spring_jpa_properties_hibernate_dialect=org.hibernate.dialect.PostgreSQLDialect
+ENV spring_flyway_enabled=true
 
-ENV SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
-ENV SPRING_JPA_GENERATE_DDL=true
-ENV SPRING_JPA_HIBERNATE_DDL_AUTO=update
-
-EXPOSE 8080
+EXPOSE 8090
 
 COPY target/WayToGo-${VERSION}.jar /opt/waytogo/waytogo.jar
 
