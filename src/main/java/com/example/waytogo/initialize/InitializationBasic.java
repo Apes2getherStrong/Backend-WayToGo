@@ -5,6 +5,7 @@ import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +20,11 @@ public class InitializationBasic implements InitializingBean {
     @Transactional
     public void afterPropertiesSet() throws Exception {
         if (audioRepository.count() < 20) {
-            csvServiceLoader.loadUsers("classpath:csvData/users.csv");
-            csvServiceLoader.loadRoutes("classpath:csvData/routes.csv");
-            csvServiceLoader.loadMapLocations("classpath:csvData/map_locations.csv");
-            csvServiceLoader.loadAudios("classpath:csvData/audios.csv");
-            csvServiceLoader.loadRoutesMapLocations("classpath:csvData/route_map_locations.csv");
+            csvServiceLoader.loadUsers(new ClassPathResource("/csvData/users.csv"));
+            csvServiceLoader.loadRoutes(new ClassPathResource("/csvData/routes.csv"));
+            csvServiceLoader.loadMapLocations(new ClassPathResource("/csvData/map_locations.csv"));
+            csvServiceLoader.loadAudios(new ClassPathResource("/csvData/audios.csv"));
+            csvServiceLoader.loadRoutesMapLocations(new ClassPathResource("/csvData/route_map_locations.csv"));
         }
     }
 }
