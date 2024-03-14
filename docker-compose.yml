@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-db
-    restart: always
+    #restart: always
     environment:
       POSTGRES_DB: "waytogo_db"
       POSTGRES_USER: "waytogo_user"
@@ -19,7 +19,7 @@ services:
 
   waytogo:
     build: .
-    restart: always
+    #restart: always
     environment:
       SPRING_PROFILES_ACTIVE: "postgres"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
