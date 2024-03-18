@@ -79,4 +79,21 @@ class RouteMapLocationMapperTest {
         assertEquals(mapped.getRoute().getDescription(), routeMapLocation.getRoute().getDescription());
 
     }
+
+    @Test
+    void testRouteMapLocationDtoToRouteMapLocation() {
+        RouteMapLocation mapped = routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(routeMapLocationDTO);
+
+        assertEquals(mapped.getId(), routeMapLocationDTO.getId());
+        assertEquals(mapped.getSequenceNr(), routeMapLocationDTO.getSequenceNr());
+
+        assertEquals(mapped.getMapLocation().getId(), routeMapLocationDTO.getMapLocation().getId());
+        assertEquals(mapped.getMapLocation().getName(), routeMapLocationDTO.getMapLocation().getName());
+        assertEquals(mapped.getMapLocation().getDescription(), routeMapLocationDTO.getMapLocation().getDescription());
+
+        assertEquals(mapped.getRoute().getId(), routeMapLocationDTO.getRoute().getId());
+        assertEquals(mapped.getRoute().getName(), routeMapLocationDTO.getRoute().getName());
+        assertEquals(mapped.getRoute().getDescription(), routeMapLocationDTO.getRoute().getDescription());
+
+    }
 }
