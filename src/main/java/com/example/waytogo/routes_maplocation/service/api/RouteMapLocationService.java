@@ -2,7 +2,7 @@ package com.example.waytogo.routes_maplocation.service.api;
 
 
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 
@@ -19,6 +19,4 @@ public interface RouteMapLocationService {
     Optional<RouteMapLocation> updateRouteMapLocationById(UUID routeMapLocationId, @Valid RouteMapLocation routeMapLocation);
 
     Boolean deleteRouteMapLocationById(UUID routeMapLocationId);
-
-
 }

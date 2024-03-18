@@ -3,7 +3,7 @@ package com.example.waytogo.routes_maplocation.service.impl;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import jakarta.validation.Valid;

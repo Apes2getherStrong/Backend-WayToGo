@@ -1,4 +1,4 @@
-package com.example.waytogo.routes_maplocation.csvModel;
+package com.example.waytogo.routes_maplocation.model.csvModel;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
