@@ -1,8 +1,11 @@
 package com.example.waytogo.routes_maplocation.service.impl;
 
+import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
+import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
+import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +25,8 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class RouteMapLocationServiceJPATest {
+    @Mock
+    RouteMapLocationMapper routeMapLocationMapper;
 
     @Mock
     RouteMapLocationRepository routeMapLocationRepository;
@@ -31,7 +37,9 @@ class RouteMapLocationServiceJPATest {
     Route testRoute;
     RouteDTO testRouteDTO;
     RouteMapLocation testRouteMapLocation;
+    RouteMapLocationDTO testRouteMapLocationDTO;
     MapLocation testMapLocation;
+    MapLocationDTO testMapLocationDTO;
 
 
     @BeforeEach
@@ -53,9 +61,22 @@ class RouteMapLocationServiceJPATest {
                 .name("maplocationtest")
                 .build();
 
+        testMapLocationDTO = MapLocationDTO.builder()
+                .id(UUID.fromString("cbf9bb1e-9109-41b8-ae9b-3d8caa1bc823"))
+                .name("maplocationtest")
+                .build();
+
         testRouteMapLocation = RouteMapLocation.builder()
                 .id(UUID.fromString("ad766712-5c9c-4102-ac03-1ae034f029d0"))
                 .mapLocation(testMapLocation)
+                .route(testRoute)
+                .sequenceNr(1)
+                .build();
+
+        testRouteMapLocationDTO = RouteMapLocationDTO.builder()
+                .id(UUID.fromString("ad766712-5c9c-4102-ac03-1ae034f029d0"))
+                .mapLocation(testMapLocationDTO)
+                .route(testRouteDTO)
                 .sequenceNr(1)
                 .build();
     }
@@ -63,25 +84,34 @@ class RouteMapLocationServiceJPATest {
 
     @Test
     void getRouteMapLocationById() {
+        given(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(any())).willReturn(testRouteMapLocationDTO);
         given(routeMapLocationRepository.findById(any(UUID.class))).willReturn(Optional.of(testRouteMapLocation));
-        RouteMapLocation routeMapLocation = routeMapLocationService.getRouteMapLocationById(testRouteMapLocation.getId()).get();
-        assertThat(routeMapLocation).isEqualTo(testRouteMapLocation);
+        RouteMapLocationDTO routeMapLocationDTO = routeMapLocationService.getRouteMapLocationById(testRouteMapLocation.getId()).get();
+        assertThat(routeMapLocationDTO).isEqualTo(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(testRouteMapLocation));
     }
 
     @Test
     void saveNewRouteMapLocation() {
+        given(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(any())).willReturn(testRouteMapLocationDTO);
+        given(routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(any())).willReturn(testRouteMapLocation);
         given(routeMapLocationRepository.save(any(RouteMapLocation.class))).willReturn(testRouteMapLocation);
-        RouteMapLocation routeMapLocation = routeMapLocationService.saveNewRouteMapLocation(testRouteMapLocation);
-        assertThat(routeMapLocation).isNotNull();
+        RouteMapLocationDTO routeMapLocationDTO = routeMapLocationService.saveNewRouteMapLocation(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(testRouteMapLocation));
+        assertThat(routeMapLocationDTO).isNotNull();
     }
 
 
     @Test
     void updateRouteMapLocationById() {
+        given(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(any())).willReturn(testRouteMapLocationDTO);
+        given(routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(any())).willReturn(testRouteMapLocation);
         given(routeMapLocationRepository.save(any(RouteMapLocation.class))).willReturn(testRouteMapLocation);
         given(routeMapLocationRepository.findById(any(UUID.class))).willReturn(Optional.of(testRouteMapLocation));
 
-        RouteMapLocation routeMapLocation = routeMapLocationService.updateRouteMapLocationById(testRouteMapLocation.getId(), testRouteMapLocation).get();
+        RouteMapLocationDTO mapped = routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(testRouteMapLocation);
+
+        RouteMapLocationDTO routeMapLocationDTO = routeMapLocationService.updateRouteMapLocationById(testRouteMapLocation.getId(), mapped).get();
+
+        RouteMapLocation routeMapLocation = routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(routeMapLocationDTO);
 
         assertThat(routeMapLocation).isEqualTo(testRouteMapLocation);
     }

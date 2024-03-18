@@ -1,5 +1,6 @@
 package com.example.waytogo.routes_maplocation.controller;
 
+import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class RouteMapLocationController {
     private final RouteMapLocationService routeMapLocationService;
 
     @GetMapping(ROUTE_MAP_LOCATION_PATH_ID)
-    public ResponseEntity<Optional<RouteMapLocation>> getRouteMapLocationById(@PathVariable("routeMapLocationId")UUID routeMapLocationId) {
-        Optional<RouteMapLocation> routeMapLocation = routeMapLocationService.getRouteMapLocationById(routeMapLocationId);
-        return new ResponseEntity<>(routeMapLocation, HttpStatus.OK);
+    public ResponseEntity<Optional<RouteMapLocationDTO>> getRouteMapLocationById(@PathVariable("routeMapLocationId")UUID routeMapLocationId) {
+        Optional<RouteMapLocationDTO> routeMapLocationDTO = routeMapLocationService.getRouteMapLocationById(routeMapLocationId);
+        return new ResponseEntity<>(routeMapLocationDTO, HttpStatus.OK);
     }
 
 }

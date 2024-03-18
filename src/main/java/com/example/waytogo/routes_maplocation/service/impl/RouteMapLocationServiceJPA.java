@@ -3,6 +3,8 @@ package com.example.waytogo.routes_maplocation.service.impl;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
+import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
@@ -26,13 +28,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RouteMapLocationServiceJPA implements RouteMapLocationService {
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 25;
+
+    private final RouteMapLocationMapper routeMapLocationMapper;
     private final RouteMapLocationRepository routeMapLocationRepository;
     private final MapLocationMapper mapLocationMapper;
 
     @Override
-    public Optional<RouteMapLocation> getRouteMapLocationById(UUID routeMapLocationId) {
+    public Optional<RouteMapLocationDTO> getRouteMapLocationById(UUID routeMapLocationId) {
 
-        return routeMapLocationRepository.findById(routeMapLocationId);
+        return Optional.ofNullable(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(routeMapLocationRepository.findById(routeMapLocationId)
+                .orElse(null)));
     }
 
     @Override
@@ -45,21 +50,24 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
     }
 
     @Override
-    public RouteMapLocation saveNewRouteMapLocation(@Valid RouteMapLocation routeMapLocation) {
+    public RouteMapLocationDTO saveNewRouteMapLocation(@Valid RouteMapLocationDTO routeMapLocationDTO) {
 
-        return routeMapLocationRepository.save(routeMapLocation);
+        return routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(routeMapLocationRepository.save(routeMapLocationMapper
+                .routeMapLocationDtoToRouteMapLocation(routeMapLocationDTO)));
     }
 
     @Override
-    public Optional<RouteMapLocation> updateRouteMapLocationById(UUID routeMapLocationId, RouteMapLocation routeMapLocation) {
-        AtomicReference<Optional<RouteMapLocation>> atomicReference = new AtomicReference<>();
+    public Optional<RouteMapLocationDTO> updateRouteMapLocationById(UUID routeMapLocationId, @Valid RouteMapLocationDTO routeMapLocationDTO) {
+        AtomicReference<Optional<RouteMapLocationDTO>> atomicReference = new AtomicReference<>();
         Optional<RouteMapLocation> test;
 
 
         routeMapLocationRepository.findById(routeMapLocationId).ifPresentOrElse(found -> {
-            routeMapLocation.setId(routeMapLocationId);
-            atomicReference.set(Optional.of(routeMapLocationRepository
-                    .save(routeMapLocation)));
+            routeMapLocationDTO.setId(routeMapLocationId);
+            atomicReference.set(Optional.of(routeMapLocationMapper
+                    .routeMapLocationToRouteMapLocationDto(routeMapLocationRepository
+                            .save(routeMapLocationMapper
+                                    .routeMapLocationDtoToRouteMapLocation(routeMapLocationDTO)))));
         }, () -> {
             atomicReference.set(Optional.empty());
         });
