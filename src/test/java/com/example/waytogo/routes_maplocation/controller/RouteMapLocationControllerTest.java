@@ -1,6 +1,5 @@
 package com.example.waytogo.routes_maplocation.controller;
 
-import com.example.waytogo.route.controller.RouteController;
 import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
 import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
@@ -17,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +58,7 @@ class RouteMapLocationControllerTest {
     }
 
     @Test
-    void testGetRouteMapLocationById() throws Exception{
+    void testGetRouteMapLocationById() throws Exception {
 
         given(routeMapLocationService.getRouteMapLocationById(any())).willReturn(Optional.of(routeMapLocationDTO));
 
@@ -70,5 +68,14 @@ class RouteMapLocationControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(routeMapLocationDTO.getId().toString())))
                 .andExpect(jsonPath("$.sequenceNr", is(routeMapLocationDTO.getSequenceNr())));
+    }
+
+    @Test
+    void testGetROuteMapLocationByIdNotFound() throws Exception {
+        given(routeMapLocationService.getRouteMapLocationById(any())).willReturn(Optional.empty());
+
+        mockMvc.perform(get(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

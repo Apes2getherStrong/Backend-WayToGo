@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +24,16 @@ public class RouteMapLocationController {
     private final RouteMapLocationService routeMapLocationService;
 
     @GetMapping(ROUTE_MAP_LOCATION_PATH_ID)
-    public ResponseEntity<Optional<RouteMapLocationDTO>> getRouteMapLocationById(@PathVariable("routeMapLocationId")UUID routeMapLocationId) {
+    public ResponseEntity<RouteMapLocationDTO> getRouteMapLocationById(@PathVariable("routeMapLocationId")UUID routeMapLocationId) {
         Optional<RouteMapLocationDTO> routeMapLocationDTO = routeMapLocationService.getRouteMapLocationById(routeMapLocationId);
-        return new ResponseEntity<>(routeMapLocationDTO, HttpStatus.OK);
+
+        if (routeMapLocationDTO.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        RouteMapLocationDTO found = routeMapLocationDTO.get();
+
+        return new ResponseEntity<>(found, HttpStatus.OK);
     }
 
 }
