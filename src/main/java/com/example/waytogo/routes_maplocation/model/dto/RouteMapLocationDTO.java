@@ -18,10 +18,8 @@ import java.util.UUID;
 public class RouteMapLocationDTO {
     private UUID id;
 
-    @NotNull
     private MapLocationDTO mapLocation;
 
-    @NotNull
     private RouteDTO route;
 
     @NotNull
