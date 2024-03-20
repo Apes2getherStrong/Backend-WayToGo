@@ -6,6 +6,7 @@ import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.core.Is.is;
@@ -129,5 +131,28 @@ class RouteMapLocationControllerTest {
                 .andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testPutRouteMapLocationById() throws Exception {
+        given(routeMapLocationService.updateRouteMapLocationById(any(), any())).willReturn(Optional.of(routeMapLocationDTO));
+
+        mockMvc.perform(put(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(routeMapLocationDTO)))
+                .andExpect(status().isNoContent());
+        verify(routeMapLocationService).updateRouteMapLocationById(any(UUID.class), any(RouteMapLocationDTO.class));
+    }
+
+    @Test
+    void testPutRouteMapLocationByIdNotFound() throws Exception {
+        given(routeMapLocationService.updateRouteMapLocationById(any(), any())).willReturn(Optional.empty());
+
+        mockMvc.perform(put(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(routeMapLocationDTO)))
+                .andExpect(status().isNotFound());
     }
 }

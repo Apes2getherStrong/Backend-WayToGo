@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
@@ -127,5 +128,35 @@ class RouteMapLocationControllerIT {
         assertThat(saved).isNotNull();
         assertThat(saved.getSequenceNr()).isEqualTo(dto.getSequenceNr());
 
+    }
+
+    @Transactional
+    @Test
+    void testUpdateExistingRouteMapLocation() {
+        RouteMapLocation found = routeMapLocationRepository.findAll().get(0);
+        RouteMapLocationDTO foundDTO = routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(found);
+        foundDTO.setId(null);
+
+        final Integer sequenceNumber = 10;
+        foundDTO.setSequenceNr(sequenceNumber);
+
+        assertThat(foundDTO.getSequenceNr()).isNotEqualTo(found.getSequenceNr());
+
+        ResponseEntity<RouteMapLocationDTO> responseEntity = routeMapLocationController.putRouteMapLocationById(found.getId(), foundDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        RouteMapLocation updated = routeMapLocationRepository.findById(found.getId()).get();
+        assertThat(updated.getSequenceNr()).isEqualTo(sequenceNumber);
+        assertThat(updated.getMapLocation()).isEqualTo(found.getMapLocation());
+    }
+
+    @Transactional
+    @Test
+    void testUpdateExistingRouteMapLocationNotFound() {
+        RouteMapLocation routeMapLocation = routeMapLocationRepository.findAll().get(0);
+        RouteMapLocationDTO dto = routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(routeMapLocation);
+        assertThrows(ResponseStatusException.class, () -> {
+            routeMapLocationController.putRouteMapLocationById(UUID.randomUUID(), dto);
+        });
     }
 }

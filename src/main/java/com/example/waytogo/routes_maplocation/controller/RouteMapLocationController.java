@@ -57,4 +57,14 @@ public class RouteMapLocationController {
         return new ResponseEntity<>(saved, headers, HttpStatus.CREATED);
     }
 
+    @PutMapping(ROUTE_MAP_LOCATION_PATH_ID)
+    public ResponseEntity<RouteMapLocationDTO> putRouteMapLocationById(@PathVariable("routeMapLocationId") UUID routeMapLocationId,
+                                                                       @RequestBody RouteMapLocationDTO routeMapLocationDTO) {
+        if (routeMapLocationService.updateRouteMapLocationById(routeMapLocationId, routeMapLocationDTO).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

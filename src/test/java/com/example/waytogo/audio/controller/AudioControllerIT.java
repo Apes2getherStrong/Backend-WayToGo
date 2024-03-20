@@ -175,7 +175,7 @@ class AudioControllerIT {
     @Test
     void testUpdateAudioNotFound() {
         assertThrows(ResponseStatusException.class, () -> {
-            audioController.patchAudioById(UUID.randomUUID(), getAudioDto());
+            audioController.putAudioById(UUID.randomUUID(), getAudioDto());
         });
     }
 
