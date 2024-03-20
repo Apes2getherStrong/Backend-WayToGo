@@ -6,8 +6,10 @@ import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,6 +45,16 @@ public class RouteMapLocationController {
         Page<MapLocationDTO> foundList = routeMapLocationService.getAllMapLocationsByRouteId(routeId, pageNumber, pageSize);
 
         return new ResponseEntity<>(foundList, HttpStatus.OK);
+    }
+
+    @PostMapping(ROUTE_MAP_LOCATION_PATH)
+    public ResponseEntity<RouteMapLocationDTO> postRouteMapLocation(@Validated @RequestBody RouteMapLocationDTO routeMapLocationDTO) {
+        RouteMapLocationDTO saved = routeMapLocationService.saveNewRouteMapLocation(routeMapLocationDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", ROUTE_MAP_LOCATION_PATH + "/" + saved.getId().toString());
+
+        return new ResponseEntity<>(saved, headers, HttpStatus.CREATED);
     }
 
 }

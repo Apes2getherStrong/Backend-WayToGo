@@ -11,16 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.core.Is.is;
 
@@ -73,7 +75,7 @@ class RouteMapLocationControllerTest {
         given(routeMapLocationService.getRouteMapLocationById(any())).willReturn(Optional.of(routeMapLocationDTO));
 
         mockMvc.perform(get(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(routeMapLocationDTO.getId().toString())))
@@ -94,10 +96,38 @@ class RouteMapLocationControllerTest {
         given(routeMapLocationService.getAllMapLocationsByRouteId(any(), any(), any())).willReturn(new PageImpl<>(new ArrayList<>(Collections.singletonList(mapLocationDTO))));
 
         mockMvc.perform(get(RouteMapLocationController.ROUTE_PATH_ID_ROUTE_MAP_LOCATIONS, UUID.randomUUID())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()", is(1)));
+    }
+
+    @Test
+    void testCreateRouteMapLocation() throws Exception {
+        given(routeMapLocationService.saveNewRouteMapLocation(any())).willReturn(routeMapLocationDTO);
+
+        mockMvc.perform(post(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(routeMapLocationDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testCreateRouteMapLocationNullSequenceNrNull() throws Exception {
+        RouteMapLocationDTO dto = RouteMapLocationDTO.builder().build();
+
+        given(routeMapLocationService.saveNewRouteMapLocation(any())).willReturn(routeMapLocationDTO);
+
+        MvcResult mvcResult = mockMvc.perform(post(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 }
