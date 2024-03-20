@@ -1,5 +1,9 @@
 package com.example.waytogo.routes_maplocation.controller;
 
+import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.route.model.entity.Route;
+import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
 import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
@@ -10,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -32,6 +37,9 @@ class RouteMapLocationControllerIT {
 
     @Autowired
     RouteMapLocationRepository routeMapLocationRepository;
+
+    @Autowired
+    RouteRepository routeRepository;
 
     @Autowired
     RouteMapLocationMapper routeMapLocationMapper;
@@ -62,8 +70,16 @@ class RouteMapLocationControllerIT {
 
     @Test
     void testGetRouteMapLocationByIdNotFound() {
-        assertThrows(ResponseStatusException.class, () -> {
-            routeMapLocationController.getRouteMapLocationById(UUID.randomUUID());
-        });
+        assertThrows(ResponseStatusException.class, () -> routeMapLocationController.getRouteMapLocationById(UUID.randomUUID()));
+    }
+
+    @Test
+    void testGetAllMapLocationsByRouteId() {
+        Route route = routeRepository.findAll().get(0);
+
+        ResponseEntity<Page<MapLocationDTO>> dto = routeMapLocationController.getAllMapLocationsByRouteId(route.getId(), 0, 25);
+
+        assertThat(dto.getBody()).isNotNull();
+        assertThat(dto.getBody().getSize()).isEqualTo(25);
     }
 }

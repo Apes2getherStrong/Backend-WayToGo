@@ -1,14 +1,14 @@
 package com.example.waytogo.routes_maplocation.controller;
 
+import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class RouteMapLocationController {
     public static final String ROUTE_MAP_LOCATION_PATH = "/api/v1/routeMapLocations";
     public static final String ROUTE_MAP_LOCATION_PATH_ID = ROUTE_MAP_LOCATION_PATH + "/{routeMapLocationId}";
-    public final static String ROUTE_MAP_LOCATIONS_BY_ROUTE = "/api/v1/routes/{routeId}/routeMapLocations";
+    public final static String ROUTE_PATH_ID_ROUTE_MAP_LOCATIONS = "/api/v1/routes/{routeId}/routeMapLocations";
 
     private final RouteMapLocationService routeMapLocationService;
 
@@ -34,6 +34,15 @@ public class RouteMapLocationController {
         RouteMapLocationDTO found = routeMapLocationDTO.get();
 
         return new ResponseEntity<>(found, HttpStatus.OK);
+    }
+
+    @GetMapping(ROUTE_PATH_ID_ROUTE_MAP_LOCATIONS)
+    public ResponseEntity<Page<MapLocationDTO>> getAllMapLocationsByRouteId(@PathVariable("routeId") UUID routeId,
+                                                                                 @RequestParam(required = false) Integer pageNumber,
+                                                                                 @RequestParam(required = false) Integer pageSize) {
+        Page<MapLocationDTO> foundList = routeMapLocationService.getAllMapLocationsByRouteId(routeId, pageNumber, pageSize);
+
+        return new ResponseEntity<>(foundList, HttpStatus.OK);
     }
 
 }
