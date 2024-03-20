@@ -159,4 +159,23 @@ class RouteMapLocationControllerIT {
             routeMapLocationController.putRouteMapLocationById(UUID.randomUUID(), dto);
         });
     }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteExistingRouteMapLocation() {
+        RouteMapLocation found = routeMapLocationRepository.findAll().get(0);
+
+        ResponseEntity<Void> responseEntity = routeMapLocationController.deleteRouteMapLocationById(found.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        assertThat(routeMapLocationRepository.findById(found.getId())).isEmpty();
+    }
+
+    @Test
+    void testDeleteExistingRouteMapLocationNotDFound() {
+        assertThrows(ResponseStatusException.class, () -> {
+            routeMapLocationController.deleteRouteMapLocationById(UUID.randomUUID());
+        });
+    }
 }

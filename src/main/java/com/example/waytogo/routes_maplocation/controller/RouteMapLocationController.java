@@ -67,4 +67,13 @@ public class RouteMapLocationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping(ROUTE_MAP_LOCATION_PATH_ID)
+    public ResponseEntity<Void> deleteRouteMapLocationById(@PathVariable("routeMapLocationId") UUID routeMapLocationId) {
+        if (!routeMapLocationService.deleteRouteMapLocationById(routeMapLocationId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
