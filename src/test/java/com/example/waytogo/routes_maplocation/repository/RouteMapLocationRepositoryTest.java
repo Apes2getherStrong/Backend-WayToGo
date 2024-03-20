@@ -1,6 +1,6 @@
 package com.example.waytogo.routes_maplocation.repository;
 
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

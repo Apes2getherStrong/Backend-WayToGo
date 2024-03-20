@@ -7,7 +7,9 @@ import com.example.waytogo.route.model.dto.RouteDTO;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.route.repository.RouteRepository;
 import com.example.waytogo.route.service.api.RouteService;
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
+import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
+import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.repository.RouteMapLocationRepository;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import jakarta.validation.ConstraintViolationException;
@@ -34,6 +36,9 @@ class RouteMapLocationServiceIT {
 
     @Autowired
     RouteMapLocationRepository routeMapLocationRepository;
+
+    @Autowired
+    RouteMapLocationMapper routeMapLocationMapper;
 
     @Autowired
     MapLocationRepository mapLocationRepository;
@@ -76,10 +81,11 @@ class RouteMapLocationServiceIT {
                 .sequenceNr(1)
                 .build();
 
-
-        RouteMapLocation routeMapLocation = routeMapLocationService.saveNewRouteMapLocation(testRouteMapLocation);
-        RouteMapLocation repositoryRouteMapLocation = routeMapLocationRepository.findById(testRouteMapLocation.getId()).get();
+        RouteMapLocation routeMapLocation = routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(routeMapLocationService.saveNewRouteMapLocation(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(testRouteMapLocation)));
+        RouteMapLocation repositoryRouteMapLocation = routeMapLocationRepository.findById(routeMapLocation.getId()).get();
+        assertThat(repositoryRouteMapLocation).isNotNull();
         assertThat(routeMapLocation.getSequenceNr()).isEqualTo(repositoryRouteMapLocation.getSequenceNr());
+        assertThat(testRouteMapLocation.getSequenceNr()).isEqualTo(repositoryRouteMapLocation.getSequenceNr());
 
 
     }
@@ -101,7 +107,7 @@ class RouteMapLocationServiceIT {
 
         testRouteMapLocation.setSequenceNr(-1);
         assertThrows(ConstraintViolationException.class, () -> {
-            RouteMapLocation routeMapLocation = routeMapLocationService.saveNewRouteMapLocation(testRouteMapLocation);
+            RouteMapLocation routeMapLocation = routeMapLocationMapper.routeMapLocationDtoToRouteMapLocation(routeMapLocationService.saveNewRouteMapLocation(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(testRouteMapLocation)));
         });
 
     }
@@ -110,7 +116,7 @@ class RouteMapLocationServiceIT {
     @Transactional
     @Test
     void getRouteMapLocationByIdNotExisting() {
-        Optional<RouteMapLocation> result = routeMapLocationService.getRouteMapLocationById(UUID.randomUUID());
+        Optional<RouteMapLocationDTO> result = routeMapLocationService.getRouteMapLocationById(UUID.randomUUID());
         assertThat(result).isNotNull();
         assertThat(result.isEmpty()).isTrue();
 
@@ -121,7 +127,7 @@ class RouteMapLocationServiceIT {
     @Test
     void getRouteMapLocationByIdExisting() {
         RouteMapLocation routeMapLocation = routeMapLocationRepository.findAll().get(0);
-        Optional<RouteMapLocation> result = routeMapLocationService.getRouteMapLocationById(routeMapLocation.getId());
+        Optional<RouteMapLocationDTO> result = routeMapLocationService.getRouteMapLocationById(routeMapLocation.getId());
         assertThat(result).isNotNull();
         assertThat(result.isEmpty()).isFalse();
         assertThat(result.get().getSequenceNr()).isEqualTo(routeMapLocation.getSequenceNr());

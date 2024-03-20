@@ -1,14 +1,12 @@
 package com.example.waytogo.route.model.entity;
 
-import com.example.waytogo.routes_maplocation.entity.RouteMapLocation;
+import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 
 import java.util.List;

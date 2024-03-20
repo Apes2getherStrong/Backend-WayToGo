@@ -4,16 +4,13 @@ import com.example.waytogo.audio.model.csvModel.AudioCsvRecord;
 import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
 import com.example.waytogo.maplocation.model.csvModel.MapLocationCsvRecord;
 import com.example.waytogo.route.model.csvModel.RoutesCsvRecord;
-import com.example.waytogo.routes_maplocation.csvModel.RouteMapLocationCsvRecord;
+import com.example.waytogo.routes_maplocation.model.csvModel.RouteMapLocationCsvRecord;
 import com.example.waytogo.user.model.csvModel.UserCsvRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
