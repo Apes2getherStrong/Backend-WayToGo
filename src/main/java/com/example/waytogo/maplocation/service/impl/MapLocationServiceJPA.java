@@ -1,11 +1,14 @@
 package com.example.waytogo.maplocation.service.impl;
 
 import com.example.waytogo.audio.service.api.AudioService;
+import com.example.waytogo.maplocation.controller.MapLocationController;
 import com.example.waytogo.maplocation.mapper.MapLocationMapper;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
 import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
+import com.example.waytogo.route.controller.RouteController;
+import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -15,8 +18,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -108,6 +115,76 @@ public class MapLocationServiceJPA implements MapLocationService {
         Page<MapLocation> mapLocationPage = mapLocationRepository.findAll(pageRequest);
 
         return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
+    }
+
+
+    @Override
+    public Boolean saveNewImage(MultipartFile file, UUID mapLocationId) throws IOException {
+
+        byte[] bytes = file.getBytes();
+
+        Path directoryPath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH);
+        Files.createDirectories(directoryPath);
+
+        Optional <MapLocation> optMapLocation = mapLocationRepository.findById(mapLocationId);
+        if(optMapLocation.isEmpty())
+            return false;
+        MapLocation mapLocation = optMapLocation.get();
+
+        //delete old image
+        deleteImage(mapLocation);
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = StringUtils.getFilenameExtension(originalFilename);
+
+        String newFilename = UUID.randomUUID().toString() + "." + fileExtension;
+        String filePath = directoryPath.resolve(newFilename).toString();
+
+        Files.write(Paths.get(filePath), bytes);
+        mapLocation.setImageFilename(newFilename);
+        mapLocationRepository.save(mapLocation); //necessary?
+        return true;
+    }
+
+
+    @Override
+    public Optional<byte[]> getImageByMapLocationId(UUID mapLocationId) throws IOException {
+
+        Optional<MapLocation> optMapLocation = mapLocationRepository.findById(mapLocationId);
+        if(optMapLocation.isEmpty()) {
+            //no route
+            return Optional.empty();
+        }
+
+        String imageFilename = optMapLocation.get().getImageFilename();
+
+        //no image assigned
+        if(imageFilename == null) {
+            return Optional.of(new byte[0]);
+        }
+
+        Path imagePath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH, imageFilename);
+
+        if (Files.exists(imagePath)) {
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+            return Optional.of(imageBytes);
+        } else {
+            //image assigned but file not found
+            return Optional.of(new byte[0]);
+        }
+    }
+
+    private void deleteImage(MapLocation mapLocation) throws IOException{
+        Path directoryPath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH);
+        String filename = mapLocation.getImageFilename();
+        if(filename != null) {
+
+            Path oldFilePath = directoryPath.resolve(filename);
+            if (Files.exists(oldFilePath)) {
+                Files.delete(oldFilePath);
+            }
+        }
+
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {

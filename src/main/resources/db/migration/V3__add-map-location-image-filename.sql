@@ -1,0 +1,1 @@
+alter table map_locations add column  image_filename varchar(100);
