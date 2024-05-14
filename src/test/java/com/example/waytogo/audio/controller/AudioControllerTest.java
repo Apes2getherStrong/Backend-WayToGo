@@ -132,6 +132,18 @@ class AudioControllerTest {
     }
 
     @Test
+    void testGetAudiosByMapLocationId() throws Exception {
+        given(audioService.getAllAudiosByMapLocationId(any(), any(), any())).willReturn(new PageImpl<>(new ArrayList<>(Collections.singletonList(audioDTO1))));
+
+        mockMvc.perform(get(AudioController.MAP_LOCATION_PATH_ID_AUDIOS, audioDTO1.getUser().getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()", is(1)));
+    }
+
+    @Test
     void testCreateAudio() throws Exception {
         given(audioService.saveNewAudio(any())).willReturn(audioDTO1);
 

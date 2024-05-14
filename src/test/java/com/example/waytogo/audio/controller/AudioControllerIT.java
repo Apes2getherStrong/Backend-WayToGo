@@ -6,15 +6,20 @@ import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.repository.AudioRepository;
 import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
+import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.maplocation.repository.MapLocationRepository;
 import com.example.waytogo.user.model.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +27,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,6 +52,9 @@ class AudioControllerIT {
 
     @Autowired
     AudioRepository audioRepository;
+
+    @Autowired
+    MapLocationRepository mapLocationRepository;
 
     @Autowired
     AudioMapper audioMapper;
@@ -128,6 +135,23 @@ class AudioControllerIT {
         assertThrows(ResponseStatusException.class, () -> {
             audioController.getAudioById(UUID.randomUUID());
         });
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testGetAllAudiosByMapLocationId() {
+        MapLocation mapLocation = mapLocationRepository.findAll().get(0);
+        System.out.println(mapLocation);
+
+        ResponseEntity<Page<AudioDTO>> response = audioController.getAllAudiosByMapLocationId(mapLocation.getId(),1,25);
+        Page<AudioDTO> page = response.getBody();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(page).isNotNull();
+        assertThat(page.getSize()).isEqualTo(25);
+        assertThat(page.getPageable().getPageNumber()).isEqualTo(0);
+        assertThat(page.getContent().size()).isEqualTo(3);
     }
 
     @Rollback
