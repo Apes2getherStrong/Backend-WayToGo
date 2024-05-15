@@ -26,6 +26,8 @@ public class AudioController {
     public static final String AUDIO_PATH = "/api/v1/audios";
     public static final String AUDIO_PATH_ID = AUDIO_PATH + "/{audioId}";
     public static final String USER_PATH_ID_AUDIOS = "/api/v1/users/{userId}/audios"; //Getting all audios from one user
+    //TODO maybe (MapLocationController.MAP_LOCATION_PATH_ID + "/audios")?
+    public static final String MAP_LOCATION_PATH_ID_AUDIOS = "/api/v1/mapLocations/{mapLocationId}/audios";
 
     private final AudioService audioService;
 
@@ -54,6 +56,16 @@ public class AudioController {
         Page<AudioDTO> audioDTOList = audioService.getAllAudiosByUserId(userId, pageNumber, pageSize);
 
         return new ResponseEntity<>(audioDTOList, HttpStatus.OK);
+    }
+
+    @GetMapping(MAP_LOCATION_PATH_ID_AUDIOS)
+    public ResponseEntity<Page<AudioDTO>> getAllAudiosByMapLocationId(@PathVariable("mapLocationId") UUID mapLocationId,
+                                                                      @RequestParam(required = false) Integer pageNumber,
+                                                                      @RequestParam(required = false) Integer pageSize
+    ) {
+        Page<AudioDTO> audioDTOPage = audioService.getAllAudiosByMapLocationId(mapLocationId, pageNumber, pageSize);
+
+        return new ResponseEntity<>(audioDTOPage, HttpStatus.OK);
     }
 
     @PostMapping(AUDIO_PATH)
@@ -85,8 +97,7 @@ public class AudioController {
             }
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -104,17 +115,16 @@ public class AudioController {
     @PostMapping(AUDIO_PATH_ID_AUDIO)
     @ResponseBody
     public ResponseEntity<Void> postAudioFile(@PathVariable("audioId") UUID audioId,
-                                          @RequestParam("file") MultipartFile file) {
+                                              @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
 
             String originalFilename = file.getOriginalFilename();
             if (isValidFileExtension(originalFilename)) {
                 try {
-                    if(audioService.saveNewAudioFile(file, audioId)) {
+                    if (audioService.saveNewAudioFile(file, audioId)) {
                         return new ResponseEntity<>(HttpStatus.CREATED);
-                    }
-                    else {
+                    } else {
                         //audio not found
                         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                     }
