@@ -20,7 +20,11 @@ To run the project, clone the repository and open it in an IDE (e.g., IntelliJ).
 
 DOCKER:
 
-Run the following command:
+Firstly build the project to obtain the jar file to have the latest version of the application with a command (You don't have to download maven, just type this command):
+``
+.\mvnw clean package
+``
+Then run the following command:
 ``
 docker-compose up
 ``
