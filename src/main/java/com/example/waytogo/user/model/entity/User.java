@@ -33,8 +33,8 @@ public class User {
 
     @NotNull
     @NotBlank
-    @Size(max = 20)
-    @Column(length = 20)
+    @Size(max = 100)
+    @Column(length = 100)
     String password;
 
     @NotNull
