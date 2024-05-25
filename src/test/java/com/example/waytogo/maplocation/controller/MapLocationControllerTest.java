@@ -3,6 +3,7 @@ package com.example.waytogo.maplocation.controller;
 import com.example.waytogo.maplocation.model.dto.MapLocationDTO;
 import com.example.waytogo.maplocation.service.api.MapLocationService;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
+import com.example.waytogo.security.jwt.JWTService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -30,9 +32,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MapLocationController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class MapLocationControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @MockBean
+    JWTService jwtService;
 
     @Autowired
     ObjectMapper objectMapper;

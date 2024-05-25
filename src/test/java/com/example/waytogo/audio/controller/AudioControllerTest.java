@@ -6,6 +6,7 @@ import com.example.waytogo.audio.model.dto.AudioDTO;
 import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.audio.service.api.AudioService;
 import com.example.waytogo.maplocation.model.entity.MapLocation;
+import com.example.waytogo.security.jwt.JWTService;
 import com.example.waytogo.user.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(AudioController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AudioControllerTest {
+
+    @MockBean
+    JWTService jwtService;
 
     @Autowired
     MockMvc mockMvc;
