@@ -19,11 +19,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CsvServiceLoader {
     private final PasswordEncoder passwordEncoder;
 
     private final JdbcTemplate jdbcTemplate;
+
+    public CsvServiceLoader( PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate) {
+        this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void loadUsers(Resource resource) throws IOException {
         InputStream inputStream = resource.getInputStream();
