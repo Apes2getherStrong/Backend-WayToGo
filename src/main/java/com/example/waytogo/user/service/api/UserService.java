@@ -21,4 +21,6 @@ public interface UserService {
     boolean deleteUserById(UUID userId);
 
     Optional<UserDTO> patchUserById(UUID userId, UserDTO userDTO);
+
+    boolean existsByUsername(String username);
 }
