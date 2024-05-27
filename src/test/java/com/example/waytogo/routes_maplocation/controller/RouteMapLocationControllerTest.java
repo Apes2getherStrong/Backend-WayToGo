@@ -6,18 +6,20 @@ import com.example.waytogo.routes_maplocation.mapper.RouteMapLocationMapper;
 import com.example.waytogo.routes_maplocation.model.dto.RouteMapLocationDTO;
 import com.example.waytogo.routes_maplocation.model.entity.RouteMapLocation;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
+import com.example.waytogo.security.jwt.JWTService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -26,14 +28,18 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.core.Is.is;
 
 @WebMvcTest(RouteMapLocationController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class RouteMapLocationControllerTest {
+
+    @MockBean
+    JWTService jwtService;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -83,7 +89,6 @@ class RouteMapLocationControllerTest {
 
     @Test
     void testGetRouteMapLocationById() throws Exception {
-
         given(routeMapLocationService.getRouteMapLocationById(any())).willReturn(Optional.of(routeMapLocationDTO));
 
         mockMvc.perform(get(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
@@ -133,9 +138,9 @@ class RouteMapLocationControllerTest {
         given(routeMapLocationService.saveNewRouteMapLocation(any())).willReturn(routeMapLocationDTO);
 
         MvcResult mvcResult = mockMvc.perform(post(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.length()", is(1)))
                 .andReturn();
@@ -148,9 +153,9 @@ class RouteMapLocationControllerTest {
         given(routeMapLocationService.updateRouteMapLocationById(any(), any())).willReturn(Optional.of(routeMapLocationDTO));
 
         mockMvc.perform(put(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(routeMapLocationDTO)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(routeMapLocationDTO)))
                 .andExpect(status().isNoContent());
         verify(routeMapLocationService).updateRouteMapLocationById(any(UUID.class), any(RouteMapLocationDTO.class));
     }
@@ -171,7 +176,7 @@ class RouteMapLocationControllerTest {
         given(routeMapLocationService.deleteRouteMapLocationById(any())).willReturn(true);
 
         mockMvc.perform(delete(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, routeMapLocationDTO.getId())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(routeMapLocationService).deleteRouteMapLocationById(uuidArgumentCaptor.capture());
@@ -180,7 +185,7 @@ class RouteMapLocationControllerTest {
     }
 
     @Test
-    void testDeleteRouteMapLocationByIdNotFund() throws Exception {
+    void testDeleteRouteMapLocationByIdNotFound() throws Exception {
         given(routeMapLocationService.deleteRouteMapLocationById(any())).willReturn(false);
 
         mockMvc.perform(delete(RouteMapLocationController.ROUTE_MAP_LOCATION_PATH_ID, UUID.randomUUID())

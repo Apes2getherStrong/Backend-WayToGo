@@ -3,6 +3,8 @@ package com.example.waytogo.user.repository;
 import com.example.waytogo.initialize.InitializationBasic;
 import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
 import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
+import com.example.waytogo.security.config.BeansSecurityConfig;
+import com.example.waytogo.security.jwt.JWTService;
 import com.example.waytogo.user.model.entity.User;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -10,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +25,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class})
+@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class, BeansSecurityConfig.class})
 class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+
 
     @Test
     void testGetAllUsers() {

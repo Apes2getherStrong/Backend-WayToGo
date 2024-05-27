@@ -7,8 +7,10 @@ import com.example.waytogo.route.model.csvModel.RoutesCsvRecord;
 import com.example.waytogo.routes_maplocation.model.csvModel.RouteMapLocationCsvRecord;
 import com.example.waytogo.user.model.csvModel.UserCsvRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,9 +19,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CsvServiceLoader {
+    private final PasswordEncoder passwordEncoder;
+
     private final JdbcTemplate jdbcTemplate;
+
+    public CsvServiceLoader( PasswordEncoder passwordEncoder, JdbcTemplate jdbcTemplate) {
+        this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void loadUsers(Resource resource) throws IOException {
         InputStream inputStream = resource.getInputStream();
@@ -29,7 +37,8 @@ public class CsvServiceLoader {
         String sql = "INSERT INTO USERS (user_id, username, password, login) VALUES(?, ?, ?, ?)";
 
         usersCsv.forEach(userCsvRecord -> {
-            jdbcTemplate.update(sql, userCsvRecord.getId(), userCsvRecord.getUsername(), userCsvRecord.getPassword(), userCsvRecord.getLogin());
+            String encodedPassword = passwordEncoder.encode(userCsvRecord.getPassword());
+            jdbcTemplate.update(sql, userCsvRecord.getId(), userCsvRecord.getUsername(), encodedPassword, userCsvRecord.getLogin());
         });
     }
 

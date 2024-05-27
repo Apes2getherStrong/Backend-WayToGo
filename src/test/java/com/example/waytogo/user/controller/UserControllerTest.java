@@ -1,5 +1,6 @@
 package com.example.waytogo.user.controller;
 
+import com.example.waytogo.security.jwt.JWTService;
 import com.example.waytogo.user.mapper.UserMapper;
 import com.example.waytogo.user.mapper.UserMapperImpl;
 import com.example.waytogo.user.model.dto.UserDTO;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +32,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 //@Import(UserMapper.class)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
+
+    @MockBean
+    JWTService jwtService;
 
     @Autowired
     MockMvc mockMvc;

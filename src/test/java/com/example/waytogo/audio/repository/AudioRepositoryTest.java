@@ -4,6 +4,8 @@ import com.example.waytogo.audio.model.entity.Audio;
 import com.example.waytogo.initialize.InitializationBasic;
 import com.example.waytogo.initialize.csvLoading.repository.CsvConverterGeneric;
 import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
+import com.example.waytogo.security.config.AppSecurityConfig;
+import com.example.waytogo.security.config.BeansSecurityConfig;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class})
+@Import({InitializationBasic.class, CsvServiceLoader.class, CsvConverterGeneric.class, BeansSecurityConfig.class})
 class AudioRepositoryTest {
 
     @Autowired

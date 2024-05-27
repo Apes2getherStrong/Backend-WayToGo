@@ -27,8 +27,8 @@ public class UserDTO {
     @NotNull
     @NotBlank
     @Valid
-    @Size(max = 20)
-    @Column(length = 20)
+    @Size(max = 100)
+    @Column(length = 100)
     @JsonProperty("password")
     String password;
 
