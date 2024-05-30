@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class JWTServiceImpl implements JWTService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationTime);
 
-        String userId = userRepository.findByUsername(username).get().getUsername();
+        UUID userId = userRepository.findByUsername(username).get().getId();
 
         return Jwts.builder()
                 .setSubject(username)
@@ -58,7 +59,7 @@ public class JWTServiceImpl implements JWTService {
                 return null;
             }
 
-            String userId = claims.get("userId", String.class); // Odczytujemy userId z roszczeń
+            String userId = claims.get("userId", String.class);
             if (userId == null) {
                 return null;
             }
