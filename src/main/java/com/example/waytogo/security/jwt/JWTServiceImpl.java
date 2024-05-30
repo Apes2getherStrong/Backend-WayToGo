@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -33,9 +34,12 @@ public class JWTServiceImpl implements JWTService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationTime);
 
+        UUID userId = userRepository.findByUsername(username).get().getId();
+
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
+                .claim("userId", userId)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -52,6 +56,11 @@ public class JWTServiceImpl implements JWTService {
 
             String username = claims.getSubject();
             if (username == null) {
+                return null;
+            }
+
+            String userId = claims.get("userId", String.class);
+            if (userId == null) {
                 return null;
             }
 
