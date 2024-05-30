@@ -33,9 +33,12 @@ public class JWTServiceImpl implements JWTService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationTime);
 
+        String userId = userRepository.findByUsername(username).get().getUsername();
+
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
+                .claim("userId", userId)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -52,6 +55,11 @@ public class JWTServiceImpl implements JWTService {
 
             String username = claims.getSubject();
             if (username == null) {
+                return null;
+            }
+
+            String userId = claims.get("userId", String.class); // Odczytujemy userId z roszczeń
+            if (userId == null) {
                 return null;
             }
 
