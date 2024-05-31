@@ -164,7 +164,7 @@ public class MapLocationControllerIT {
                 .description("desc")
                 .build();
 
-        ResponseEntity<Void> response = mapLocationController.postMapLocation(mapLocationDTO);
+        ResponseEntity<MapLocationDTO> response = mapLocationController.postMapLocation(mapLocationDTO);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(response.getHeaders().getLocation()).isNotNull();

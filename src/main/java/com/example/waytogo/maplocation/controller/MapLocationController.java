@@ -59,13 +59,13 @@ public class MapLocationController {
     }
 
     @PostMapping(MAP_LOCATION_PATH)
-    public ResponseEntity<Void> postMapLocation(@Validated @RequestBody MapLocationDTO mapLocationDTO) {
+    public ResponseEntity<MapLocationDTO> postMapLocation(@Validated @RequestBody MapLocationDTO mapLocationDTO) {
         MapLocationDTO mapLocation = mapLocationService.saveNewMapLocation(mapLocationDTO);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", MAP_LOCATION_PATH + "/" + mapLocation.getId().toString());
 
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapLocation, headers, HttpStatus.CREATED);
     }
 
     @PutMapping(MAP_LOCATION_PATH_ID)
