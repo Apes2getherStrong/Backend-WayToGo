@@ -13,4 +13,3 @@ alter table if exists audios add constraint FKcjfi0tcraemsm3bu7qd8lw7w0 foreign 
 alter table if exists routes add constraint FKtn5l1ci7sxbp52akvblqjg4jm foreign key (user_id) references users;
 alter table if exists routes_map_locations add constraint FK4ya9jurkwidykseo4e5k409g foreign key (map_location_id) references map_locations on delete cascade;
 alter table if exists routes_map_locations add constraint FKn6rwqt3ppk9gqinmrlei775pv foreign key (route_id) references routes on delete cascade;
-alter table users add constraint unique_username unique (username);
