@@ -52,7 +52,9 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
     @Override
     public RouteMapLocationDTO saveNewRouteMapLocation(@Valid RouteMapLocationDTO routeMapLocationDTO) {
 
-        return routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(routeMapLocationRepository.save(routeMapLocationMapper
+        return routeMapLocationMapper
+                .routeMapLocationToRouteMapLocationDto(routeMapLocationRepository
+                .save(routeMapLocationMapper
                 .routeMapLocationDtoToRouteMapLocation(routeMapLocationDTO)));
     }
 
