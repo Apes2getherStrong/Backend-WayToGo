@@ -71,6 +71,15 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
+    public Page<RouteDTO> getRoutesByName(String name, Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+
+        Page<Route> routePage = routeRepository.findByName(name, pageRequest);
+
+        return routePage.map(routeMapper::routeToRouteDto);
+    }
+
+    @Override
     public RouteDTO saveNewRoute(@Valid RouteDTO routeDTO) {
         return routeMapper.routeToRouteDto(routeRepository.save(routeMapper.routeDtoToRoute(routeDTO)));
     }
@@ -93,14 +102,14 @@ public class RouteServiceJPA implements RouteService {
 
     @Transactional
     @Override
-    public Boolean deleteRouteById(UUID routeId) throws IOException{
-        Optional <Route> optRoute = routeRepository.findById(routeId);
-        if(optRoute.isEmpty())
+    public Boolean deleteRouteById(UUID routeId) throws IOException {
+        Optional<Route> optRoute = routeRepository.findById(routeId);
+        if (optRoute.isEmpty())
             return false;
         Route route = optRoute.get();
 
         List<RouteMapLocation> routeMapLocations = routeMapLocationRepository.findByRoute_Id(routeId, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-        for(RouteMapLocation rmp : routeMapLocations) {
+        for (RouteMapLocation rmp : routeMapLocations) {
             routeMapLocationService.deleteRouteMapLocationById(rmp.getId());
         }
 
@@ -112,10 +121,10 @@ public class RouteServiceJPA implements RouteService {
 
     }
 
-    private void deleteImage(Route route) throws IOException{
+    private void deleteImage(Route route) throws IOException {
         Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
         String filename = route.getImageFilename();
-        if(filename != null) {
+        if (filename != null) {
 
             Path oldFilePath = directoryPath.resolve(filename);
             if (Files.exists(oldFilePath)) {
@@ -136,7 +145,7 @@ public class RouteServiceJPA implements RouteService {
             if (StringUtils.hasText(routeDTO.getDescription())) {
                 foundRoute.setDescription(routeDTO.getDescription());
             }
-            if(routeDTO.getUser() != null) {
+            if (routeDTO.getUser() != null) {
                 foundRoute.setUser(userMapper.userDtoToUser(routeDTO.getUser()));
             }
             atomicReference.set(Optional.of(routeMapper.routeToRouteDto(routeRepository.save(foundRoute))));
@@ -145,7 +154,6 @@ public class RouteServiceJPA implements RouteService {
         });
         return atomicReference.get();
     }
-
 
 
     //TODO check if routeRepository.save(route); is necessary
@@ -159,8 +167,8 @@ public class RouteServiceJPA implements RouteService {
         Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
         Files.createDirectories(directoryPath);
 
-        Optional <Route> optRoute = routeRepository.findById(routeId);
-        if(optRoute.isEmpty())
+        Optional<Route> optRoute = routeRepository.findById(routeId);
+        if (optRoute.isEmpty())
             return false;
         Route route = optRoute.get();
 
@@ -187,7 +195,7 @@ public class RouteServiceJPA implements RouteService {
     public Optional<byte[]> getImageByRouteId(UUID routeId) throws IOException {
 
         Optional<Route> optRoute = routeRepository.findById(routeId);
-        if(optRoute.isEmpty()) {
+        if (optRoute.isEmpty()) {
             //no route
             return Optional.empty();
         }
@@ -195,7 +203,7 @@ public class RouteServiceJPA implements RouteService {
         String imageFilename = optRoute.get().getImageFilename();
 
         //no image assigned
-        if(imageFilename == null) {
+        if (imageFilename == null) {
             return Optional.of(new byte[0]);
         }
 

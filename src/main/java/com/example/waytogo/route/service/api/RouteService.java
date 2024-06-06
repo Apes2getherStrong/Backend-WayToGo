@@ -17,6 +17,8 @@ public interface RouteService {
 
     Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
 
+    Page<RouteDTO> getRoutesByName(String name, Integer pageNumber, Integer pageSize);
+
     RouteDTO saveNewRoute(@Valid RouteDTO routeDTO);
 
     Optional<RouteDTO> updateRouteById(UUID routeId, @Valid RouteDTO routeDTO);
