@@ -122,7 +122,7 @@ class RouteControllerIT {
         }
 
 
-        Page<RouteDTO> page = routeController.getRoutes(1, 20).getBody();
+        Page<RouteDTO> page = routeController.getRoutes(1, 20, "").getBody();
         assertThat(page.getContent().size()).isEqualTo(0);
     }
 

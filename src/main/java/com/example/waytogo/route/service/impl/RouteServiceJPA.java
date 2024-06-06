@@ -45,11 +45,17 @@ public class RouteServiceJPA implements RouteService {
     private final RouteMapLocationRepository routeMapLocationRepository;
 
     @Override
-    public Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize) {
+    public Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize, String name) {
+
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
-        routePage = routeRepository.findAll(pageRequest);
+        if(name != null) {
+            routePage = routeRepository.findByNameContaining(name, pageRequest);
+        } else {
+            routePage = routeRepository.findAll(pageRequest);
+        }
+
 
         return routePage.map(routeMapper::routeToRouteDto);
     }

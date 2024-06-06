@@ -38,8 +38,9 @@ public class RouteController {
 
     @GetMapping(ROUTE_PATH)
     public ResponseEntity<Page<RouteDTO>> getRoutes(@RequestParam(required = false) Integer pageNumber,
-                                    @RequestParam(required = false) Integer pageSize) {
-        return new ResponseEntity<>(routeService.getAllRoutes(pageNumber, pageSize), HttpStatus.OK);
+                                                    @RequestParam(required = false) Integer pageSize,
+                                                    @RequestParam(required = false) String routeName) {
+        return new ResponseEntity<>(routeService.getAllRoutes(pageNumber, pageSize, routeName), HttpStatus.OK);
     }
 
     @GetMapping(ROUTE_PATH_ID)

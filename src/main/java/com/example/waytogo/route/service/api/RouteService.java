@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface RouteService {
 
-    Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize);
+    Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize, String name);
 
     Optional<RouteDTO> getRouteById(UUID routeId);
 
