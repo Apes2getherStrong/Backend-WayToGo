@@ -26,7 +26,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JWTServiceImpl implements JWTService {
     private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expirationTime = 3600000;
+    private final long expirationTime = 3600000 * 24;
     private final UserRepository userRepository;
 
     @Override
