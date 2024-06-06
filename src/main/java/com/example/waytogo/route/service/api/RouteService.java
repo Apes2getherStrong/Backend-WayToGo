@@ -11,13 +11,11 @@ import java.util.UUID;
 
 public interface RouteService {
 
-    Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize);
+    Page<RouteDTO> getAllRoutes(Integer pageNumber, Integer pageSize, String name);
 
     Optional<RouteDTO> getRouteById(UUID routeId);
 
     Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize);
-
-    Page<RouteDTO> getRoutesByName(String name, Integer pageNumber, Integer pageSize);
 
     RouteDTO saveNewRoute(@Valid RouteDTO routeDTO);
 

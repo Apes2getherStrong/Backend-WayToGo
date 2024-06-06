@@ -64,7 +64,7 @@ class RouteServiceJPATest {
     @Test
     void getAllRoutes() {
         given(routeRepository.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(testRoute)));
-        Page<RouteDTO> result = routeService.getAllRoutes(1, 1);
+        Page<RouteDTO> result = routeService.getAllRoutes(1, 1, "");
         assertThat(result).isNotNull();
         assertThat(result.getSize()).isEqualTo(1);
     }

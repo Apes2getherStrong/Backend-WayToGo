@@ -69,7 +69,7 @@ class RouteControllerTest {
 
     @Test
     void getRoutes() throws Exception {
-        given(routeService.getAllRoutes(any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
+        given(routeService.getAllRoutes(any(), any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
 
         mockMvc.perform(get(RouteController.ROUTE_PATH)
                         .param("pageNumber", "0")

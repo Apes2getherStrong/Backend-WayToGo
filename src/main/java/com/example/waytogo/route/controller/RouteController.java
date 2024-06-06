@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 public class RouteController {
     public static final String ROUTE_PATH = "/api/v1/routes";
     public static final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
-    public static final String ROUTE_PATH_NAME = ROUTE_PATH + "/{routeName}";
     public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
     public static final String ROUTE_PATH_ID_IMAGE = ROUTE_PATH_ID + "/image";
     //TODO change  the path (it shouldn't be hardcoded)
@@ -39,8 +38,9 @@ public class RouteController {
 
     @GetMapping(ROUTE_PATH)
     public ResponseEntity<Page<RouteDTO>> getRoutes(@RequestParam(required = false) Integer pageNumber,
-                                    @RequestParam(required = false) Integer pageSize) {
-        return new ResponseEntity<>(routeService.getAllRoutes(pageNumber, pageSize), HttpStatus.OK);
+                                                    @RequestParam(required = false) Integer pageSize,
+                                                    @RequestParam(required = false) String routeName) {
+        return new ResponseEntity<>(routeService.getAllRoutes(pageNumber, pageSize, routeName), HttpStatus.OK);
     }
 
     @GetMapping(ROUTE_PATH_ID)
@@ -56,13 +56,6 @@ public class RouteController {
 
         return new ResponseEntity<>(routeService.getRoutesByUserId(userId, pageNumber, pageSize), HttpStatus.OK);
 
-    }
-
-    @GetMapping(ROUTE_PATH_NAME)
-    public ResponseEntity<Page<RouteDTO>> getRoutesByName(@PathVariable("routeName") String routeName,
-                                                    @RequestParam(required = false) Integer pageNumber,
-                                                    @RequestParam(required = false) Integer pageSize) {
-        return new ResponseEntity<>(routeService.getRoutesByName(routeName, pageNumber, pageSize), HttpStatus.OK);
     }
 
     @PostMapping(ROUTE_PATH)
