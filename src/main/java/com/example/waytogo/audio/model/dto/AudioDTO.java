@@ -23,8 +23,8 @@ public class AudioDTO {
     @NotNull
     @NotBlank
     @Valid
-    @Size(max = 20)
-    @Column(length = 20)
+    @Size(max = 100)
+    @Column(length = 100)
     String name;
 
     @Size(max = 255)

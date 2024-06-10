@@ -50,6 +50,7 @@ public class RouteServiceJPA implements RouteService {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
+        System.out.println("W getRoutes, name: " + name);
         if(name != null) {
             routePage = routeRepository.findByNameContaining(name, pageRequest);
         } else {
