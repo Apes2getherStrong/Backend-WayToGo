@@ -30,7 +30,7 @@ public class Audio {
     @NotNull
     @NotBlank
     @Size(max = 100)
-    @Column(name = "audio_name", length = 20)
+    @Column(name = "audio_name", length = 100)
     String name;
 
     @Size(max = 255)

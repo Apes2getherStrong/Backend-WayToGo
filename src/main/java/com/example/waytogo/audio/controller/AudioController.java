@@ -140,7 +140,7 @@ public class AudioController {
     }
 
     private boolean isValidFileExtension(String fileName) {
-        String[] allowedExtensions = {"mp3"};
+        String[] allowedExtensions = {"mp3", "3gp"};
         String fileExtension = StringUtils.getFilenameExtension(fileName);
         return Arrays.asList(allowedExtensions).contains(fileExtension.toLowerCase());
     }

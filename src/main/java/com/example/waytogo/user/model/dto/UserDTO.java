@@ -19,8 +19,8 @@ public class UserDTO {
     @NotNull
     @NotBlank
     @Valid
-    @Size(max = 20)
-    @Column(length = 20)
+    @Size(max = 50)
+    @Column(length = 50)
     @JsonProperty("username")
     String username;
 
