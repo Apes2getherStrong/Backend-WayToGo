@@ -39,7 +39,7 @@ public class Route {
 
     @NotBlank
     @NotNull
-    @Size(max = 32)
+    @Size(max = 100)
     private String name;
 
     @Size(max = 255)
