@@ -12,8 +12,8 @@ services:
       POSTGRES_DB: "waytogo_db"
       POSTGRES_USER: "waytogo_user"
       POSTGRES_PASSWORD: "waytogo_password"
-#    ports:
-#      - "5433:5432" # zmień port z 5432 na 5433
+    ports:
+      - "5432:5432" # zmień port z 5432 na 5433
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
 
