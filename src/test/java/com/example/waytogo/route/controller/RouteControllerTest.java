@@ -107,7 +107,7 @@ class RouteControllerTest {
 
     @Test
     void testGetRoutesByUserId() throws Exception {
-        given(routeService.getRoutesByUserId(any(UUID.class), any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
+        given(routeService.getRoutesByUserId(any(UUID.class), any(), any(), any())).willReturn(new PageImpl<>(List.of(testRouteDTO)));
 
         mockMvc.perform(get(RouteController.ROUTE_PATH_ID_USER, UUID.randomUUID())
                         .param("pageNumber", "0")

@@ -23,11 +23,12 @@ import java.util.UUID;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 @RequiredArgsConstructor
 @RestController
 public class RouteController {
     public static final String ROUTE_PATH = "/api/v1/routes";
-    public static final String ROUTE_PATH_ID= ROUTE_PATH + "/{routeId}";
+    public static final String ROUTE_PATH_ID = ROUTE_PATH + "/{routeId}";
     public static final String ROUTE_PATH_ID_USER = "/api/v1/routes/{userId}/routes";
     public static final String ROUTE_PATH_ID_IMAGE = ROUTE_PATH_ID + "/image";
     //TODO change  the path (it shouldn't be hardcoded)
@@ -51,15 +52,16 @@ public class RouteController {
 
     @GetMapping(ROUTE_PATH_ID_USER)
     public ResponseEntity<Page<RouteDTO>> getRoutesByUserId(@PathVariable("userId") UUID userId,
-                                            @RequestParam(required = false) Integer pageNumber,
-                                            @RequestParam(required = false) Integer pageSize) {
+                                                            @RequestParam(required = false) Integer pageNumber,
+                                                            @RequestParam(required = false) Integer pageSize,
+                                                            @RequestParam(required = false) String routeName) {
 
-        return new ResponseEntity<>(routeService.getRoutesByUserId(userId, pageNumber, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(routeService.getRoutesByUserId(userId, pageNumber, pageSize, routeName), HttpStatus.OK);
 
     }
 
     @PostMapping(ROUTE_PATH)
-    public ResponseEntity<RouteDTO> postRoute(@Validated @RequestBody RouteDTO routeDTO){
+    public ResponseEntity<RouteDTO> postRoute(@Validated @RequestBody RouteDTO routeDTO) {
 
         RouteDTO savedRoute = routeService.saveNewRoute(routeDTO);
 
@@ -72,26 +74,25 @@ public class RouteController {
     @PutMapping(ROUTE_PATH_ID_IMAGE)
     @ResponseBody
     public ResponseEntity<Void> putImage(@PathVariable("routeId") UUID routeId,
-                                   @RequestParam("file") MultipartFile file) {
+                                         @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
 
-                String originalFilename = file.getOriginalFilename();
-                if (isValidFileExtension(originalFilename)) {
-                    try {
-                        if(routeService.saveNewImage(file, routeId)) {
-                            return new ResponseEntity<>(HttpStatus.CREATED);
-                        }
-                        else {
-                            //route not found
-                           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                        }
-                    } catch (IOException e) {
-                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing the file", e);
+            String originalFilename = file.getOriginalFilename();
+            if (isValidFileExtension(originalFilename)) {
+                try {
+                    if (routeService.saveNewImage(file, routeId)) {
+                        return new ResponseEntity<>(HttpStatus.CREATED);
+                    } else {
+                        //route not found
+                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                     }
-                } else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                } catch (IOException e) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing the file", e);
                 }
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -149,15 +150,14 @@ public class RouteController {
     }
 
     @DeleteMapping(ROUTE_PATH_ID)
-    public ResponseEntity<Void> deleteRoute (@PathVariable("routeId") UUID routeId) {
+    public ResponseEntity<Void> deleteRoute(@PathVariable("routeId") UUID routeId) {
 
         try {
             if (!routeService.deleteRouteById(routeId)) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

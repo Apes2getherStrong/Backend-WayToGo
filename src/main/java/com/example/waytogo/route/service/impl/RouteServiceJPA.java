@@ -68,11 +68,22 @@ public class RouteServiceJPA implements RouteService {
     }
 
     @Override
-    public Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize) {
+    public Page<RouteDTO> getRoutesByUserId(UUID userId, Integer pageNumber, Integer pageSize, String routeName) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
-        routePage = routeRepository.findByUser_Id(userId, pageRequest);
+//        routePage = routeRepository.findByUser_Id(userId, pageRequest);
+        //routePage = routeRepository.findByNameContainingAndUser_Id(null, userId, pageRequest);
+
+        if(routeName != null) {
+            routePage = routeRepository.findByNameContainingAndUser_Id(routeName, userId, pageRequest);
+            System.out.println("Nie null");
+        } else {
+            routePage = routeRepository.findByUser_Id(userId, pageRequest);
+            System.out.println("null");
+        }
+
+        System.out.println(userId);
 
         return routePage.map(routeMapper::routeToRouteDto);
     }
