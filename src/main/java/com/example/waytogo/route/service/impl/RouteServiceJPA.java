@@ -50,7 +50,6 @@ public class RouteServiceJPA implements RouteService {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
-        System.out.println("W getRoutes, name: " + name);
         if(name != null) {
             routePage = routeRepository.findByNameContaining(name, pageRequest);
         } else {
@@ -72,18 +71,11 @@ public class RouteServiceJPA implements RouteService {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
         Page<Route> routePage;
-//        routePage = routeRepository.findByUser_Id(userId, pageRequest);
-        //routePage = routeRepository.findByNameContainingAndUser_Id(null, userId, pageRequest);
-
         if(routeName != null) {
             routePage = routeRepository.findByNameContainingAndUser_Id(routeName, userId, pageRequest);
-            System.out.println("Nie null");
         } else {
             routePage = routeRepository.findByUser_Id(userId, pageRequest);
-            System.out.println("null");
         }
-
-        System.out.println(userId);
 
         return routePage.map(routeMapper::routeToRouteDto);
     }
