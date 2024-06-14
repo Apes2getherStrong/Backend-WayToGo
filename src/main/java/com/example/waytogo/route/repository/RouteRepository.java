@@ -16,6 +16,7 @@ import java.util.UUID;
 public interface RouteRepository extends JpaRepository<Route, UUID> {
 
     Page<Route> findByUser_Id(UUID userId, PageRequest pageRequest);
+    Page<Route> findByNameContainingAndUser_Id(String name, UUID userId, PageRequest pageRequest);
 
     //Page<Route> findByName(String name, PageRequest pageRequest);
     Page<Route> findByNameContaining(String name, PageRequest pageRequest);
