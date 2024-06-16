@@ -4,27 +4,24 @@ version: '3'
 services:
   waytogo-db:
     container_name: waytogo-db
-    build:
-      context: .
-      dockerfile: Dockerfile-db
-    #restart: always
+    image: janek1010/waytogo-db:latest
     environment:
       POSTGRES_DB: "waytogo_db"
       POSTGRES_USER: "waytogo_user"
       POSTGRES_PASSWORD: "waytogo_password"
     ports:
-      - "5432:5432" # zmień port z 5432 na 5433
+      - "5432:5432"
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
 
   waytogo:
-    build: .
-    #restart: always
+    image: janek1010/waytogo:latest
     environment:
       SPRING_PROFILES_ACTIVE: "postgres"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
       SPRING_DATASOURCE_USERNAME: "waytogo_user"
       SPRING_DATASOURCE_PASSWORD: "waytogo_password"
+      #SERVER_PORT: "8090"
     ports:
       - "8090:8090"
     depends_on:
