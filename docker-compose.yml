@@ -34,7 +34,7 @@ services:
 
   waytogo-frontend:
     container_name: frontend
-    image: your-angular-app
+    image: janek1010/angular-waytogo
     restart: always
     ports:
       - "80:80"
