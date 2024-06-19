@@ -1,10 +1,10 @@
 version: '3'
 
-# okej laczy sie teraz ale nie wiem czasem czy nie z lokalnym postgresem xdd ogarnac to i potem next bledy
 services:
   waytogo-db:
     container_name: waytogo-db
     image: janek1010/waytogo-db:latest
+    restart: always
     environment:
       POSTGRES_DB: "waytogo_db"
       POSTGRES_USER: "waytogo_user"
@@ -13,9 +13,12 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
+    networks:
+      - mynetwork
 
   waytogo:
     image: janek1010/waytogo:latest
+    restart: always
     environment:
       SPRING_PROFILES_ACTIVE: "postgres"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
@@ -26,3 +29,22 @@ services:
       - "8090:8090"
     depends_on:
       - waytogo-db
+    networks:
+      - mynetwork
+
+  waytogo-frontend:
+    container_name: frontend
+    image: janek1010/angular-waytogo
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      API_URL: http://waytogo:8090/api
+    depends_on:
+      - waytogo
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
