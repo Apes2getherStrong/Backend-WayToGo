@@ -75,14 +75,20 @@ public class MapLocationServiceJPA implements MapLocationService {
         AtomicReference<Optional<MapLocationDTO>> atomicReference = new AtomicReference<>();
 
         mapLocationRepository.findById(mapLocationId).ifPresentOrElse(found -> {
+            String fileName = found.getImageFilename();
+
             MapLocationDTO foundDTO = mapLocationMapper.mapLocationToMapLocationDto(found);
             foundDTO.setName(mapLocationDTO.getName());
             foundDTO.setDescription(mapLocationDTO.getDescription());
             foundDTO.setCoordinates(mapLocationDTO.getCoordinates());
 
+            MapLocation newMapLocation = mapLocationMapper.mapLocationDtoToMapLocation(foundDTO);
+            newMapLocation.setImageFilename(fileName);
+
             atomicReference.set(Optional.of(mapLocationMapper
                     .mapLocationToMapLocationDto(mapLocationRepository
-                            .save(mapLocationMapper.mapLocationDtoToMapLocation(foundDTO)))));
+                            .save(newMapLocation))));
+
         }, () -> atomicReference.set(Optional.empty()));
         return atomicReference.get();
     }
