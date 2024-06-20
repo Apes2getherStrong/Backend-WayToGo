@@ -142,7 +142,7 @@ class MapLocationControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mapLocationDTO)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isCreated());
         verify(mapLocationService).updateMapLocationById(any(UUID.class), any(MapLocationDTO.class));
     }
 

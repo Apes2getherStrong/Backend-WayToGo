@@ -77,6 +77,7 @@ public class MapLocationServiceJPA implements MapLocationService {
         mapLocationRepository.findById(mapLocationId).ifPresentOrElse(found -> {
             MapLocationDTO foundDTO = mapLocationMapper.mapLocationToMapLocationDto(found);
             foundDTO.setName(mapLocationDTO.getName());
+            foundDTO.setDescription(mapLocationDTO.getDescription());
             foundDTO.setCoordinates(mapLocationDTO.getCoordinates());
 
             atomicReference.set(Optional.of(mapLocationMapper
