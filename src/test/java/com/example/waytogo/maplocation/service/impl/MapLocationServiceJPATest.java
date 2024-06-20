@@ -60,6 +60,7 @@ class MapLocationServiceJPATest {
 
         testMapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(testMapLocation);
         testMapLocationDTO.setName("Test Name 2");
+        testMapLocationDTO.setDescription("Test description aaaa 2");
 
         mapLocationService.updateMapLocationById(testMapLocation.getId(), testMapLocationDTO).get();
 

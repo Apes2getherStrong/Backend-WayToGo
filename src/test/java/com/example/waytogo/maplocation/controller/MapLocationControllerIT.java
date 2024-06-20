@@ -143,7 +143,7 @@ public class MapLocationControllerIT {
         mapLocationDTO.setCoordinates(point);
 
 
-        ResponseEntity<Void> responseEntity = mapLocationController.putMapLocationById(mapLocation.getId(), mapLocationDTO);
+        ResponseEntity<MapLocationDTO> responseEntity = mapLocationController.putMapLocationById(mapLocation.getId(), mapLocationDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         MapLocation updatedMapLocation = mapLocationRepository.findById(mapLocation.getId()).get();

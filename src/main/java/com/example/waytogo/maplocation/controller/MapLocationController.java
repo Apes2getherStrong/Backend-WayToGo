@@ -69,12 +69,16 @@ public class MapLocationController {
     }
 
     @PutMapping(MAP_LOCATION_PATH_ID)
-    public ResponseEntity<Void> putMapLocationById(@PathVariable("mapLocationId") UUID mapLocationId, @Validated @RequestBody MapLocationDTO mapLocationDTO) {
-        if (mapLocationService.updateMapLocationById(mapLocationId, mapLocationDTO).isEmpty()) {
+    public ResponseEntity<MapLocationDTO> putMapLocationById(@PathVariable("mapLocationId") UUID mapLocationId, @Validated @RequestBody MapLocationDTO mapLocationDTO) {
+        Optional<MapLocationDTO> updatedMapLocation = mapLocationService.updateMapLocationById(mapLocationId, mapLocationDTO);
+
+        if (updatedMapLocation.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.noContent().build();
+        MapLocationDTO existingMapLocation = updatedMapLocation.get();
+
+        return new ResponseEntity<>(existingMapLocation, HttpStatus.CREATED);
     }
 
     @DeleteMapping(MAP_LOCATION_PATH_ID)
