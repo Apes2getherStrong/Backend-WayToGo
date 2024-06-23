@@ -1,4 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
+
+
 -- DROP USER IF EXISTS waytogo;
 --
 -- CREATE USER waytogo WITH PASSWORD 'waytogo';
