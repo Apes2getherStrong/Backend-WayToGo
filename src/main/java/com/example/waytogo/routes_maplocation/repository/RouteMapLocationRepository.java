@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -25,7 +26,9 @@ public interface RouteMapLocationRepository extends JpaRepository<RouteMapLocati
     @Query("SELECT rml.mapLocation FROM RouteMapLocation rml WHERE rml.route.id = :routeId")
     Page<MapLocation> findMapLocationsByRouteId(@Param("routeId") UUID routeId, Pageable pageable);
 
-    Page<RouteMapLocation> findByMapLocation_Id(UUID id, PageRequest pageRequest);
+    List<RouteMapLocation> findByMapLocation_Id(UUID id);
 
     Page<RouteMapLocation> findByRoute_Id(UUID id, PageRequest pageRequest);
+
+    List<RouteMapLocation> findByMapLocation_IdAndRoute_Id(UUID mapLocationId, UUID routeId);
 }
