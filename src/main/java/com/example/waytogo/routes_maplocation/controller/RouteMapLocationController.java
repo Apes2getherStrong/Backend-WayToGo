@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +23,9 @@ public class RouteMapLocationController {
     public static final String ROUTE_MAP_LOCATION_PATH = "/api/v1/routeMapLocations";
     public static final String ROUTE_MAP_LOCATION_PATH_ID = ROUTE_MAP_LOCATION_PATH + "/{routeMapLocationId}";
     public final static String ROUTE_PATH_ID_ROUTE_MAP_LOCATIONS = "/api/v1/routes/{routeId}/routeMapLocations";
+    public final static String MAP_LOCATION_PATH_ID_ROUTE_MAP_LOCATIONS = "/api/v1/mapLocation/{mapLocationId}/routeMapLocations";
+
+    public final static String ROUTE_MAP_LOCATION_PATH_MAP_LOCATION_ID_ROUTE_ID = ROUTE_MAP_LOCATION_PATH + "/mapLocation/{mapLocationId}/route/{routeId}";
 
     private final RouteMapLocationService routeMapLocationService;
 
@@ -37,6 +41,22 @@ public class RouteMapLocationController {
 
         return new ResponseEntity<>(found, HttpStatus.OK);
     }
+
+    @GetMapping(MAP_LOCATION_PATH_ID_ROUTE_MAP_LOCATIONS)
+    public ResponseEntity<List<RouteMapLocationDTO>> getRouteMapLocationByMapLocationId(@PathVariable("mapLocationId") UUID mapLocationId) {
+        List<RouteMapLocationDTO> foundList = routeMapLocationService.getRouteMapLocationByMapLocationId(mapLocationId);
+
+        return new ResponseEntity<>(foundList, HttpStatus.OK);
+    }
+
+    @GetMapping(ROUTE_MAP_LOCATION_PATH_MAP_LOCATION_ID_ROUTE_ID)
+    public ResponseEntity<List<RouteMapLocationDTO>> getRouteMapLocationByMapLocationIdAndRouteId(@PathVariable("mapLocationId") UUID mapLocationId,
+                                                                                                  @PathVariable("routeId") UUID routeId) {
+        List<RouteMapLocationDTO> foundList = routeMapLocationService.getRouteMapLocationByMapLocationIdAndRouteId(mapLocationId,routeId);
+
+        return new ResponseEntity<>(foundList, HttpStatus.OK);
+    }
+
 
     @GetMapping(ROUTE_PATH_ID_ROUTE_MAP_LOCATIONS)
     public ResponseEntity<Page<MapLocationDTO>> getAllMapLocationsByRouteId(@PathVariable("routeId") UUID routeId,

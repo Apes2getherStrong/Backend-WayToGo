@@ -17,9 +17,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -38,6 +40,22 @@ public class RouteMapLocationServiceJPA implements RouteMapLocationService {
 
         return Optional.ofNullable(routeMapLocationMapper.routeMapLocationToRouteMapLocationDto(routeMapLocationRepository.findById(routeMapLocationId)
                 .orElse(null)));
+    }
+
+    public List<RouteMapLocationDTO> getRouteMapLocationByMapLocationId(UUID mapLocationId) {
+
+        return routeMapLocationRepository.findByMapLocation_Id(mapLocationId)
+                .stream()
+                .map(routeMapLocationMapper::routeMapLocationToRouteMapLocationDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<RouteMapLocationDTO> getRouteMapLocationByMapLocationIdAndRouteId(UUID mapLocationId, UUID routeId) {
+
+        return routeMapLocationRepository.findByMapLocation_IdAndRoute_Id(mapLocationId, routeId)
+                .stream()
+                .map(routeMapLocationMapper::routeMapLocationToRouteMapLocationDto)
+                .collect(Collectors.toList());
     }
 
     @Override
