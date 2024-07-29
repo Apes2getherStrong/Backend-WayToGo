@@ -19,7 +19,7 @@ public interface RouteRepository extends JpaRepository<Route, UUID> {
     Page<Route> findByNameContainingAndUser_Id(String name, UUID userId, PageRequest pageRequest);
 
     //Page<Route> findByName(String name, PageRequest pageRequest);
-    Page<Route> findByNameContaining(String name, PageRequest pageRequest);
+    Page<Route> findByNameContainingIgnoreCase(String name, PageRequest pageRequest);
 
 
     //for some reason changes made by the query are not visible in tests.
