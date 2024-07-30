@@ -51,7 +51,7 @@ public class RouteServiceJPA implements RouteService {
 
         Page<Route> routePage;
         if(name != null) {
-            routePage = routeRepository.findByNameContaining(name, pageRequest);
+            routePage = routeRepository.findByNameContainingIgnoreCase(name, pageRequest);
         } else {
             routePage = routeRepository.findAll(pageRequest);
         }
