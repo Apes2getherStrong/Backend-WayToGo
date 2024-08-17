@@ -3,6 +3,7 @@ package com.example.waytogo.security.config;
 import com.example.waytogo.security.filter.JWTFilter;
 import com.example.waytogo.security.jwt.JWTService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,11 +21,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
-@AllArgsConstructor
+
 public class AppSecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JWTService jwtService;
 
+    @Value("${app.cors.allowed-origins}")
+    private String corsAllowedOrigins;
+
+    public AppSecurityConfig(AuthenticationProvider authenticationProvider, JWTService jwtService) {
+        this.authenticationProvider = authenticationProvider;
+        this.jwtService = jwtService;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JWTFilter jwtFilter = new JWTFilter(jwtService);
@@ -48,8 +56,11 @@ public class AppSecurityConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://localhost");
+        String[] origins = corsAllowedOrigins.split(",");
+        for (String origin : origins) {
+            System.out.println("available cors origins: "+ origin.trim());
+            config.addAllowedOrigin(origin.trim());
+        }
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
