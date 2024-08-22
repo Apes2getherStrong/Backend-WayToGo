@@ -24,7 +24,7 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://waytogo-db:5432/waytogo_db"
       SPRING_DATASOURCE_USERNAME: "waytogo_user"
       SPRING_DATASOURCE_PASSWORD: "waytogo_password"
-      CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://waytogo-frontend:80"
+      CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://waytogo-frontend:80,http://localhost"
     ports:
       - "8090:8090"
     depends_on:
