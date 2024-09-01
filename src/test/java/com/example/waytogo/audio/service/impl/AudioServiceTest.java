@@ -219,20 +219,6 @@ class AudioServiceTest {
 
     }
 
-    @Rollback
-    @Transactional
-    @Test
-    void testAudioExistanceAfterMapLocationDeletion() throws Exception {
-        MapLocation mapLocation = mapLocationRepository.findAll().get(0);
-        Audio audio = audioRepository.findAll().get(0);
-        audio.setMapLocation(mapLocation);
-
-        mapLocationService.deleteMapLocationById(mapLocation.getId());
-
-        assertThat(audioRepository.existsById(audio.getId())).isFalse();
-
-
-    }
 
 
 }

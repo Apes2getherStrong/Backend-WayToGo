@@ -77,14 +77,12 @@ public class RouteController {
                                          @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
-
             String originalFilename = file.getOriginalFilename();
             if (isValidFileExtension(originalFilename)) {
                 try {
                     if (routeService.saveNewImage(file, routeId)) {
                         return new ResponseEntity<>(HttpStatus.CREATED);
                     } else {
-                        //route not found
                         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                     }
                 } catch (IOException e) {

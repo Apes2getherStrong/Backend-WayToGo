@@ -122,18 +122,13 @@ public class RouteServiceJPA implements RouteService {
 
     }
 
-    private void deleteImage(Route route) throws IOException{
-        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
-        String filename = route.getImageFilename();
-        if(filename != null) {
-
-            Path oldFilePath = directoryPath.resolve(filename);
-            if (Files.exists(oldFilePath)) {
-                Files.delete(oldFilePath);
-            }
+    private void deleteImage(Route route) {
+        if (route.getImageData() != null) {
+            route.setImageData(null);
+            routeRepository.save(route);
         }
-
     }
+
 
     @Override
     public Optional<RouteDTO> patchRouteById(UUID routeId, RouteDTO routeDTO) {
@@ -163,29 +158,16 @@ public class RouteServiceJPA implements RouteService {
 
     @Override
     public Boolean saveNewImage(MultipartFile file, UUID routeId) throws IOException {
-
-        byte[] bytes = file.getBytes();
-
-        Path directoryPath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH);
-        Files.createDirectories(directoryPath);
-
-        Optional <Route> optRoute = routeRepository.findById(routeId);
-        if(optRoute.isEmpty())
+        Optional<Route> optRoute = routeRepository.findById(routeId);
+        if (optRoute.isEmpty()) {
             return false;
+        }
         Route route = optRoute.get();
 
-        //delete old image
-        deleteImage(route);
+        byte[] imageBytes = file.getBytes();
+        route.setImageData(imageBytes);
 
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = StringUtils.getFilenameExtension(originalFilename);
-
-        String newFilename = UUID.randomUUID().toString() + "." + fileExtension;
-        String filePath = directoryPath.resolve(newFilename).toString();
-
-        Files.write(Paths.get(filePath), bytes);
-        route.setImageFilename(newFilename);
-        routeRepository.save(route); //necessary?
+        routeRepository.save(route);
         return true;
     }
 
@@ -195,29 +177,17 @@ public class RouteServiceJPA implements RouteService {
     //empty optional when route not found, empty array when route found but image not found
     @Override
     public Optional<byte[]> getImageByRouteId(UUID routeId) throws IOException {
-
         Optional<Route> optRoute = routeRepository.findById(routeId);
-        if(optRoute.isEmpty()) {
-            //no route
+        if (optRoute.isEmpty()) {
             return Optional.empty();
         }
 
-        String imageFilename = optRoute.get().getImageFilename();
-
-        //no image assigned
-        if(imageFilename == null) {
+        byte[] imageBytes = optRoute.get().getImageData();
+        if (imageBytes == null || imageBytes.length == 0) {
             return Optional.of(new byte[0]);
         }
 
-        Path imagePath = Paths.get(RouteController.IMAGE_DIRECTORY_PATH, imageFilename);
-
-        if (Files.exists(imagePath)) {
-            byte[] imageBytes = Files.readAllBytes(imagePath);
-            return Optional.of(imageBytes);
-        } else {
-            //image assigned but file not found
-            return Optional.of(new byte[0]);
-        }
+        return Optional.of(imageBytes);
     }
 
     @Transactional
