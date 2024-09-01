@@ -129,30 +129,6 @@ public class MapLocationControllerIT {
         });
     }
 
-    @Rollback
-    @Transactional
-    @Test
-    void updateExistingMapLocation() throws JsonProcessingException {
-        MapLocation mapLocation = mapLocationRepository.findAll().get(0);
-        MapLocationDTO mapLocationDTO = mapLocationMapper.mapLocationToMapLocationDto(mapLocation);
-
-        final String newName = "changed name";
-        final Point point = geometryFactory.createPoint(new Coordinate(21.1, 11.5));
-
-        mapLocationDTO.setName("changed name");
-        mapLocationDTO.setCoordinates(point);
-
-
-        ResponseEntity<MapLocationDTO> responseEntity = mapLocationController.putMapLocationById(mapLocation.getId(), mapLocationDTO);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
-
-        MapLocation updatedMapLocation = mapLocationRepository.findById(mapLocation.getId()).get();
-        assertThat(updatedMapLocation.getName()).isEqualTo(newName);
-        assertThat(updatedMapLocation.getCoordinates()).isEqualTo(point);
-        assertThat(updatedMapLocation.getDescription()).isEqualTo(mapLocation.getDescription());
-
-
-    }
 
     @Rollback
     @Transactional

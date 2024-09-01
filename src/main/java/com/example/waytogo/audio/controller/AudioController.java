@@ -118,14 +118,12 @@ public class AudioController {
                                               @RequestParam("file") MultipartFile file) {
 
         if (!file.isEmpty()) {
-
             String originalFilename = file.getOriginalFilename();
             if (isValidFileExtension(originalFilename)) {
                 try {
                     if (audioService.saveNewAudioFile(file, audioId)) {
                         return new ResponseEntity<>(HttpStatus.CREATED);
                     } else {
-                        //audio not found
                         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                     }
                 } catch (IOException e) {
@@ -148,7 +146,6 @@ public class AudioController {
     @GetMapping(AUDIO_PATH_ID_AUDIO)
     public ResponseEntity<byte[]> getAudioFile(@PathVariable("audioId") UUID audioId) {
         try {
-
             Optional<byte[]> audioBytesOpt = audioService.getAudioFileByAudioId(audioId);
             HttpHeaders headers = new HttpHeaders();
 
@@ -163,15 +160,11 @@ public class AudioController {
                 return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);
             }
 
-
             headers.setContentType(MediaType.parseMediaType("audio/mpeg"));
             headers.setContentLength(audioBytes.length);
-            //headers.setContentDispositionFormData("attachment", filename);
             return new ResponseEntity<>(audioBytes, headers, HttpStatus.OK);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
@@ -305,34 +303,34 @@ class RouteControllerIT {
 
     @Test
     @Rollback
-    void testSaveNewImage() throws Exception{
-        String destinationDirectoryPath = RouteController.IMAGE_DIRECTORY_PATH;
-
+    void testSaveNewImage() throws Exception {
         Route testRoute = routeRepository.findAll().get(0);
 
         ResponseEntity<Void> responseEntity = routeController.putImage(testRoute.getId(), testFile);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
-        Path newFilePath = Paths.get(destinationDirectoryPath, testRoute.getImageFilename());
-        assertThat(Files.exists(newFilePath)).isEqualTo(true);
+        testRoute = routeRepository.findById(testRoute.getId()).get();
 
-        //deleting testing file
-        Files.delete(newFilePath);
+        assertThat(testRoute.getImageData()).isNotNull();
+        assertThat(testRoute.getImageData().length).isGreaterThan(0);
+
+        byte[] expectedData = testFile.getBytes();
+        assertThat(testRoute.getImageData()).isEqualTo(expectedData);
     }
+
 
     @Test
     @Rollback
-    void testSaveNewImageWrongExtension() throws Exception{
-        //change test file to audio
+    void testSaveNewImageWrongExtension() throws Exception {
         File audioFile = new File(testAudioPath);
-        // Check if the file exists
+
         if (!audioFile.exists()) {
-            System.out.println("no file found");
+            System.out.println("No file found");
             throw new IOException("Audio file not found");
         }
+
         testFile = new MockMultipartFile(
-                "testAduio",
+                "testAudio",
                 "testAudio.mp3",
                 "audio/mpeg",
                 Files.readAllBytes(audioFile.toPath())
@@ -344,32 +342,32 @@ class RouteControllerIT {
             routeController.putImage(testRoute.getId(), testFile);
         });
 
-        //change test file back to image
         prepareTestFile(testImagePath);
     }
+
 
     @Test
     @Rollback
     void testGetImage() throws Exception {
         Route testRoute = routeRepository.findAll().get(0);
 
-        //prepare image to get
         routeService.saveNewImage(testFile, testRoute.getId());
-        testRoute = routeRepository.findById(testRoute.getId()).get(); //refresh
-        //check if saved
-        assertThat(Files.exists(Paths.get(RouteController.IMAGE_DIRECTORY_PATH, testRoute.getImageFilename()))).isEqualTo(true);
+        testRoute = routeRepository.findById(testRoute.getId()).get();
 
-        //testGet
+        assertThat(testRoute.getImageData()).isNotNull();
+        assertThat(testRoute.getImageData().length).isGreaterThan(0);
+
         ResponseEntity<byte[]> responseEntity = routeController.getImage(testRoute.getId());
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         byte[] imageData = responseEntity.getBody();
         assertNotNull(imageData);
         assertTrue(imageData.length > 0);
 
-        //deleting testing file
-        Files.delete(Paths.get(RouteController.IMAGE_DIRECTORY_PATH, testRoute.getImageFilename()));
+        byte[] expectedData = testFile.getBytes();
+        assertThat(imageData).isEqualTo(expectedData);
     }
+
 
 
 }

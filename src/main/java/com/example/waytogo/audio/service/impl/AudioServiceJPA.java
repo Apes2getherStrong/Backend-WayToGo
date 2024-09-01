@@ -179,40 +179,25 @@ public class AudioServiceJPA implements AudioService {
 
     @Override
     public Boolean saveNewAudioFile(MultipartFile file, UUID audioId) throws IOException {
-
         byte[] bytes = file.getBytes();
 
-        Path directoryPath = Paths.get(AudioController.AUDIO_DIRECTORY_PATH);
-        Files.createDirectories(directoryPath);
-
-        Optional <Audio> optAudio = audioRepository.findById(audioId);
-        if(optAudio.isEmpty())
+        Optional<Audio> optAudio = audioRepository.findById(audioId);
+        if (optAudio.isEmpty()) {
             return false;
+        }
         Audio audio = optAudio.get();
 
+        audio.setAudioData(bytes);
+        audioRepository.save(audio);
 
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = StringUtils.getFilenameExtension(originalFilename);
-
-        String newFilename = UUID.randomUUID().toString() + "." + fileExtension;
-        String filePath = directoryPath.resolve(newFilename).toString();
-
-        Files.write(Paths.get(filePath), bytes);
-        audio.setAudioFilename(newFilename);
-        audioRepository.save(audio); //necessary?
         return true;
     }
 
     @Override
     public void deleteAudioFile(Audio audio) throws IOException{
-        Path directoryPath = Paths.get(AudioController.AUDIO_DIRECTORY_PATH);
-        String filename = audio.getAudioFilename();
-        if(filename != null) {
-
-            Path oldFilePath = directoryPath.resolve(filename);
-            if (Files.exists(oldFilePath)) {
-                Files.delete(oldFilePath);
-            }
+        if (audio.getAudioData() != null) {
+            audio.setAudioData(null);
+            audioRepository.save(audio);
         }
 
     }
@@ -232,28 +217,12 @@ public class AudioServiceJPA implements AudioService {
     //empty optional when audio(entity) not found, empty array when audito(entity) found but audio file not found
     @Override
     public Optional<byte[]> getAudioFileByAudioId(UUID audioId) throws IOException {
-
         Optional<Audio> optAudio = audioRepository.findById(audioId);
-        if(optAudio.isEmpty()) {
-            //no audio
+        if (optAudio.isEmpty()) {
             return Optional.empty();
         }
 
-        String audioFilename = optAudio.get().getAudioFilename();
-
-        //no image assigned
-        if(audioFilename == null) {
-            return Optional.of(new byte[0]);
-        }
-
-        Path audioPath = Paths.get(AudioController.AUDIO_DIRECTORY_PATH, audioFilename);
-
-        if (Files.exists(audioPath)) {
-            byte[] audioBytes = Files.readAllBytes(audioPath);
-            return Optional.of(audioBytes);
-        } else {
-            //audio assigned but file not found
-            return Optional.of(new byte[0]);
-        }
+        byte[] audioData = optAudio.get().getAudioData();
+        return Optional.ofNullable(audioData);
     }
 }

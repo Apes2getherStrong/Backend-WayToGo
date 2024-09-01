@@ -5,12 +5,14 @@ import com.example.waytogo.initialize.csvLoading.service.CsvServiceLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Slf4j
+@Profile("h2")
 @RequiredArgsConstructor
 public class InitializationBasic implements InitializingBean {
     private final CsvServiceLoader csvServiceLoader;

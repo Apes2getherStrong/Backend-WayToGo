@@ -301,35 +301,38 @@ class AudioControllerIT {
 
     @Test
     @Rollback
-    void testSaveNewAudioFile() throws Exception{
-        String destinationDirectoryPath = AudioController.AUDIO_DIRECTORY_PATH;
+    void testSaveNewAudioFile() throws Exception {
+        // Prepare test file as MultipartFile
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "testAudio.mp3",
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                "test audio content".getBytes() // Replace with actual audio bytes if necessary
+        );
 
         Audio testAudio = audioRepository.findAll().get(0);
 
         ResponseEntity<Void> responseEntity = audioController.postAudioFile(testAudio.getId(), testFile);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        testAudio = audioRepository.findById(testAudio.getId()).get(); //refresh
-        Path newFilePath = Paths.get(destinationDirectoryPath, testAudio.getAudioFilename());
-        assertThat(Files.exists(newFilePath)).isEqualTo(true);
-
-        //deleting testing file
-        Files.delete(newFilePath);
+        testAudio = audioRepository.findById(testAudio.getId()).get(); // Refresh
+        assertNotNull(testAudio.getAudioData());
+        assertTrue(testAudio.getAudioData().length > 0);
     }
+
 
     @Test
     @Rollback
-    void testSaveNewAudioFileWrongExtension() throws Exception{
-        //change test file to image
+    void testSaveNewAudioFileWrongExtension() throws Exception {
+        // Change test file to an image
         File imageFile = new File(testImagePath);
-        // Check if the file exists
         if (!imageFile.exists()) {
-            System.out.println("no file found");
+            System.out.println("No file found");
             throw new IOException("Image file not found");
         }
 
-        testFile = new MockMultipartFile(
-                "testImage",
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
                 "testImage.jpeg",
                 MediaType.IMAGE_JPEG_VALUE,
                 Files.readAllBytes(imageFile.toPath())
@@ -340,33 +343,32 @@ class AudioControllerIT {
         assertThrows(ResponseStatusException.class, () -> {
             audioController.postAudioFile(testAudio.getId(), testFile);
         });
-
-        //change test file back to audio
-        prepareTestFile(testAudioPath);
     }
 
     @Test
     @Rollback
     void testGetAudioFile() throws Exception {
+        // Prepare test file as MultipartFile
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "testAudio.mp3",
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                "test audio content".getBytes() // Replace with actual audio bytes if necessary
+        );
+
         Audio testAudio = audioRepository.findAll().get(0);
-
-        //prepare image to get
         audioService.saveNewAudioFile(testFile, testAudio.getId());
-        testAudio = audioRepository.findById(testAudio.getId()).get(); //refresh
-        //check if saved
-        assertThat(Files.exists(Paths.get(AudioController.AUDIO_DIRECTORY_PATH, testAudio.getAudioFilename()))).isEqualTo(true);
 
-        //testGet
+        testAudio = audioRepository.findById(testAudio.getId()).get(); // Refresh
+
         ResponseEntity<byte[]> responseEntity = audioController.getAudioFile(testAudio.getId());
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        byte[] imageData = responseEntity.getBody();
-        assertNotNull(imageData);
-        assertTrue(imageData.length > 0);
-
-        //deleting testing file
-        Files.delete(Paths.get(AudioController.AUDIO_DIRECTORY_PATH, testAudio.getAudioFilename()));
+        byte[] audioData = responseEntity.getBody();
+        assertNotNull(audioData);
+        assertTrue(audioData.length > 0);
     }
+
 }
 
 
