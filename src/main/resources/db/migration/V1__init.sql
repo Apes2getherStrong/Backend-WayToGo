@@ -19,6 +19,7 @@ create table map_locations
     name            varchar(100) not null,
     description     varchar(255),
     coordinates     Geometry(point) not null,
+    image_data BYTEA,
     primary key (map_location_id)
 );
 create table routes

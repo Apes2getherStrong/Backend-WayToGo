@@ -75,7 +75,7 @@ public class MapLocationServiceJPA implements MapLocationService {
         AtomicReference<Optional<MapLocationDTO>> atomicReference = new AtomicReference<>();
 
         mapLocationRepository.findById(mapLocationId).ifPresentOrElse(found -> {
-            String fileName = found.getImageFilename();
+            byte[] fileName = found.getImageData();
 
             MapLocationDTO foundDTO = mapLocationMapper.mapLocationToMapLocationDto(found);
             foundDTO.setName(mapLocationDTO.getName());
@@ -83,7 +83,7 @@ public class MapLocationServiceJPA implements MapLocationService {
             foundDTO.setCoordinates(mapLocationDTO.getCoordinates());
 
             MapLocation newMapLocation = mapLocationMapper.mapLocationDtoToMapLocation(foundDTO);
-            newMapLocation.setImageFilename(fileName);
+            newMapLocation.setImageData(fileName);
 
             atomicReference.set(Optional.of(mapLocationMapper
                     .mapLocationToMapLocationDto(mapLocationRepository
@@ -127,71 +127,41 @@ public class MapLocationServiceJPA implements MapLocationService {
 
     @Override
     public Boolean saveNewImage(MultipartFile file, UUID mapLocationId) throws IOException {
-
-        byte[] bytes = file.getBytes();
-
-        Path directoryPath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH);
-        Files.createDirectories(directoryPath);
-
-        Optional <MapLocation> optMapLocation = mapLocationRepository.findById(mapLocationId);
-        if(optMapLocation.isEmpty())
+        Optional<MapLocation> optMapLocation = mapLocationRepository.findById(mapLocationId);
+        if (optMapLocation.isEmpty()) {
             return false;
+        }
         MapLocation mapLocation = optMapLocation.get();
 
-        //delete old image
-        deleteImage(mapLocation);
+        byte[] imageBytes = file.getBytes();
+        mapLocation.setImageData(imageBytes);
 
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = StringUtils.getFilenameExtension(originalFilename);
-
-        String newFilename = UUID.randomUUID().toString() + "." + fileExtension;
-        String filePath = directoryPath.resolve(newFilename).toString();
-
-        Files.write(Paths.get(filePath), bytes);
-        mapLocation.setImageFilename(newFilename);
-        mapLocationRepository.save(mapLocation); //necessary?
+        mapLocationRepository.save(mapLocation);
         return true;
     }
 
 
     @Override
     public Optional<byte[]> getImageByMapLocationId(UUID mapLocationId) throws IOException {
-
         Optional<MapLocation> optMapLocation = mapLocationRepository.findById(mapLocationId);
-        if(optMapLocation.isEmpty()) {
-            //no route
+        if (optMapLocation.isEmpty()) {
             return Optional.empty();
         }
 
-        String imageFilename = optMapLocation.get().getImageFilename();
-
-        //no image assigned
-        if(imageFilename == null) {
+        byte[] imageBytes = optMapLocation.get().getImageData();
+        if (imageBytes == null || imageBytes.length == 0) {
             return Optional.of(new byte[0]);
         }
 
-        Path imagePath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH, imageFilename);
+        return Optional.of(imageBytes);
 
-        if (Files.exists(imagePath)) {
-            byte[] imageBytes = Files.readAllBytes(imagePath);
-            return Optional.of(imageBytes);
-        } else {
-            //image assigned but file not found
-            return Optional.of(new byte[0]);
-        }
     }
 
     private void deleteImage(MapLocation mapLocation) throws IOException{
-        Path directoryPath = Paths.get(MapLocationController.IMAGE_DIRECTORY_PATH);
-        String filename = mapLocation.getImageFilename();
-        if(filename != null) {
-
-            Path oldFilePath = directoryPath.resolve(filename);
-            if (Files.exists(oldFilePath)) {
-                Files.delete(oldFilePath);
-            }
+        if (mapLocation.getImageData() != null) {
+            mapLocation.setImageData(null);
+            mapLocationRepository.save(mapLocation);
         }
-
     }
 
     private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
