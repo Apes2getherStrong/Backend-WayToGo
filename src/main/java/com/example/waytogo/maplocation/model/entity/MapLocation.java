@@ -47,8 +47,8 @@ public class MapLocation {
     @ValidCoordinates
     private Point coordinates;
 
-    @Column(name = "image_filename")
-    String imageFilename;
+    @Column(name = "image_data", columnDefinition = "bytea")
+    private byte[] imageData;
 
 
 }
