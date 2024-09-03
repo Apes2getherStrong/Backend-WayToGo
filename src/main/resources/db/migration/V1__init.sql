@@ -58,3 +58,4 @@ alter table if exists routes_map_locations
     add constraint FK4ya9jurkwidykseo4e5k409g foreign key (map_location_id) references map_locations on delete cascade;
 alter table if exists routes_map_locations
     add constraint FKn6rwqt3ppk9gqinmrlei775pv foreign key (route_id) references routes on delete cascade;
+
