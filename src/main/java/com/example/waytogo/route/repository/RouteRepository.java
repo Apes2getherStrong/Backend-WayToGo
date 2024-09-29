@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -20,8 +21,6 @@ public interface RouteRepository extends JpaRepository<Route, UUID> {
 
     //Page<Route> findByName(String name, PageRequest pageRequest);
     Page<Route> findByNameContainingIgnoreCase(String name, PageRequest pageRequest);
-
-
     //for some reason changes made by the query are not visible in tests.
     //One solution is to delete @Transactional annotation in test but then tests on github are failing
     //(Even though they pass locally)
