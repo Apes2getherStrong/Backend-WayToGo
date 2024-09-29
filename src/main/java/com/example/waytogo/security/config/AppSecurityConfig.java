@@ -26,7 +26,7 @@ public class AppSecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JWTService jwtService;
 
-    @Value("${app.cors.allowed-origins}")
+    @Value("${app.cors.allowed.origins}")
     private String corsAllowedOrigins;
 
     public AppSecurityConfig(AuthenticationProvider authenticationProvider, JWTService jwtService) {
