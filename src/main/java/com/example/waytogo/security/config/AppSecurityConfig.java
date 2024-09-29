@@ -56,12 +56,6 @@ public class AppSecurityConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-//        String[] origins = corsAllowedOrigins.split(",");
-//        for (String origin : origins) {
-//            System.out.println("available cors origins: "+ origin.trim());
-//            config.addAllowedOrigin(origin.trim());
-//        }
-        config.addAllowedOrigin(CorsConfiguration.ALL);
         config.addAllowedOriginPattern(CorsConfiguration.ALL);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
