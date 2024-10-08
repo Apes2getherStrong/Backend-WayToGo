@@ -27,4 +27,6 @@ public interface MapLocationService {
     Boolean saveNewImage (MultipartFile file, UUID mapLocationId) throws IOException;
 
     Optional<byte[]> getImageByMapLocationId(UUID mapLocationId) throws IOException;
+
+    Page<MapLocationDTO> getLocationsWithinRange(Integer pageNumber, Integer pageSize, Double lat, Double lng, Double range);
 }
