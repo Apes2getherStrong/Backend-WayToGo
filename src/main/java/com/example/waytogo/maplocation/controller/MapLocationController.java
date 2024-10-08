@@ -47,8 +47,18 @@ public class MapLocationController {
 
     @GetMapping(MAP_LOCATION_PATH)
     public ResponseEntity<Page<MapLocationDTO>> getAllMapLocations(@RequestParam(required = false) Integer pageNumber,
-                                                                   @RequestParam(required = false) Integer pageSize) {
-        Page<MapLocationDTO> mapLocationsPage = mapLocationService.getAllMapLocations(pageNumber, pageSize);
+                                                                   @RequestParam(required = false) Integer pageSize,
+                                                                   @RequestParam(required = false) Double lat,
+                                                                   @RequestParam(required = false) Double lng,
+                                                                   @RequestParam(required = false) Double range) {
+        Page<MapLocationDTO> mapLocationsPage;
+
+        if (lat != null && lng != null && range != null) {
+            mapLocationsPage = mapLocationService.getLocationsWithinRange(pageNumber, pageSize,lat, lng, range);
+        } else {
+            mapLocationsPage = mapLocationService.getAllMapLocations(pageNumber, pageSize);
+        }
+
         return new ResponseEntity<>(mapLocationsPage, HttpStatus.OK);
     }
 

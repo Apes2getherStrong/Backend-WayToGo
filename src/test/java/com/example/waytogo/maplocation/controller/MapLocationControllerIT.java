@@ -179,7 +179,7 @@ public class MapLocationControllerIT {
     @DisplayName("JANEK NAPRAW -jak bedzie wiecej danych to odpalic")
     @Disabled
     void listMapLocations() {
-        Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 2141).getBody();
+        Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 2141,null,null,null).getBody();
         assertThat(dtos.getContent().size()).isEqualTo(1000);
     }
 
@@ -190,7 +190,7 @@ public class MapLocationControllerIT {
     @DisplayName("JANEK NAPRAW - z usuwaniem problem przez polaczenia z reszta")
     void testEmptyList() {
         mapLocationRepository.deleteAll();
-        Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 25).getBody();
+        Page<MapLocationDTO> dtos = mapLocationController.getAllMapLocations(1, 25,null,null,null).getBody();
         assertThat(dtos.getContent().size()).isEqualTo(0);
 
     }

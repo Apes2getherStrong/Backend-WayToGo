@@ -11,6 +11,8 @@ import com.example.waytogo.route.controller.RouteController;
 import com.example.waytogo.route.model.entity.Route;
 import com.example.waytogo.routes_maplocation.service.api.RouteMapLocationService;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
+import org.locationtech.jts.geom.Point;
 @Service
 @Primary
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class MapLocationServiceJPA implements MapLocationService {
     private static final Integer DEFAULT_PAGE_SIZE = 25;
     private final MapLocationMapper mapLocationMapper;
     private final MapLocationRepository mapLocationRepository;
+    private final GeometryFactory geometryFactory;
 
     private final AudioService audioService;
     private final RouteMapLocationService routeMapLocationService;
@@ -124,6 +127,13 @@ public class MapLocationServiceJPA implements MapLocationService {
         return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
     }
 
+    @Override
+    public Page<MapLocationDTO> getLocationsWithinRange(Integer pageNumber, Integer pageSize, Double lat, Double lng, Double range) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+        Point location = geometryFactory.createPoint(new Coordinate(lat, lng));
+        Page<MapLocation> mapLocationPage = mapLocationRepository.findByCoordinatesNear(location, range, pageRequest);
+        return mapLocationPage.map(mapLocationMapper::mapLocationToMapLocationDto);
+    }
 
     @Override
     public Boolean saveNewImage(MultipartFile file, UUID mapLocationId) throws IOException {
@@ -156,6 +166,7 @@ public class MapLocationServiceJPA implements MapLocationService {
         return Optional.of(imageBytes);
 
     }
+
 
     private void deleteImage(MapLocation mapLocation) throws IOException{
         if (mapLocation.getImageData() != null) {
