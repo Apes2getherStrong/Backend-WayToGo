@@ -108,7 +108,6 @@ public class AudioServiceJPA implements AudioService {
         }
         else {
             Audio a = optAudio.get();
-            deleteAudioFile(a);
             audioRepository.deleteById(audioId);
             return true;
         }
@@ -194,19 +193,9 @@ public class AudioServiceJPA implements AudioService {
     }
 
     @Override
-    public void deleteAudioFile(Audio audio) throws IOException{
-        if (audio.getAudioData() != null) {
-            audio.setAudioData(null);
-            audioRepository.save(audio);
-        }
-
-    }
-
-    @Override
     public void deleteAudioByMapLocationId(UUID mapLocationId) throws IOException {
         for (Audio a : audioRepository.findByMapLocation_Id(mapLocationId, PageRequest.of(0, Integer.MAX_VALUE)).getContent()) {
             audioRepository.deleteById(a.getId());
-            deleteAudioFile(a);
         }
     }
 

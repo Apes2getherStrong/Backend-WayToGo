@@ -31,8 +31,6 @@ public interface AudioService {
 
     Boolean saveNewAudioFile(MultipartFile file, UUID audioId) throws IOException;
 
-    void deleteAudioFile(Audio audio) throws IOException;
-
     void deleteAudioByMapLocationId(UUID mapLocationId) throws IOException;
 
     Optional<byte[]> getAudioFileByAudioId(UUID audioId) throws IOException;
